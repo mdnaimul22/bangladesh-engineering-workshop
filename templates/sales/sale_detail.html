@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}Sale Detail - #{{ sale.id }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1>
+        <span class="material-icons v-middle">receipt_long</span> {{ _('Sale Record') }} #{{ sale.id }}
+    </h1>
+    <div class="header-actions">
+        <a href="{{ url_for('sales.edit_sale', sale_id=sale.id) }}" class="btn btn-navy">
+            <span class="material-icons">edit</span> {{ _('Edit Sale') }}
+        </a>
+        <a href="{{ url_for('sales.sale_list') }}" class="btn btn-secondary">
+            <span class="material-icons">arrow_back</span> {{ _('Back') }}
+        </a>
+    </div>
+</section>
+
+<div class="shop-content-grid" style="grid-template-columns: 2fr 1fr;"> <!-- Main content vs Sidebar (Voucher) -->
+
+    <!-- Left: Invoice Details -->
+    <div class="section-card">
+
+        <div class="grid-2 mb-3" style="border-bottom: 1px solid #eee; padding-bottom: 1rem; align-items: center;">
+            <div class="form-group mb-0" style="display: flex; align-items: center; gap: 8px;">
+                <span class="material-icons" style="color: var(--primary); font-size: 20px;">person</span>
+                <h2 style="margin: 0; color: var(--text); font-size: 1.4rem;">{{ sale.buyer_name }}</h2>
+            </div>
+            <div class="form-group mb-0"
+                style="text-align: right; display: flex; align-items: center; justify-content: flex-end; gap: 8px;">
+                <span class="material-icons" style="color: #64748b; font-size: 20px;">calendar_today</span>
+                <span style="font-size: 1rem; color: #64748b; margin-top: 5px;">{{ sale.sale_date_display }}</span>
+            </div>
+        </div>
+
+        <div class="shops-table-container mb-3">
+            <table class="shops-table">
+                <thead>
+                    <tr>
+                        <th>{{ _('Material') }}</th>
+                        <th>{{ _('Source') }}</th>
+                        <th style="text-align: center;">{{ _('Weight') }}</th>
+                        <th style="text-align: center;">{{ _('Qty') }}</th>
+                        <th style="text-align: right;">{{ _('Unit Price') }}</th>
+                        <th style="text-align: right;">{{ _('Total') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in sale.get('items', []) %}
+                    <tr>
+                        <td style="padding: 1rem; border-bottom: 1px solid #f1f5f9;">
+                            <strong>{{ item.product_name }}</strong>
+                        </td>
+                        <td style="padding: 1rem; border-bottom: 1px solid #f1f5f9;">
+                            {% if item.inventory_material_name %}
+                            <span
+                                style="display: inline-block; padding: 0.2rem 0.6rem; background: #ecfdf5; color: #059669; border-radius: 4px; font-size: 0.8rem;">
+                                {{ _('LINK') }}: {{ item.inventory_material_name }}
+                            </span>
+                            {% else %}
+                            <span style="color: #94a3b8; font-size: 0.8rem;">-</span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 1rem; border-bottom: 1px solid #f1f5f9; text-align: center;">{{ item.weight
+                            }}</td>
+                        <td style="padding: 1rem; border-bottom: 1px solid #f1f5f9; text-align: center;">{{
+                            item.quantity }}</td>
+                        <td style="padding: 1rem; border-bottom: 1px solid #f1f5f9; text-align: right;">{{
+                            item.unit_price }}</td>
+                        <td style="padding: 1rem; border-bottom: 1px solid #f1f5f9; text-align: right;">{{
+                            item.total_price }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="5" style="text-align: right; font-weight: bold;">{{ _('Grand Total') }}:</td>
+                        <td style="text-align: right; font-weight: bold; font-size: 1.1rem; color: var(--primary);">৳ {{
+                            sale.total_amount }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- Right: Voucher Image -->
+    <div class="shop-sidebar">
+        <div class="section-card">
+            <h3 class="mb-2"><span class="material-icons v-middle">attach_file</span> {{ _('Voucher / Bill') }}</h3>
+            {% if sale.voucher_image %}
+            <div style="border: 1px solid #ddd; padding: 0.5rem; border-radius: 6px; background: white;">
+                <a href="{{ url_for('shop_img', filename=sale.voucher_image) }}" target="_blank">
+                    <img src="{{ url_for('shop_img', filename=sale.voucher_image) }}" alt="Voucher"
+                        style="width: 100%; border-radius: 4px;">
+                </a>
+            </div>
+            <p style="text-align: center; margin-top: 0.5rem; font-size: 0.8rem; color: #666;">{{ _('Click to view full
+                size') }}</p>
+            {% else %}
+            <p style="color: #999; font-style: italic;">{{ _('No voucher uploaded for this sale.') }}</p>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+</section>
+{% endblock %}

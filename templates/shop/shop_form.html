@@ -1,0 +1,357 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if action == 'add' %}{{ _('Add New Shop') }}{% else %}{{ _('Edit Shop') }}{% endif %} - {{
+_('Bangladesh Engineering Workshop') }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1>
+        <span class="material-icons v-middle">{% if action == 'add' %}add_circle{% else %}edit{% endif %}</span>
+        {{ _('Add New Shop') if action == 'add' else _('Edit Shop') }}
+    </h1>
+    <div class="header-actions">
+        <a href="{{ url_for('shops.shop_list') }}" class="btn btn-secondary">
+            <span class="material-icons">arrow_back</span> {{ _('Back') }}
+        </a>
+    </div>
+</section>
+
+<section class="shop-form-section">
+
+    <form method="POST" class="shop-form" enctype="multipart/form-data">
+
+        <!-- Row 1: Shop Name & Visiting Card Section (grid-3) -->
+        <div class="grid-3 mb-3">
+            <!-- Left: Shop Name -->
+            <div class="form-group mb-0">
+                <label for="name" class="header-label"><span class="material-icons v-middle">storefront</span> {{
+                    _('Shop Name') }}</label>
+                <input type="text" name="name" id="name" class="form-control" required value="{{ shop.name or '' }}"
+                    placeholder="{{ _('Enter shop name') }}">
+            </div>
+
+            <!-- Middle: Visiting Card (Aligns with Address below) -->
+            <div class="form-group mb-0">
+                <label for="visiting_card" class="header-label">
+                    <span class="material-icons v-middle">image</span> Visiting Card
+                </label>
+                <input type="file" name="visiting_card" id="visiting_card" class="form-control" accept="image/*"
+                    onchange="previewImage(this)">
+            </div>
+
+            <!-- Right: Preview Box (Aligns with Category below) -->
+            <div class="form-group mb-0">
+                <div id="imagePreview" class="image-preview-box">
+                    {% if shop.visiting_card %}
+                    <img src="/shop_img/{{ shop.visiting_card }}" alt="Current Card" class="preview-img">
+                    {% else %}
+                    <span style="color: #999; font-size: 10px;">{{ _('Preview') }}</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 2: Proprietor, Address, Category (grid-3) -->
+        <div class="grid-3 mb-3">
+            <div class="form-group mb-0">
+                <label for="proprietor" class="header-label"><span class="material-icons v-middle">person</span> {{
+                    _('Proprietor') }}</label>
+                <input type="text" name="proprietor" id="proprietor" class="form-control"
+                    value="{{ shop.proprietor or '' }}" placeholder="{{ _('Proprietor Name') }}">
+            </div>
+
+            <div class="form-group mb-0">
+                <label for="address" class="header-label"><span class="material-icons v-middle">place</span> {{
+                    _('Address') }}</label>
+                <input type="text" name="address" id="address" class="form-control" value="{{ shop.address or '' }}"
+                    placeholder="{{ _('Shop Address') }}">
+            </div>
+
+            <div class="form-group mb-0">
+                <label for="category_id" class="header-label"><span class="material-icons v-middle">category</span> {{
+                    _('Category') }}</label>
+                <select name="category_id" id="category_id" class="form-control">
+                    <option value="">-- {{ _('Select Category') }} --</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat.id }}" {% if shop.category_id==cat.id %}selected{% endif %}>
+                        {{ cat.name }} ({{ cat.name_english }})
+                    </option>
+                    {% endfor %}
+                    <option value="new">+ {{ _('Add New Category') }}</option>
+                </select>
+                <input type="text" name="new_category_name" id="new_category_name" class="form-control"
+                    placeholder="{{ _('Enter new category name') }}" style="display: none; margin-top: 0.5rem;">
+            </div>
+        </div>
+
+        <!-- Row 3: Mobile, WhatsApp, Online Transaction (grid-3) -->
+        <div class="grid-3 mb-3">
+            <div class="form-group mb-0">
+                <label for="mobile" class="header-label"><span class="material-icons v-middle">phone_android</span> {{
+                    _('Mobile') }}</label>
+                <input type="text" name="mobile" id="mobile" class="form-control" value="{{ shop.mobile or '' }}"
+                    placeholder="{{ _('e.g. 017XX-XXXXXX') }}">
+            </div>
+
+            <div class="form-group mb-0">
+                <label for="whatsapp" class="header-label"><span class="material-icons v-middle">chat</span> {{
+                    _('WhatsApp') }}</label>
+                <input type="text" name="whatsapp" id="whatsapp" class="form-control" value="{{ shop.whatsapp or '' }}"
+                    placeholder="{{ _('WhatsApp Number') }}">
+            </div>
+
+            <div class="form-group mb-0">
+                <label for="transaction_status" class="header-label"><span
+                        class="material-icons v-middle">payments</span> {{ _('Online Transaction') }}</label>
+                <input type="text" name="transaction_status" id="transaction_status" class="form-control"
+                    value="{{ shop.transaction_status or '' }}" placeholder="{{ _('e.g. Bkash 018XX-XXXXXX') }}">
+            </div>
+        </div>
+
+        <!-- Row 4: Email/Web, Tags, Products List (grid-3) -->
+        <div class="grid-3 mb-3">
+            <!-- Left: Email/Web -->
+            <div class="form-group mb-0">
+                <label for="email_web" class="header-label"><span class="material-icons v-middle">language</span> {{
+                    _('Email/Web') }}</label>
+                <input type="text" name="email_web" id="email_web" class="form-control"
+                    value="{{ shop.email_web or '' }}" placeholder="{{ _('Email or Website') }}">
+            </div>
+
+            <!-- Middle: Tags Section -->
+            <div class="form-group mb-0">
+                <label class="header-label"><span class="material-icons v-middle">local_offer</span> {{ _('Tags') }}
+                    <span style="font-size: 0.725rem; color: #666; font-weight: normal; margin-left: 4px;">({{
+                        _('comma separated') }})</span></label>
+
+                <!-- Add Tag Input -->
+                <div class="tag-input-group mb-2" style="display: flex; gap: 4px;">
+                    <input type="text" id="new-tag-input" class="form-control" placeholder="{{ _('e.g. Lathe') }}"
+                        style="flex: 1; height: 32px; font-size: 0.85rem;">
+                    <button type="button" id="btn-add-tag" class="btn btn-navy"
+                        style="width: 38px; height: 32px; min-width: 38px; padding: 0;">
+                        <span class="material-icons" style="font-size: 18px;">add</span>
+                    </button>
+                </div>
+
+                <!-- Hidden input for Create Mode -->
+                <input type="hidden" name="tags" id="hidden_tags">
+
+                <!-- Tags Container (Added tags will appear below the input) -->
+                <div id="tags-container"
+                    style="max-height: 100px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 5px;">
+                    {% if action == 'edit' and shop.tags %}
+                    {% for tag in shop.tags %}
+                    <div class="tag-item" data-tag-id="{{ tag.id }}">
+                        <span class="tag-label">
+                            <span class="material-icons v-middle" style="font-size: 14px;">local_offer</span>
+                            <span class="tag-text">{{ tag.name }}</span>
+                        </span>
+                        <button type="button" class="btn-remove-tag" data-tag-id="{{ tag.id }}"
+                            title="ট্যাগ সরান">×</button>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Right: Products List -->
+            <div class="form-group mb-0">
+                <label for="products" class="header-label"><span class="material-icons v-middle">inventory_2</span> {{
+                    _('Products List') }}</label>
+                <textarea name="products" id="products" class="form-control" rows="4"
+                    placeholder="{{ _('List products...') }}"
+                    style="font-size: 0.85rem; line-height: 1.4; height: 80px;">{{ shop.products or '' }}</textarea>
+            </div>
+        </div>
+
+        <div class="form-actions mt-1">
+            <button type="submit" class="btn btn-navy">
+                {% if action == 'add' %}
+                <span class="material-icons">add_circle</span> {{ _('Add Shop') }}
+                {% else %}
+                <span class="material-icons">save</span> {{ _('Save') }}
+                {% endif %}
+            </button>
+            <a href="{{ url_for('shops.shop_list') }}" class="btn btn-secondary">
+                <span class="material-icons">close</span> {{ _('Cancel') }}
+            </a>
+        </div>
+    </form>
+</section>
+
+<style>
+    .header-label {
+        margin-bottom: 2px !important;
+        font-size: 0.725rem !important;
+        color: #166534 !important;
+        font-weight: bold !important;
+        display: flex !important;
+        align-items: center;
+        min-height: 24px;
+    }
+</style>
+
+<script>
+    // Shop ID for edit mode (null for add mode)
+    const SHOP_ID = {% if action == 'edit' and shop_id %}{ { shop_id } } {% else %} null{% endif %};
+    const IS_EDIT_MODE = SHOP_ID !== null;
+
+    function previewImage(input) {
+        const preview = document.getElementById('imagePreview');
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                preview.innerHTML = '<img src="' + e.target.result + '" alt="Preview" class="preview-img">';
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Handle new category input
+    document.getElementById('category_id').addEventListener('change', function () {
+        var newCatInput = document.getElementById('new_category_name');
+        if (this.value === 'new') {
+            newCatInput.style.display = 'block';
+            newCatInput.focus();
+        } else {
+            newCatInput.style.display = 'none';
+        }
+    });
+
+    // ==================== SIMPLE TAG MANAGEMENT ====================
+
+    // Add a tag item to the container (visual only if not in edit mode)
+    function addTagToContainer(tagId, tagName) {
+        const container = document.getElementById('tags-container');
+
+        const tagItem = document.createElement('div');
+        tagItem.className = 'tag-item';
+        tagItem.dataset.tagId = tagId;
+        tagItem.innerHTML = `
+            <span class="tag-label">
+                <span class="material-icons v-middle" style="font-size: 16px;">local_offer</span> 
+                <span class="tag-text">${tagName}</span>
+            </span>
+            <button type="button" class="btn-remove-tag" data-tag-id="${tagId}" title="ট্যাগ সরান">×</button>
+        `;
+
+        container.appendChild(tagItem);
+
+        // Add remove handler
+        tagItem.querySelector('.btn-remove-tag').addEventListener('click', handleRemoveTag);
+    }
+
+    // Handle add tag button click
+    document.getElementById('btn-add-tag').addEventListener('click', async function () {
+        const input = document.getElementById('new-tag-input');
+        const rawInput = input.value.trim();
+
+        if (!rawInput) {
+            alert('ট্যাগের নাম লিখুন');
+            return;
+        }
+
+        const tags = rawInput.split(',').map(t => t.trim()).filter(t => t);
+
+        if (!IS_EDIT_MODE) {
+            // Client-side only for Create Mode
+            tags.forEach(tagName => {
+                // Generate a temp random ID for removal handling
+                const tempId = 'temp_' + Math.random().toString(36).substr(2, 9);
+                addTagToContainer(tempId, tagName);
+            });
+            updateHiddenTags();
+            input.value = '';
+            input.focus();
+            return;
+        }
+
+        // Edit Mode: Immediate API call
+        for (const tagName of tags) {
+            try {
+                // First create the tag (or get existing)
+                const createResponse = await fetch('/api/tag/add', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name: tagName, name_bn: '' })
+                });
+
+                if (!createResponse.ok) {
+                    console.error('Failed to create tag: ' + tagName);
+                    continue;
+                }
+
+                const tagData = await createResponse.json();
+
+                // Then add it to the shop
+                const addResponse = await fetch(`/api/shop/${SHOP_ID}/tag/add`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tag_id: tagData.id })
+                });
+
+                if (addResponse.ok) {
+                    // Check if already in UI to avoid duplicates
+                    const existing = document.querySelector(`.tag-item[data-tag-id="${tagData.id}"]`);
+                    if (!existing) {
+                        addTagToContainer(tagData.id, tagName);
+                    }
+                }
+            } catch (err) {
+                console.error('Error adding tag: ' + tagName, err);
+            }
+        }
+
+        input.value = '';
+        input.focus();
+    });
+
+    // Allow Enter key to add tag
+    document.getElementById('new-tag-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            document.getElementById('btn-add-tag').click();
+        }
+    });
+
+    // Handle remove tag
+    async function handleRemoveTag(e) {
+        const tagId = e.target.dataset.tagId;
+        const tagItem = e.target.closest('.tag-item');
+
+        if (!IS_EDIT_MODE) {
+            tagItem.remove();
+            updateHiddenTags();
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/shop/${SHOP_ID}/tag/remove`, {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tag_id: tagId })
+            });
+
+            if (response.ok) {
+                tagItem.remove();
+            } else {
+                alert('ট্যাগ সরাতে সমস্যা হয়েছে');
+            }
+        } catch (err) {
+            alert('ট্যাগ সরাতে সমস্যা হয়েছে');
+        }
+    }
+
+    function updateHiddenTags() {
+        const items = document.querySelectorAll('.tag-item .tag-text');
+        const tags = Array.from(items).map(span => span.innerText.trim());
+        document.getElementById('hidden_tags').value = tags.join(',');
+    }
+
+    // Attach remove handlers to existing tags
+    document.querySelectorAll('.btn-remove-tag').forEach(btn => {
+        btn.addEventListener('click', handleRemoveTag);
+    });
+</script>
+{% endblock %}

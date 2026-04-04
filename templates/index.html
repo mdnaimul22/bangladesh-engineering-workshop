@@ -13,23 +13,24 @@
                 placeholder="{{ _('Search by product, category, mobile number or shop name...') }}" class="search-input"
                 id="searchInput">
             <button type="submit" class="search-btn">
-                🔍 {{ _('Search') }}
+                <span class="material-icons v-middle">search</span> {{ _('Search') }}
             </button>
         </div>
     </form>
 
     <!-- Search Results (Only show if searching) -->
     {% if query %}
-    <div class="search-results-header" style="margin-top: 2rem; margin-bottom: 1rem; text-align: left;">
-        <h2>🔍 {{ _('Search Results') }}: "{{ query }}"</h2>
+    <div class="search-results-header" style="margin-top: 2rem; margin-bottom: 2rem; text-align: center;">
+        <h2 style="font-weight: 300; color: #555;"><span class="material-icons v-middle"
+                style="font-size: 28px;">search</span> {{ _('Search Results') }}: "{{ query }}"</h2>
     </div>
 
     {% if shops %}
-    <div class="shops-grid" style="text-align: left;">
+    <div class="shops-grid">
         {% for shop in shops %}
         <div class="shop-card">
             <div class="shop-header">
-                <span class="shop-name"><a href="{{ url_for('shop_detail', shop_id=shop.id) }}">{{ shop.name
+                <span class="shop-name"><a href="{{ url_for('shops.shop_detail', shop_id=shop.id) }}">{{ shop.name
                         }}</a></span>
                 <span class="shop-category">{{ shop.category_name }}</span>
             </div>
@@ -55,7 +56,8 @@
     {% endif %}
 
     <div style="margin-top: 2rem;">
-        <a href="{{ url_for('index') }}" class="btn btn-secondary">{{ _('Clear') }}</a>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary"><span class="material-icons">refresh</span> {{
+            _('Clear') }}</a>
     </div>
     {% endif %}
 </section>

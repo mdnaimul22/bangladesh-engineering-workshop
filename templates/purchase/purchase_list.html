@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Purchases - Bangladesh Engineering Workshop{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1>
+        <span class="material-icons v-middle">receipt_long</span>
+        {% if supplier %}{{ _('Purchases') }} - {{ supplier.name }}{% else %}{{ _('Purchases') }}{% endif %}
+    </h1>
+
+    <div class="header-actions">
+        <a href="{% if supplier %}{{ url_for('purchases.new_purchase', supplier_id=supplier.id) }}{% else %}{{ url_for('purchases.new_purchase') }}{% endif %}"
+            class="btn btn-navy">
+            <span class="material-icons">add_circle</span> {{ _('New Purchase') }}
+        </a>
+        <a href="{{ supplier and url_for('shops.shop_detail', shop_id=supplier.id) or url_for('index') }}"
+            class="btn btn-secondary">
+            <span class="material-icons">arrow_back</span> {{ _('Back') }}
+        </a>
+    </div>
+</section>
+
+<section class="shops-section">
+    {% if purchases %}
+    <div class="shops-table-container">
+        <table class="shops-table">
+            <thead>
+                <tr>
+                    <th><span class="material-icons v-middle" style="font-size: 18px;">calendar_today</span> {{
+                        _('Date') }}</th>
+                    <th><span class="material-icons v-middle" style="font-size: 18px;">storefront</span> {{
+                        _('Supplier') }}</th>
+                    <th><span class="material-icons v-middle" style="font-size: 18px;">receipt</span> {{ _('Voucher No')
+                        }}</th>
+                    <th><span class="material-icons v-middle" style="font-size: 18px;">payments</span> {{ _('Total') }}
+                    </th>
+                    <th><span class="material-icons v-middle" style="font-size: 18px;">info</span> {{ _('Payment') }}
+                    </th>
+                    <th><span class="material-icons v-middle" style="font-size: 18px;">paid</span> {{ _('Paid') }}</th>
+                    <th><span class="material-icons v-middle" style="font-size: 18px;">list</span> {{ _('Items') }}</th>
+                    <th><span class="material-icons v-middle" style="font-size: 18px;">attach_file</span> {{
+                        _('Voucher') }}</th>
+                    <th><span class="material-icons v-middle" style="font-size: 18px;">settings</span> {{ _('Action') }}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in purchases %}
+                <tr>
+                    <td>{{ p.purchase_date_display or '-' }}</td>
+                    <td>
+                        {% if p.supplier_id %}
+                        <a href="{{ url_for('shops.shop_detail', shop_id=p.supplier_id) }}" class="shop-link">{{
+                            p.supplier_name }}</a>
+                        {% else %}
+                        {{ p.supplier_name or '-' }}
+                        {% endif %}
+                    </td>
+                    <td>{{ p.voucher_no or '-' }}</td>
+                    <td>৳ {{ p.total_amount or 0 }}</td>
+                    <td>{{ _(p.payment_status or '-') }}</td>
+                    <td>৳ {{ p.paid_amount or 0 }}</td>
+                    <td>{{ p.item_count or 0 }}</td>
+                    <td>
+                        {% if p.voucher_file_path %}
+                        <a href="{{ url_for('shop_img', filename=p.voucher_file_path) }}" target="_blank"
+                            class="shop-link">
+                            <span class="material-icons" style="font-size: 18px; vertical-align: middle;">receipt</span>
+                        </a>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+                        <a href="{{ url_for('purchases.purchase_detail', purchase_id=p.id) }}"
+                            class="btn btn-secondary btn-sm">
+                            <span class="material-icons" style="font-size: 18px;">visibility</span>
+                        </a>
+                        <a href="{{ url_for('purchases.edit_purchase', purchase_id=p.id) }}"
+                            class="btn btn-navy btn-sm">
+                            <span class="material-icons" style="font-size: 18px;">edit</span>
+                        </a>
+                        <form action="{{ url_for('purchases.delete_purchase', purchase_id=p.id) }}" method="POST"
+                            style="display: inline;"
+                            onsubmit='return confirm({{ _("Are you sure you want to delete this purchase?")|tojson }});'>
+                            <button type="submit" class="btn btn-red btn-sm">
+                                <span class="material-icons" style="font-size: 18px;">delete</span>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="no-results">
+        <p>{{ _('No purchase records found.') }}</p>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

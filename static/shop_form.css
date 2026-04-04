@@ -1,0 +1,129 @@
+/* Shop Management - Form Styles */
+
+.shop-form {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Master Form Control Styles */
+.form-control {
+    padding: 0.5rem 0.8rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    transition: var(--transition);
+    width: 100%;
+}
+
+/* Image Preview Section */
+.visiting-card-group {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+#visiting_card {
+    height: 33px !important;
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+    vertical-align: bottom;
+    box-sizing: border-box;
+}
+
+#name {
+    height: 33px !important;
+    box-sizing: border-box;
+}
+
+.image-preview-box {
+    width: 265px;
+    height: 120px;
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(15px) saturate(180%) contrast(90%);
+    -webkit-backdrop-filter: blur(15px) saturate(180%) contrast(90%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    flex-shrink: 0;
+    margin-top: -45px;
+    margin-left: auto;
+    margin-right: 10%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    position: relative;
+}
+
+.preview-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+/* Tag Management Styling */
+#tags-container {
+    margin-top: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.tag-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.4rem;
+    background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+    border-radius: 8px;
+    max-width: 400px;
+}
+
+.tag-label {
+    flex: 1;
+    color: #0284c7;
+    font-weight: 500;
+}
+
+.btn-remove-tag {
+    background: #fee2e2;
+    color: #dc2626;
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.btn-remove-tag:hover {
+    background: #fecaca;
+    transform: scale(1.1);
+}
+
+/* Flash Messages */
+.flash-message {
+    padding: 1rem 1.5rem;
+    border-radius: var(--radius-sm);
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.flash-success {
+    background: #dcfce7;
+    color: #166534;
+    border-left: 4px solid var(--success);
+}
+
+.flash-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border-left: 4px solid var(--danger);
+}

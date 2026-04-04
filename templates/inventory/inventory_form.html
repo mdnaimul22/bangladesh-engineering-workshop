@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ _('Add Inventory') }} - {{ _('Bangladesh Engineering Workshop') }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1>
+        <span class="material-icons v-middle">inventory_2</span> {{ _('Add Inventory Item') }}
+    </h1>
+    <div class="header-actions">
+        <a href="{{ url_for('inventory.inventory_list') }}" class="btn btn-secondary">
+            <span class="material-icons">arrow_back</span> {{ _('Back') }}
+        </a>
+    </div>
+</section>
+
+<section class="shop-form-section">
+
+    <form method="POST" class="shop-form">
+        <div class="erp-form-card">
+            <!-- Row 1: Source Shop, Material Name, Purchase Date -->
+            <div class="grid-3 mb-3">
+                <div class="form-group mb-0">
+                    <label for="shop_id" class="header-label"><span class="material-icons v-middle">storefront</span> {{
+                        _('Source Shop') }}</label>
+                    <select name="shop_id" id="shop_id" class="form-control" required>
+                        <option value="">-- {{ _('Select Shop') }} --</option>
+                        {% for shop in shops %}
+                        <option value="{{ shop.id }}">{{ shop.name }} ({{ shop.proprietor }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group mb-0">
+                    <label for="material_name" class="header-label"><span
+                            class="material-icons v-middle">category</span> {{ _('Material Name') }}</label>
+                    <input type="text" name="material_name" id="material_name" class="form-control" required
+                        placeholder="{{ _('e.g. Steel Pipe 2 inch') }}">
+                </div>
+
+                <div class="form-group mb-0">
+                    <label for="purchase_date" class="header-label"><span
+                            class="material-icons v-middle">calendar_today</span> {{ _('Purchase Date') }}</label>
+                    <input type="date" name="purchase_date" id="purchase_date" class="form-control"
+                        value="{{ now_date }}">
+                </div>
+            </div>
+
+            <!-- Row 2: Quantity, Cost, Tags -->
+            <div class="grid-3 mb-0">
+                <div class="form-group mb-0">
+                    <label for="quantity" class="header-label"><span class="material-icons v-middle">balance</span> {{
+                        _('Quantity') }}</label>
+                    <input type="number" step="0.01" name="quantity" id="quantity" class="form-control"
+                        placeholder="{{ _('Qty') }}">
+                </div>
+
+                <div class="form-group mb-0">
+                    <label for="cost" class="header-label"><span class="material-icons v-middle">payments</span> {{
+                        _('Cost') }}</label>
+                    <input type="number" step="0.01" name="cost" id="cost" class="form-control"
+                        placeholder="{{ _('Total Cost') }}">
+                </div>
+
+                <div class="form-group mb-0">
+                    <label for="tags" class="header-label"><span class="material-icons v-middle">label</span> {{
+                        _('Tags') }}</label>
+                    <input type="text" name="tags" id="tags" class="form-control"
+                        placeholder="{{ _('e.g. Steel, Heavy, Grade-A') }}">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions mt-4">
+            <button type="submit" class="btn btn-navy">
+                <span class="material-icons">add_circle</span> {{ _('Save Item') }}
+            </button>
+            <a href="{{ url_for('inventory.inventory_list') }}" class="btn btn-secondary">
+                <span class="material-icons">close</span> {{ _('Cancel') }}
+            </a>
+        </div>
+    </form>
+</section>
+
+<style>
+    .header-label {
+        margin-bottom: 2px !important;
+        font-size: 0.725rem !important;
+        color: #166534 !important;
+        font-weight: bold !important;
+        display: flex !important;
+        align-items: center;
+        min-height: 24px;
+    }
+</style>
+
+<script>
+    // Set default date to today
+    document.getElementById('purchase_date').valueAsDate = new Date();
+</script>
+{% endblock %}

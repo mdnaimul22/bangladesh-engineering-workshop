@@ -1,0 +1,163 @@
+/* ==========================================
+   BUTTON CONTROL PANEL (Global Theme)
+   ========================================== */
+:root {
+    --btn-primary: #3b82f6;
+    /* Keeping for backward compat */
+    --btn-navy: #3b82f6;
+    --btn-danger: #ef4444;
+    /* Keeping for backward compat */
+    --btn-red: #ef4444;
+    --btn-orange: #FF6600;
+    --btn-secondary: var(--surface);
+    --btn-text-light: #f8fafc;
+    --btn-hover-bg: rgba(255, 255, 255, 0.1);
+    --btn-transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    --btn-scale: 1.05;
+    --btn-radius: 8px;
+}
+
+/* Standard Global Buttons (120px Strict) */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.15rem;
+    padding: 0;
+    width: 120px;
+    height: 38px;
+    min-width: 120px;
+    max-width: 120px;
+    border-radius: var(--btn-radius);
+    text-decoration: none;
+    font-weight: 550;
+    font-size: 0.78rem;
+    cursor: pointer;
+    font-family: inherit;
+    transition: var(--btn-transition);
+    line-height: 1;
+    border: 2px solid transparent;
+    outline: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* --- LIST ACTION BUTTONS SECTION ---
+   Compact buttons for Edit, Delete, View in tables
+   ----------------------------------- */
+.btn-action,
+.btn-sm,
+.btn-remove-part,
+.btn-remove-item,
+.btn-remove-doc,
+.btn-remove-contact {
+    width: 38px !important;
+    min-width: 38px !important;
+    max-width: 38px !important;
+    height: 38px !important;
+    padding: 0 !important;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn .material-icons {
+    font-size: 18px;
+}
+
+.btn-16 {
+    width: 18px !important;
+    height: 18px !important;
+    min-width: 18px !important;
+    padding: 0 !important;
+    font-size: 12px !important;
+    line-height: 1 !important;
+}
+
+.btn-16 .material-icons {
+    font-size: 12px !important;
+}
+
+/* Primary Navy Variant */
+.btn-navy,
+.btn-primary {
+    background-color: var(--btn-primary);
+    color: var(--btn-text-light) !important;
+    border-color: var(--btn-primary);
+    box-shadow: 0 2px 4px rgba(30, 58, 138, 0.1);
+}
+
+.btn-navy:hover,
+.btn-primary:hover {
+    background-color: var(--btn-hover-bg);
+    color: var(--btn-primary) !important;
+    transform: scale(var(--btn-scale));
+    /* Subtle scale */
+    box-shadow: 0 8px 16px rgba(30, 58, 138, 0.2);
+    backdrop-filter: blur(4px);
+    border-color: var(--btn-primary);
+}
+
+/* Secondary Variant (Grey/Back) */
+.btn-secondary {
+    background-color: var(--btn-secondary);
+    color: var(--btn-primary) !important;
+    border: 2px solid var(--border, #e2e8f0);
+    /* Match 2px from .btn for consistency */
+}
+
+.btn-secondary:hover {
+    background-color: var(--btn-hover-bg);
+    color: var(--btn-primary) !important;
+    transform: scale(var(--btn-scale));
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(4px);
+    border-color: var(--border, #e2e8f0);
+}
+
+/* Form Actions Container */
+.form-actions {
+    display: flex;
+    gap: 1.5rem;
+    /* Increased spacing as requested */
+    align-items: center;
+    margin-top: 2rem;
+}
+
+/* Danger Variant (Red) */
+.btn-red,
+.btn-danger {
+    background-color: var(--btn-danger);
+    color: var(--btn-text-light) !important;
+    border-color: var(--btn-danger);
+    box-shadow: 0 2px 4px rgba(220, 38, 38, 0.1);
+}
+
+.btn-red:hover,
+.btn-danger:hover {
+    background-color: var(--btn-hover-bg);
+    color: var(--btn-danger) !important;
+    transform: scale(var(--btn-scale));
+    box-shadow: 0 8px 16px rgba(220, 38, 38, 0.2);
+    backdrop-filter: blur(4px);
+    border-color: var(--btn-danger);
+}
+
+/* Support for text in action buttons if needed */
+.btn-action.has-text {
+    width: auto !important;
+    min-width: auto !important;
+    max-width: none !important;
+    padding: 0 0.75rem !important;
+}
+
+
+
+/* Special Case: Header/Nav Links that look like buttons */
+.nav-link.btn-primary {
+    /* Ensure nav icons don't override buttons.css alignment */
+    height: auto !important;
+    white-space: nowrap;
+}

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>PDF Modal Test</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/work_order_detail.css') }}">
+    <style>
+        body {
+            padding: 50px;
+            font-family: Arial, sans-serif;
+        }
+
+        .test-btn {
+            padding: 10px 20px;
+            background: #1e3a5f;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>PDF Preview Modal Test</h1>
+    <button class="test-btn" onclick="openPreview('/shop_img/work_orders/category.pdf', 'Test PDF')">
+        Open Test PDF
+    </button>
+
+    <button class="test-btn" onclick="openPreview('/shop_img/gallery/xAssem1d.JPG', 'Test Image')">
+        Open Test Image
+    </button>
+
+    <!-- Preview Modal (Image/PDF) -->
+    <div id="preview-modal" class="pdf-modal-overlay" style="display: none;">
+        <div class="pdf-modal-container">
+            <div class="pdf-modal-header">
+                <h3 id="preview-modal-title" style="margin: 0; font-size: 1.1rem; color: #1e293b;"></h3>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <a id="preview-direct-link" href="" target="_blank" class="btn btn-secondary btn-sm"
+                        style="display: flex; align-items: center; gap: 4px; padding: 4px 10px !important; height: auto !important; width: auto !important;">
+                        <span class="material-icons" style="font-size: 16px;">open_in_new</span> Direct View
+                    </a>
+                    <button onclick="closePreview()" class="pdf-modal-close">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+            </div>
+            <div class="pdf-modal-body">
+                <iframe id="preview-iframe" src="" style="display: none;"></iframe>
+                <div id="preview-img-container" style="display: none;">
+                    <img id="preview-img" src="">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openPreview(url, title) {
+            console.log('openPreview called with:', url, title);
+            const modal = document.getElementById('preview-modal');
+            const iframe = document.getElementById('preview-iframe');
+            const imgContainer = document.getElementById('preview-img-container');
+            const img = document.getElementById('preview-img');
+            const titleEl = document.getElementById('preview-modal-title');
+            const directLink = document.getElementById('preview-direct-link');
+
+            console.log('Modal element:', modal);
+            console.log('Iframe element:', iframe);
+
+            titleEl.innerText = title;
+            directLink.href = url;
+
+            // Reset src before setting new one
+            iframe.src = 'about:blank';
+            img.src = '';
+
+            // Check extension
+            const isPDF = url.toLowerCase().endsWith('.pdf');
+            console.log('Is PDF:', isPDF);
+
+            if (isPDF) {
+                iframe.src = url;
+                iframe.style.display = 'block';
+                imgContainer.style.display = 'none';
+                console.log('Set iframe src to:', url);
+            } else {
+                img.src = url;
+                imgContainer.style.display = 'flex';
+                iframe.style.display = 'none';
+                console.log('Set img src to:', url);
+            }
+
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            console.log('Modal should now be visible');
+        }
+
+        function closePreview() {
+            const modal = document.getElementById('preview-modal');
+            const iframe = document.getElementById('preview-iframe');
+            const img = document.getElementById('preview-img');
+
+            modal.style.display = 'none';
+            iframe.src = 'about:blank';
+            img.src = '';
+            document.body.style.overflow = '';
+        }
+
+        document.getElementById('preview-modal').addEventListener('click', function (e) {
+            if (e.target === this) closePreview();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closePreview();
+        });
+
+        console.log('Test page loaded. Functions available:', typeof openPreview, typeof closePreview);
+    </script>
+</body>
+
+</html>
