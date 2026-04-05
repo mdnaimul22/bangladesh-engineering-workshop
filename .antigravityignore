@@ -12,4 +12,9 @@ translations
 shop_img
 uploads
 messages.pot
-python/classifire
+python/classifire/
+shop_details.db
+shop_details.json
+shop_details_backup.json
+messages.mo
+messages.po

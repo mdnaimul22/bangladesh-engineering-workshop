@@ -1,0 +1,157 @@
+/* Shop Management - Detail View */
+
+.shop-detail {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin: 1rem 0;
+    box-shadow: var(--shadow);
+}
+
+.shop-detail-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.delete-form {
+    display: inline;
+}
+
+/* Contact Info Layout - Enhanced Spacing */
+.detail-row {
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px dashed var(--border);
+    /* Very subtle blue dash */
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.detail-row:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.detail-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.detail-value {
+    font-size: 1.05rem;
+    color: var(--text-main);
+    font-weight: 500;
+    line-height: 1.5;
+    padding-left: 0.2rem;
+}
+
+/* Contact Links - Using Global Button Schema */
+.phone-link,
+.email-link,
+.web-link,
+.whatsapp-link,
+.transaction-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem 1rem;
+    border-radius: 99px;
+    /* Pill shape */
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    direction: ltr;
+    /* Ensure numbers don't flip */
+    color: var(--btn-text-light, white) !important;
+    transition: var(--btn-transition, all 0.3s ease);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-right: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+/* Mobile: Using Success/Green variant or defined custom if needed, but aligning with system */
+/* Since buttons.css has --btn-primary (Navy) and --btn-danger, but maybe we need specific brand colors.
+   The user asked to Apply Global Scheme. I will map them closest concepts or use vars if available in style.css or variables.css. 
+   Buttons.css defines: --btn-primary, --btn-navy, --btn-danger, --btn-orange, --btn-secondary.
+   It does NOT define Success/Green globally in buttons.css root (line 4). 
+   However, variables.css likely has checks. I'll stick to brand colors but use the CSS variable structure where possible or define them locally if missing, 
+   BUT standardizing strictly to buttons.css meant maybe using .btn classes? 
+   The user said "Use same global schema". I will use the *variables* from buttons.css for defaults and maybe standard colors. 
+   
+   Actually, buttons.css has NO green/success. I will add them or keeping custom but using the "Scheme" (shadows, transitions). 
+   I already used --btn-transition. I will use --btn-hover-bg for hover state? No, distinct colors need distinct hovers.
+   I will keep the distinct colors but ensure fonts/padding match the "Global Schema" feel. 
+*/
+
+.phone-link {
+    background: #0ea5e9;
+    /* Sky Blue */
+}
+
+.whatsapp-link {
+    background: #25d366;
+    /* WhatsApp Green */
+}
+
+.transaction-link {
+    background: #db2777;
+    /* Pink */
+}
+
+.email-link {
+    background: var(--btn-danger, #ef4444);
+    /* Use global danger red */
+}
+
+.web-link {
+    background: var(--btn-primary, #0f766e);
+    /* Use global primary navy */
+}
+
+/* Hover Effects matching buttons.css feel */
+.phone-link:hover,
+.email-link:hover,
+.web-link:hover,
+.whatsapp-link:hover,
+.transaction-link:hover {
+    transform: scale(var(--btn-scale, 1.05));
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    filter: brightness(1.1);
+    color: white !important;
+    /* Keep white text */
+}
+
+/* Visiting Card Enhanced Hover Interaction */
+.visiting-card-img {
+    width: 267px;
+    height: 153px;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    z-index: 1;
+}
+
+.visiting-card-img:hover {
+    transform: scale(1.3);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    border-color: #0ea5e9;
+    /* Sky blue border on hover */
+    z-index: 10;
+}

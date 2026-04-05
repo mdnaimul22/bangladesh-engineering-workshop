@@ -1,0 +1,203 @@
+/* Global Variables and Utilities */
+:root {
+    /* Modern Light Palette (Default) */
+    --primary: #2563eb;
+    --primary-dark: #1e40af;
+    --secondary: #64748b;
+    --success: #10b981;
+    --danger: #ef4444;
+    --surface: #ffffff;
+    --background: #f1f5f9;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --border: #e2e8f0;
+    --footer-bg: rgba(255, 255, 255, 0.7);
+    --card-bg: #ffffff;
+    --input-bg: #ffffff;
+
+    /* Legacy Compatibility */
+    --dark: var(--text-main);
+    --light: var(--background);
+    --text-color: var(--text-main);
+
+    /* === Z-Index Scale (Layering System) === */
+    --z-overlay: 900;
+    --z-sidebar: 950;
+    --z-header: 1000;
+    --z-dropdown: 1010;
+    --z-modal: 1100;
+    --z-toast: 1200;
+
+    /* === Header Height Reference === */
+    --header-height: 80px;
+
+    /* === Spacing Scale (8dp System) === */
+    --space-1: 0.25rem;
+    /* 4px  */
+    --space-2: 0.5rem;
+    /* 8px  */
+    --space-3: 0.75rem;
+    /* 12px */
+    --space-4: 1rem;
+    /* 16px */
+    --space-6: 1.5rem;
+    /* 24px */
+    --space-8: 2rem;
+    /* 32px */
+    --space-12: 3rem;
+    /* 48px */
+
+    /* === Button Tokens (Single Source) === */
+    --btn-primary: #3b82f6;
+    --btn-navy: #3b82f6;
+    --btn-danger: #ef4444;
+    --btn-red: #ef4444;
+    --btn-orange: #FF6600;
+    --btn-secondary: var(--surface);
+    --btn-text-light: #f8fafc;
+    --btn-hover-bg: rgba(255, 255, 255, 0.1);
+    --btn-transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    --btn-scale: 1.05;
+    --btn-radius: 8px;
+
+    /* Spacing & Effects (Light Optimized) */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --radius: 8px;
+    --radius-sm: 6px;
+    --font-main: 'Noto Sans Bengali', system-ui, -apple-system, sans-serif;
+    --font-inter: 'Inter', sans-serif;
+    --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Grid System */
+    --gap-sm: 0.75rem;
+    --gap-md: 1.5rem;
+    --gap-lg: 2rem;
+}
+
+[data-theme='dark'] {
+    /* Premium Dark Palette */
+    --primary: #3b82f6;
+    /* Vibrant Blue-500 */
+    --primary-dark: #2563eb;
+    /* Blue-600 */
+    --secondary: #94a3b8;
+    /* Slate-400 */
+    --surface: #1e293b;
+    /* Slate-800 */
+    --background: #0f172a;
+    /* Slate-950 */
+    --text-main: #f8fafc;
+    /* Slate-50 */
+    --text-muted: #94a3b8;
+    /* Slate-400 */
+    --border: #334155;
+    /* Slate-700 */
+    --footer-bg: rgba(15, 23, 42, 0.9);
+    --card-bg: #1e293b;
+    --input-bg: #0f172a;
+
+    /* Effects (Dark Optimized) */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+/* Utility Classes */
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--gap-md);
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--gap-md);
+}
+
+.grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--gap-md);
+}
+
+@media (max-width: 768px) {
+    :root {
+        --header-height: 60px;
+    }
+
+    .grid-2,
+    .grid-3,
+    .grid-4 {
+        grid-template-columns: 1fr;
+    }
+}
+
+.mb-0 {
+    margin-bottom: 0 !important;
+}
+
+.mb-1 {
+    margin-bottom: 0.5rem !important;
+}
+
+.mb-2 {
+    margin-bottom: 1rem !important;
+}
+
+.mb-3 {
+    margin-bottom: 1.5rem !important;
+}
+
+.mb-4 {
+    margin-bottom: 2rem !important;
+}
+
+.mt-1 {
+    margin-top: 0.5rem !important;
+}
+
+.mt-2 {
+    margin-top: 1rem !important;
+}
+
+.mt-3 {
+    margin-top: 1.5rem !important;
+}
+
+.mt-4 {
+    margin-top: 2rem !important;
+}
+
+.section-card {
+    background: var(--surface);
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    margin-bottom: var(--gap-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.erp-form-card {
+    background: var(--surface);
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    margin-bottom: var(--gap-lg);
+}
+
+.dynamic-row {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+}
+
+.material-icons.v-middle {
+    vertical-align: middle;
+}

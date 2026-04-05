@@ -1,0 +1,267 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ _('Edit Sale') if action == 'edit' else _('New Sale') }} - {{ _('Bangladesh Engineering Workshop')
+}}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1>
+        <span class="material-icons v-middle">{{ 'edit' if action == 'edit' else 'local_mall' }}</span>
+        {{ _('Edit Sale Record') if action == 'edit' else _('New Sale Record') }}
+    </h1>
+    <div class="header-actions">
+        <a href="{{ url_for('sales.sale_list') }}" class="btn btn-secondary">
+            <span class="material-icons">arrow_back</span> {{ _('Back') }}
+        </a>
+    </div>
+</section>
+
+<section class="shop-form-section">
+
+    <form method="POST" class="shop-form" enctype="multipart/form-data">
+
+        <!-- Header: Buyer, Date, Voucher -->
+        <div class="erp-form-card">
+            <div class="grid-3 mb-0" style="align-items: flex-end;">
+                <div class="form-group mb-0">
+                    <label for="buyer_id" class="header-label"><span class="material-icons v-middle">business</span> {{
+                        _('Select Buyer Company') }}</label>
+                    <select name="buyer_id" id="buyer_id" class="form-control" required>
+                        <option value="">-- {{ _('Select Buyer') }} --</option>
+                        {% for buyer in buyers %}
+                        <option value="{{ buyer.id }}" {{ 'selected' if sale.buyer_id==buyer.id }}>{{ buyer.company_name
+                            }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group mb-0">
+                    <label for="sale_date" class="header-label"><span
+                            class="material-icons v-middle">calendar_month</span> {{ _('Sale Date') }}</label>
+                    <input type="date" name="sale_date" id="sale_date" class="form-control"
+                        value="{{ sale.sale_date if sale.sale_date else '' }}">
+                </div>
+
+                <div class="form-group mb-0">
+                    <label for="voucher_image" class="header-label"><span
+                            class="material-icons v-middle">attach_file</span> {{ _('Voucher / Bill') }}</label>
+                    <input type="file" name="voucher_image" id="voucher_image" class="form-control" accept="image/*">
+                    {% if sale.voucher_image %}
+                    <small class="text-muted" style="display: block; margin-top: 4px;">{{ _('Current') }}: <a
+                            href="{{ url_for('shop_img', filename=sale.voucher_image) }}" target="_blank">{{
+                            sale.voucher_image.split('/')[-1] }}</a></small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Items Section -->
+        <div class="items-section card">
+            <h3 class="mb-3" style="border-bottom: 2px solid #eee; padding-bottom: 0.5rem;">
+                <span class="material-icons v-middle">list</span> {{ _('ITEMS') }}
+            </h3>
+
+            <div id="items-container">
+                {% if action == 'edit' and sale.get('items') %}
+                {% for item in sale.get('items') %}
+                <div class="item-row dynamic-row">
+                    <div class="sale-item-grid">
+                        <div class="form-group mb-0">
+                            <label>{{ _('Product Name') }}</label>
+                            <input type="text" name="product_name" class="form-control" required
+                                placeholder="{{ _('Item Name') }}" value="{{ item.product_name }}">
+                        </div>
+
+                        <div class="form-group mb-0">
+                            <label>{{ _('Weight (kg)') }}</label>
+                            <input type="number" step="0.01" name="weight" class="form-control" placeholder="0.0"
+                                value="{{ item.weight }}">
+                        </div>
+
+                        <div class="form-group mb-0">
+                            <label>{{ _('Quantity') }}</label>
+                            <input type="number" step="0.01" name="quantity" class="form-control" required
+                                placeholder="1" value="{{ item.quantity }}">
+                        </div>
+
+                        <div class="form-group mb-0">
+                            <label>{{ _('Unit Price') }}</label>
+                            <input type="number" step="0.01" name="unit_price" class="form-control" required
+                                placeholder="0.00" value="{{ item.unit_price }}">
+                        </div>
+
+                        <div class="form-group mb-0 traceability-group">
+                            <label>{{ _('Source') }}</label>
+                            <select name="inventory_link_id" class="form-control">
+                                <option value="">-- {{ _('None') }} --</option>
+                                {% for inv_item in inventory %}
+                                <option value="{{ inv_item.id }}" {{ 'selected' if item.inventory_link_id==inv_item.id
+                                    }}>{{ inv_item.material_name }} ({{ inv_item.quantity }}) - {{ inv_item.shop_name }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-0">
+                            <button type="button" class="btn btn-red btn-sm btn-remove-item"
+                                style="height: 36px; width: 100%; display: flex; align-items: center; justify-content: center; padding: 0;">
+                                <span class="material-icons" style="font-size: 18px;">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+
+            <button type="button" id="btn-add-item" class="btn btn-secondary" style="margin-top: 0.5rem;">
+                <span class="material-icons">add</span> {{ _('Add Item') }}
+            </button>
+        </div>
+
+        <!-- Submit -->
+        <div class="form-actions mt-4">
+            <button type="submit" class="btn btn-navy">
+                <span class="material-icons">save</span> {{ _('Save Changes') if action == 'edit' else _('Save Record')
+                }}
+            </button>
+            <a href="{{ url_for('sales.sale_list' if action != 'edit' else 'sales.sale_detail', sale_id=sale.id if action == 'edit' else '') }}"
+                class="btn btn-secondary">
+                <span class="material-icons">close</span> {{ _('Cancel') }}
+            </a>
+        </div>
+    </form>
+</section>
+<style>
+    .sale-item-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr) 42px;
+        gap: 10px;
+        align-items: flex-end;
+        margin-bottom: 10px;
+    }
+
+    .sale-item-grid .form-control {
+        padding: 5px 10px;
+        font-size: 0.85rem;
+        height: 36px;
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid #cbd5e1;
+        border-radius: 4px;
+    }
+
+    .sale-item-grid label,
+    .header-label {
+        margin-bottom: 2px !important;
+        font-size: 0.725rem !important;
+        color: #166534 !important;
+        font-weight: bold !important;
+        display: block;
+    }
+
+    @media (max-width: 1100px) {
+        .sale-item-grid {
+            grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+        }
+
+        .sale-item-grid .traceability-group {
+            grid-column: span 3;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .sale-item-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .sale-item-grid .traceability-group {
+            grid-column: span 1;
+        }
+    }
+</style>
+
+<!-- Template for Item Row -->
+<template id="item-row-template">
+    <div class="item-row dynamic-row">
+        <div class="sale-item-grid">
+            <div class="form-group mb-0">
+                <label>{{ _('Product Name') }}</label>
+                <input type="text" name="product_name" class="form-control" required placeholder="{{ _('Item Name') }}">
+            </div>
+
+            <div class="form-group mb-0">
+                <label>{{ _('Weight (kg)') }}</label>
+                <input type="number" step="0.01" name="weight" class="form-control" placeholder="0.0">
+            </div>
+
+            <div class="form-group mb-0">
+                <label>{{ _('Quantity') }}</label>
+                <input type="number" step="0.01" name="quantity" class="form-control" required placeholder="1">
+            </div>
+
+            <div class="form-group mb-0">
+                <label>{{ _('Unit Price') }}</label>
+                <input type="number" step="0.01" name="unit_price" class="form-control" required placeholder="0.00">
+            </div>
+
+            <div class="form-group mb-0 traceability-group">
+                <label>{{ _('Source') }}</label>
+                <select name="inventory_link_id" class="form-control">
+                    <option value="">-- {{ _('None') }} --</option>
+                    {% for inv_item in inventory %}
+                    <option value="{{ inv_item.id }}">{{ inv_item.material_name }} ({{ inv_item.quantity }}) - {{
+                        inv_item.shop_name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group mb-0">
+                <button type="button" class="btn btn-red btn-sm btn-remove-item"
+                    style="height: 36px; width: 100%; display: flex; align-items: center; justify-content: center; padding: 0;">
+                    <span class="material-icons" style="font-size: 18px;">delete</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    // Only set date if not editing
+    {% if action != 'edit' %}
+    document.getElementById('sale_date').valueAsDate = new Date();
+    {% endif %}
+
+    function addItemRow() {
+        const container = document.getElementById('items-container');
+        const template = document.getElementById('item-row-template');
+        const clone = template.content.cloneNode(true);
+
+        container.appendChild(clone);
+        attachItemHandlers();
+    }
+
+    function attachItemHandlers() {
+        document.querySelectorAll('.btn-remove-item').forEach(btn => {
+            btn.onclick = function () {
+                const rows = document.querySelectorAll('.item-row');
+                if (rows.length > 1) {
+                    this.closest('.item-row').remove();
+                } else {
+                    alert("{{ _('At least one item is required.') }}");
+                }
+            };
+        });
+    }
+
+    document.getElementById('btn-add-item').addEventListener('click', addItemRow);
+
+    // Initial setup
+    {% if action != 'edit' %}
+    addItemRow();
+    {% else %}
+    attachItemHandlers();
+    {% endif %}
+</script>
+{% endblock %}

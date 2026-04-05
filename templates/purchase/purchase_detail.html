@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block title %}Purchase Detail - {{ purchase.id }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div>
+        <h1><span class="material-icons v-middle">receipt_long</span> {{ _('Purchase') }} #{{ purchase.id }}</h1>
+        <div class="subtitle">
+            <span class="material-icons v-middle" style="font-size: 16px;">storefront</span> {{ _('Supplier') }}:
+            <a class="shop-link" href="{{ url_for('shops.shop_detail', shop_id=purchase.supplier_id) }}">{{
+                purchase.supplier_name }}</a>
+            | <span class="material-icons v-middle" style="font-size: 16px;">calendar_today</span> {{ _('Date') }}: {{
+            purchase.purchase_date_display or '-' }}
+        </div>
+    </div>
+
+    <div class="header-actions">
+        <a href="{{ url_for('purchases.edit_purchase', purchase_id=purchase.id) }}" class="btn btn-navy">
+            <span class="material-icons">edit</span> {{ _('Edit') }}
+        </a>
+        <a href="{{ url_for('purchases.shop_purchases', shop_id=purchase.supplier_id) }}" class="btn btn-secondary">
+            <span class="material-icons">arrow_back</span> {{ _('Back') }}
+        </a>
+    </div>
+</section>
+
+<div class="shop-content-grid" style="grid-template-columns: 2fr 1fr;">
+    <div class="section-card">
+        <div class="grid-4 mb-3">
+            <div class="form-group mb-0">
+                <p class="subtitle" style="font-size: 0.85rem;"><span class="material-icons v-middle"
+                        style="font-size: 14px;">receipt</span> {{ _('Voucher No') }}</p>
+                <h3 style="margin:0;">{{ purchase.voucher_no or '-' }}</h3>
+            </div>
+            <div class="form-group mb-0">
+                <p class="subtitle" style="font-size: 0.85rem;"><span class="material-icons v-middle"
+                        style="font-size: 14px;">payments</span> {{ _('Payment') }}</p>
+                <h3 style="margin:0;">{{ _(purchase.payment_status or '-') }}</h3>
+            </div>
+            <div class="form-group mb-0">
+                <p class="subtitle" style="font-size: 0.85rem;"><span class="material-icons v-middle"
+                        style="font-size: 14px;">paid</span> {{ _('Paid Amount') }}</p>
+                <h3 style="margin:0;">৳ {{ purchase.paid_amount or 0 }}</h3>
+            </div>
+            <div class="form-group mb-0">
+                <p class="subtitle" style="font-size: 0.85rem;"><span class="material-icons v-middle"
+                        style="font-size: 14px;">calculate</span> {{ _('Total Amount') }}</p>
+                <h3 style="margin:0;">৳ {{ purchase.total_amount or 0 }}</h3>
+            </div>
+        </div>
+
+        {% if purchase.notes %}
+        <div
+            style="margin-bottom: 1.5rem; padding: 1rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius: 8px;">
+            <strong>{{ _('Notes') }}:</strong>
+            <div style="margin-top: 0.5rem; color:#334155;">{{ purchase.notes }}</div>
+        </div>
+        {% endif %}
+
+        <div class="shops-table-container">
+            <table class="shops-table">
+                <thead>
+                    <tr>
+                        <th>{{ _('Item') }}</th>
+                        <th>{{ _('Spec') }}</th>
+                        <th style="text-align: center;">{{ _('Qty') }}</th>
+                        <th style="text-align: center;">{{ _('Unit') }}</th>
+                        <th style="text-align: right;">{{ _('Rate') }}</th>
+                        <th style="text-align: right;">{{ _('Total') }}</th>
+                        <th style="text-align: center;">{{ _('Stock') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in purchase.get('items', []) %}
+                    <tr>
+                        <td style="padding: 1rem; border-bottom: 1px solid #f1f5f9; text-align: right;">{{
+                            item.rate_per_unit }}</td>
+                        <td style="padding: 1rem; border-bottom: 1px solid #f1f5f9; text-align: right;">{{
+                            item.total_amount }}</td>
+                        <td style="padding: 1rem; border-bottom: 1px solid #f1f5f9; text-align: center;">{{
+                            item.stock_status or '-' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="shop-sidebar">
+        <div class="section-card">
+            <h3 class="mb-2"><span class="material-icons v-middle">attach_file</span> {{ _('Voucher') }}</h3>
+            {% if purchase.voucher_file_path %}
+            <div style="border: 1px solid #ddd; padding: 0.5rem; border-radius: 6px; background: white;">
+                <a href="{{ url_for('shop_img', filename=purchase.voucher_file_path) }}" target="_blank">
+                    <img src="{{ url_for('shop_img', filename=purchase.voucher_file_path) }}" alt="Voucher"
+                        style="width: 100%; border-radius: 4px;">
+                </a>
+            </div>
+            <p style="text-align: center; margin-top: 0.5rem; font-size: 0.8rem; color: #666;">{{ _('Click to view full
+                size') }}</p>
+            {% else %}
+            <p style="color: #999; font-style: italic;">{{ _('No voucher uploaded for this purchase.') }}</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+</section>
+{% endblock %}

@@ -57,7 +57,14 @@
         <p class="reference-text" style="font-size: 0.9rem; margin-bottom: 1rem;">
             Our team is ready to assist with breakdowns and emergency maintenance.
         </p>
-        <a href="#" class="btn btn-primary" style="width: 15%; text-align: center;">Contact Us</a>
+        <div class="form-actions" style="justify-content: flex-start; margin-top: 1rem; gap: 1rem;">
+            <a href="tel:+8801906399161" class="btn btn-navy">
+                <span class="material-icons">call</span> {{ _('Contact Us') }}
+            </a>
+            <a href="{{ url_for('services') }}" class="btn btn-secondary">
+                <span class="material-icons">arrow_back</span> {{ _('Back to Services') }}
+            </a>
+        </div>
     </div>
 </div>
 

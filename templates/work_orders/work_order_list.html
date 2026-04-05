@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Work Orders - Bangladesh Engineering Workshop{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/work_order/work_order_list.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1><span class="material-icons v-middle">assignment</span> {{ _('Work Orders') }}</h1>
+    <div class="header-actions">
+        <a href="{{ url_for('work_orders.new_work_order') }}" class="btn btn-navy">
+            <span class="material-icons">add_task</span> {{ _('Add Order') }}
+        </a>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">
+            <span class="material-icons">arrow_back</span> {{ _('Back') }}
+        </a>
+    </div>
+</section>
+
+<section class="shops-section">
+    {% if work_orders %}
+    <div class="shops-table-container">
+        <table class="shops-table">
+            <thead>
+                <tr>
+                    <th><span class="material-icons">calendar_today</span> {{ _('Date') }}</th>
+                    <th><span class="material-icons">build</span> {{ _('Job') }}</th>
+                    <th style="text-align: center !important;">ID</th>
+                    <th><span class="material-icons">business</span> {{ _('Company') }}</th>
+                    <th style="text-align: center !important;"><span class="material-icons">sell</span> {{ _('Quoted
+                        Price') }}</th>
+                    <th style="text-align: center !important;"><span class="material-icons">calculate</span> {{ _('Total
+                        Cost') }}</th>
+                    <th><span class="material-icons">info</span> {{ _('Status') }}</th>
+                    <th><span class="material-icons">settings_suggest</span> {{ _('Action') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for w in work_orders %}
+                <tr>
+                    <td data-label="{{ _('Date') }}" class="work-order-date-cell">{{ w.job_date_display or '-' }}</td>
+                    <td data-label="{{ _('Job') }}">
+                        <a href="{{ url_for('work_orders.work_order_detail', work_order_id=w.id) }}"
+                            class="company-link" style="font-weight: bold;">
+                            {{ w.job_name }}
+                        </a>
+                    </td>
+                    <td data-label="ID" class="work-order-id-cell" style="text-align: center !important;">
+                        <a href="{{ url_for('work_orders.work_order_detail', work_order_id=w.id) }}"
+                            class="company-link">
+                            {{ w.display_id or w.id }}
+                        </a>
+                    </td>
+                    <td data-label="{{ _('Company') }}">
+                        <a href="{{ url_for('work_orders.work_order_detail', work_order_id=w.id) }}"
+                            class="company-link">
+                            {{ w.company_name }}
+                        </a>
+                    </td>
+                    <td data-label="{{ _('Quoted Price') }}" class="work-order-quoted-cell" style="text-align: center !important;">৳ {{
+                        "{:,.0f}".format(w.quoted_price or 0) }}</td>
+                    <td data-label="{{ _('Total Cost') }}" class="work-order-total-cell" style="text-align: center !important;">৳ {{
+                        "{:,.0f}".format(w.total_cost or 0) }}</td>
+                    <td data-label="{{ _('Status') }}">
+                        {% set status_val = (w.status or 'open')|lower %}
+                        <span
+                            class="status-badge {% if status_val == 'open' or status_val == 'in progress' or status_val == 'on hold' %}status-open{% elif status_val == 'closed' or status_val == 'completed' %}status-closed{% endif %}">
+                            {{ _(w.status or 'open') }}
+                        </span>
+                    </td>
+                    <td class="work-order-actions-cell">
+                        <div class="actions-wrapper">
+                            <a href="{{ url_for('work_orders.work_order_detail', work_order_id=w.id) }}"
+                                class="btn btn-secondary btn-sm">
+                                <span class="material-icons work_order-icon-v-middle">visibility</span>
+                            </a>
+                            <a href="{{ url_for('work_orders.edit_work_order', work_order_id=w.id) }}"
+                                class="btn btn-navy btn-sm">
+                                <span class="material-icons work_order-icon-v-middle">edit</span>
+                            </a>
+                            <form action="{{ url_for('work_orders.delete_work_order', work_order_id=w.id) }}"
+                                method="POST" class="d-inline"
+                                onsubmit="return confirm('{{ _('Are you sure you want to delete this work order?') }}');">
+                                <button type="submit" class="btn btn-red btn-sm">
+                                    <span class="material-icons work_order-icon-v-middle">delete</span>
+                                </button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="no-results">
+        <p>{{ _('No work orders found.') }}</p>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

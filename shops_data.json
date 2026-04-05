@@ -2,143 +2,228 @@
   "categories": [
     {
       "id": 1,
-      "name": "পুরাতন এম এস",
-      "name_english": ""
+      "name": "জাহাজ কাটা লোহা",
+      "name_english": "Ship Scrap"
     },
     {
       "id": 2,
-      "name": "নতুন এম এস",
-      "name_english": ""
+      "name": "এম.এস. ম্যাটেরিয়ালস",
+      "name_english": "MS Materials"
     },
     {
       "id": 3,
-      "name": "পুরাতন এস এস",
-      "name_english": ""
+      "name": "এস.এস. ম্যাটেরিয়ালস",
+      "name_english": "SS Sheets"
     },
     {
       "id": 4,
-      "name": "সীট এঙ্গেল পাইপ",
-      "name_english": ""
+      "name": "তামা ও পিতল",
+      "name_english": "Copper & Brass"
     },
     {
       "id": 5,
-      "name": "নতুন জি-আই",
-      "name_english": ""
+      "name": "অ্যালুমিনিয়াম ও সিলভার",
+      "name_english": "Aluminum & Silver"
     },
     {
       "id": 6,
-      "name": "এলুমিনিয়াম ও কপার",
-      "name_english": ""
+      "name": "দস্তা, সীসা ও টিন",
+      "name_english": "Zinc, Lead & Tin"
     },
     {
       "id": 7,
-      "name": "সি-আই পিতল এলুমিনিয়াম",
-      "name_english": ""
+      "name": "কাস্ট আয়রন ও ঢালাই",
+      "name_english": "CI Foundry Items"
     },
     {
       "id": 8,
-      "name": "মেশিন টুলস",
-      "name_english": ""
+      "name": "লেদ ও শেপার মেশিন",
+      "name_english": "Lathe & Shaper Machine"
     },
     {
       "id": 9,
-      "name": "পাওয়ার টুলস",
-      "name_english": ""
+      "name": "মিলিং ও বোরিং মেশিন",
+      "name_english": "Milling & Boring Machine"
     },
     {
       "id": 10,
-      "name": "প্ল্যাস্টিক ও টেফলন",
-      "name_english": ""
+      "name": "পাওয়ার প্রেস ও কাটিং মেশিন",
+      "name_english": "Power Press & Cutting Machine"
     },
     {
       "id": 11,
-      "name": "ইলেকট্রিক শপ",
-      "name_english": ""
+      "name": "পানি পাম্প ও কমপ্রেসর",
+      "name_english": "Water Pump & Compressor"
     },
     {
       "id": 12,
-      "name": "নতুন মটর",
-      "name_english": ""
+      "name": "জেনারেটর ও পাওয়ার সিস্টেম",
+      "name_english": "Generator & Power System"
     },
     {
       "id": 13,
-      "name": "পুরাতন মটর ও গিয়ার বক্স",
-      "name_english": ""
+      "name": "বয়লার ও হেভি ইকুইপমেন্ট",
+      "name_english": "Boiler & Heavy Equipment"
     },
     {
       "id": 14,
-      "name": "পুরাতন ব্লোয়ার",
-      "name_english": ""
+      "name": "বল বিয়ারিং ও রোলার",
+      "name_english": "Bearings"
     },
     {
       "id": 15,
-      "name": "ইজেক্টর পিন",
-      "name_english": ""
+      "name": "গিয়ার ও পিনিয়ন",
+      "name_english": "Gears & Pinions"
     },
     {
       "id": 16,
-      "name": "বয়লার নিউমেটিক",
-      "name_english": ""
+      "name": "চেইন ও চেইন ব্লক",
+      "name_english": "Chains & Chain Blocks"
     },
     {
       "id": 17,
-      "name": "বিয়ারিং",
-      "name_english": ""
+      "name": "বেল্ট ও ট্রান্সমিশন",
+      "name_english": "Belts & Transmission"
     },
     {
       "id": 18,
-      "name": "নাট বোল্ট এল-কি স্ক্রু",
-      "name_english": ""
+      "name": "সিল, ও-রিং ও অয়েল সিল",
+      "name_english": "Seals & O-Rings"
     },
     {
       "id": 19,
-      "name": "এন্ড মিল কাটার",
-      "name_english": ""
+      "name": "নাট ও বোল্ট",
+      "name_english": "Nuts & Bolts"
     },
     {
       "id": 20,
-      "name": "বেল্ট রাবার মবিল গিয়ার-অয়েল গ্রিজ হাইড্রোলিক্ ওয়েল",
-      "name_english": ""
+      "name": "পাওয়ার টুলস",
+      "name_english": "Power Tools"
     },
     {
       "id": 21,
-      "name": "গালাচুল ব্লাংকেট ফায়ার-ক্লে ইট সিমেন্ট",
-      "name_english": ""
+      "name": "হ্যান্ড টুলস ও সরঞ্জাম",
+      "name_english": "Hand Tools"
     },
     {
       "id": 22,
-      "name": "ক্রোমিয়াম শ্যাফট কাটার স্কয়ার ছয়পল-স্প্রিং কয়েল-স্প্রিং",
-      "name_english": ""
+      "name": "কাটিং টুলস ও ডাইস",
+      "name_english": "Cutting Tools & Dies"
     },
     {
       "id": 23,
-      "name": "সিএনসি ডিজাইন এন্ড টুলস",
-      "name_english": ""
+      "name": "ওয়েল্ডিং ইকুইপমেন্ট",
+      "name_english": "Welding Equipment"
     },
     {
       "id": 24,
-      "name": "লেদ মিলিং ইম্পোর্টার",
-      "name_english": ""
+      "name": "জি.আই এম.এস ও সি.আই পাইপ",
+      "name_english": "GI, MS & CI Pipes"
     },
     {
       "id": 25,
-      "name": "ট্রান্সপোর্ট",
-      "name_english": ""
+      "name": "হাইড্রোলিক পাইপ ও ফিটিংস",
+      "name_english": "Hydraulic Pipes & Fittings"
     },
     {
       "id": 26,
-      "name": "মেশিন প্রস্তুতকারক",
-      "name_english": ""
+      "name": "নিউমেটিক ও গ্যাস ফিটিংস",
+      "name_english": "Pneumatic & Gas Fittings"
     },
     {
       "id": 27,
-      "name": "ক্যারিং কন্ট্রাক্টর",
-      "name_english": ""
+      "name": "প্লাস্টিক, নাইলন ও টেফলন",
+      "name_english": "Plastic, Nylon & Teflon"
     },
     {
       "id": 28,
-      "name": "ইঞ্জিনিয়ারিং ওয়ার্কশপ",
-      "name_english": ""
+      "name": "রাবার ও পিভিসি পণ্য",
+      "name_english": "Rubber & PVC Products"
+    },
+    {
+      "id": 29,
+      "name": "অ্যাক্রিলিক ও গ্লাস শিট",
+      "name_english": "Acrylic & Glass Sheets"
+    },
+    {
+      "id": 30,
+      "name": "ইনসুলেশন ও গ্লাসউল",
+      "name_english": "Insulation & Glass Wool"
+    },
+    {
+      "id": 31,
+      "name": "রিফ্র্যাক্টরি ও ফায়ার ব্রিক",
+      "name_english": "Refractory & Fire Bricks"
+    },
+    {
+      "id": 32,
+      "name": "ওয়েল ও লুব্রিকেন্ট",
+      "name_english": "Lubricants"
+    },
+    {
+      "id": 33,
+      "name": "কৃষি ও এগ্রো মেশিনারি",
+      "name_english": "Agriculture & Agro Machinery"
+    },
+    {
+      "id": 34,
+      "name": "ইট ভাটা ও নির্মাণ যন্ত্রপাতি",
+      "name_english": "Brick Field & Construction Equipment"
+    },
+    {
+      "id": 35,
+      "name": "টেক্সটাইল ও ডাইং পার্টস",
+      "name_english": "Textile & Dyeing Parts"
+    },
+    {
+      "id": 36,
+      "name": "বেকারি ও ফুড প্রসেসিং",
+      "name_english": "Bakery & Food Processing Machinery"
+    },
+    {
+      "id": 37,
+      "name": "প্রিন্টিং ও প্যাকেজিং",
+      "name_english": "Printing & Packaging Equipment"
+    },
+    {
+      "id": 38,
+      "name": "লিফট ও ম্যাটেরিয়াল হ্যান্ডলিং",
+      "name_english": "Lift & Material Handling Equipment"
+    },
+    {
+      "id": 39,
+      "name": "মেশিন মেরামত ও রিপেয়ারিং",
+      "name_english": "Machine Repair & Servicing"
+    },
+    {
+      "id": 40,
+      "name": "কাটিং ও ফ্যাব্রিকেশন সার্ভিস",
+      "name_english": "Cutting & Fabrication Services"
+    },
+    {
+      "id": 41,
+      "name": "হার্ডেনিং ও হিট ট্রিটমেন্ট",
+      "name_english": "Hardening & Heat Treatment"
+    },
+    {
+      "id": 42,
+      "name": "নিকেল ও পলিশ সার্ভিস",
+      "name_english": "Nickel & Polishing Services"
+    },
+    {
+      "id": 43,
+      "name": "সিএনসি ডিজাইন এন্ড টুলস",
+      "name_english": "CNC Design & Cutting"
+    },
+    {
+      "id": 44,
+      "name": "মালামাল পরিবহন",
+      "name_english": "Transport Services"
+    },
+    {
+      "id": 45,
+      "name": "লোহা ও ভাঙারি ক্রয়",
+      "name_english": "Scrap Purchase"
     }
   ],
   "shops": [

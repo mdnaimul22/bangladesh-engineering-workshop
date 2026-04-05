@@ -7,11 +7,13 @@
     <title>{% block title %}বাংলাদেশ ইঞ্জিনিয়ারিং ওয়ার্কশপ{% endblock %}</title>
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/logo.svg') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='buttons.css') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link
         href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&family=Inter:wght@300;400;700&display=swap"
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
 </head>
 
 <body>
@@ -31,19 +33,45 @@
                 </a>
             </div>
 
-            <div class="nav-center"
-                style="display: flex; align-items: center; gap: 0.0rem; color: var(--primary); font-weight: 600;">
-                <span class="material-icons">call</span>
-                <span style="font-family: 'Noto Sans', sans-serif;">+880 1906399161</span>
-            </div>
             <div class="nav-links">
-                <a href="{{ url_for('index') }}" class="nav-link">{{ _('Home') }}</a>
-                <a href="{{ url_for('about') }}" class="nav-link">{{ _('About') }}</a>
+                <a href="{{ url_for('index') }}" class="nav-link">
+                    <span class="material-icons v-middle">home</span> {{ _('Home') }}
+                </a>
 
-                <a href="{{ url_for('services') }}" class="nav-link">{{ _('Our Services') }}</a>
+                <div class="dropdown">
+                    <a href="javascript:void(0)" class="nav-link">
+                        <span class="material-icons v-middle">business_center</span> {{ _('ERP') }}
+                        <span class="material-icons v-middle" style="font-size: 18px;">expand_more</span>
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('buyers.buyer_list') }}">
+                            <span class="material-icons v-middle" style="font-size: 18px;">people</span> {{
+                            _('Buyers') }}
+                        </a>
+                        <a href="{{ url_for('purchases.purchase_list') }}">
+                            <span class="material-icons v-middle" style="font-size: 18px;">shopping_cart</span> {{
+                            _('Purchases') }}
+                        </a>
+                        <a href="{{ url_for('inventory.inventory_list') }}">
+                            <span class="material-icons v-middle" style="font-size: 18px;">inventory_2</span> {{
+                            _('Inventory') }}
+                        </a>
+                        <a href="{{ url_for('work_orders.work_order_list') }}">
+                            <span class="material-icons v-middle" style="font-size: 18px;">assignment</span> {{ _('Work
+                            Orders') }}
 
-                <a href="{{ url_for('shop_list') }}" class="nav-link">{{ _('All Shops') }}</a>
-                <a href="{{ url_for('add_shop') }}" class="nav-link btn-primary">
+                        </a>
+                        <a href="{{ url_for('sales.sale_list') }}">
+                            <span class="material-icons v-middle" style="font-size: 18px;">receipt_long</span> {{
+                            _('Sales') }}
+                        </a>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('shops.shop_list') }}" class="nav-link">
+                    <span class="material-icons v-middle">storefront</span> {{ _('All Shops') }}
+                </a>
+                <a href="{{ url_for('shops.new_shop') }}" class="btn btn-navy">
                     <span class="material-icons">add_circle</span>
                     {{ _('New Shop') }}
                 </a>
@@ -56,20 +84,37 @@
                 </div>
             </div>
         </div>
+        <div class="theme-toggle-container">
+            <button id="themeToggle" class="theme-btn" title="Toggle Theme">
+                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+        </div>
     </nav>
 
     <!-- Sidebar -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h3>{{ _('Categories') }}</h3>
-            <button class="close-sidebar" id="closeSidebar">
-                <span class="material-icons">close</span>
-            </button>
         </div>
         <div class="sidebar-content">
             <div class="category-list">
                 {% for cat in categories if categories %}
-                <a href="{{ url_for('category_shops', category_id=cat.id) }}" class="sidebar-link">
+                <a href="{{ url_for('shops.category_shops', category_id=cat.id) }}" class="sidebar-link">
                     {{ cat.name }}
                 </a>
                 {% else %}
@@ -97,10 +142,64 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2026 {{ _('Bangladesh Engineering Workshop') }} | {{ _('City Bypass, Mostofar Mor, Horintana
-                Khulna') }}</p>
+    <footer class="main-footer">
+        <div class="container unified-footer-container">
+            <!-- Left: Quick Links -->
+            <div class="footer-side-column">
+                <h4>{{ _('Quick Links') }}</h4>
+                <ul class="footer-links">
+                    <li><a href="{{ url_for('about') }}"><span class="material-icons">chevron_right</span> {{ _('About
+                            Us') }}</a></li>
+
+                    <li><a href="{{ url_for('shops.shop_list') }}"><span class="material-icons">chevron_right</span> {{
+                            _('All
+                            Shops') }}</a></li>
+
+                </ul>
+            </div>
+
+            <!-- Center: Brand identity -->
+            <div class="footer-center-column">
+                <div class="footer-logo">
+                    <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="BEW Logo">
+                    <h4>{{ _('Bangladesh Engineering Workshop') }}</h4>
+                </div>
+                <p class="footer-desc">{{ _('Your trusted partner for heavy machinery repair, precision machining, and
+                    engineering solutions since years.') }}</p>
+
+            </div>
+
+            <!-- Right: Contact Info -->
+            <div class="footer-side-column">
+                <div class="footer-header-row">
+                    <div class="footer-social">
+                        <a href="tel:+8801906399161" title="Call Us"><span class="material-icons">phone</span></a>
+                        <a href="https://wa.me/8801906399161" title="WhatsApp"><span
+                                class="material-icons">chat</span></a>
+                    </div>
+                    <h4>{{ _('Contact Info') }}</h4>
+                </div>
+                <ul class="footer-contact-list">
+                    <li>
+                        <span class="material-icons">phone_android</span>
+                        <span>+880 1906 399161</span>
+                    </li>
+                    <li>
+                        <span class="material-icons">email</span>
+                        <span>info@bew-bd.com</span>
+                    </li>
+                    <li>
+                        <span class="material-icons">place</span>
+                        <span>{{ _('City Bypass, Mostofar Mor, Horintana, Khulna') }}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom-bar">
+            <div class="container">
+                <p class="footer-copyright">&copy; 2026 {{ _('Bangladesh Engineering Workshop') }}. All rights reserved.
+                </p>
+            </div>
         </div>
     </footer>
 

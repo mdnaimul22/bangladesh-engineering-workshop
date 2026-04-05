@@ -1,0 +1,397 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if action == 'add' %}{{ _('New Purchase') }}{% else %}{{ _('Edit Purchase') }}{% endif %} - {{
+_('Bangladesh Engineering Workshop') }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1>
+        <span class="material-icons v-middle">{% if action == 'add' %}add_shopping_cart{% else %}edit_note{% endif
+            %}</span>
+        {{ _('New Purchase') if action == 'add' else _('Edit Purchase') }}
+    </h1>
+    <div class="header-actions">
+        <a href="{{ url_for('purchases.purchase_list') }}" class="btn btn-secondary">
+            <span class="material-icons">arrow_back</span> {{ _('Back') }}
+        </a>
+    </div>
+</section>
+
+{% macro unit_options(selected_value='') %}
+<option value="Kg" {% if selected_value=='Kg' or selected_value=='kg' %}selected{% endif %}>{{ _('Kg') }}</option>
+<option value="Pcs" {% if selected_value=='Pcs' or selected_value=='pcs' %}selected{% endif %}>{{ _('Pcs') }}</option>
+<option value="Meter" {% if selected_value=='Meter' or selected_value=='m' %}selected{% endif %}>{{ _('Meter') }}
+</option>
+<option value="Ton" {% if selected_value=='Ton' %}selected{% endif %}>{{ _('Ton') }}</option>
+<option value="Feet" {% if selected_value=='Feet' %}selected{% endif %}>{{ _('Feet') }}</option>
+<option value="Inch" {% if selected_value=='Inch' %}selected{% endif %}>{{ _('Inch') }}</option>
+<option value="Ltr" {% if selected_value=='Ltr' or selected_value=='liter' %}selected{% endif %}>{{ _('Ltr') }}</option>
+<option value="Set" {% if selected_value=='Set' or selected_value=='set' %}selected{% endif %}>{{ _('Set') }}</option>
+<option value="Nos" {% if selected_value=='Nos' %}selected{% endif %}>{{ _('Nos') }}</option>
+<option value="Box" {% if selected_value=='Box' or selected_value=='box' %}selected{% endif %}>{{ _('Box') }}</option>
+<option value="Roll" {% if selected_value=='Roll' or selected_value=='roll' %}selected{% endif %}>{{ _('Roll') }}
+</option>
+<option value="Sheet" {% if selected_value=='Sheet' or selected_value=='sheet' %}selected{% endif %}>{{ _('Sheet') }}
+</option>
+<option value="Coil" {% if selected_value=='Coil' %}selected{% endif %}>{{ _('Coil') }}</option>
+{% endmacro %}
+
+<section class="shop-form-section">
+
+    <form method="POST" class="shop-form" enctype="multipart/form-data">
+
+        <div class="erp-form-card">
+            <div class="grid-3 mb-3">
+                <div class="form-group mb-0">
+                    <label for="supplier_id" class="header-label"><span
+                            class="material-icons v-middle">storefront</span> {{ _('Supplier') }}</label>
+                    <select name="supplier_id" id="supplier_id" class="form-control" required>
+                        <option value="">-- {{ _('Select Supplier') }} --</option>
+                        {% for s in shops %}
+                        <option value="{{ s.id }}" {% if (purchase.supplier_id and s.id==purchase.supplier_id) or
+                            (preselected_supplier_id and s.id==preselected_supplier_id) %}selected{% endif %}>
+                            {{ s.name }}{% if s.proprietor %} ({{ s.proprietor }}){% endif %}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group mb-0">
+                    <label for="purchase_date" class="header-label"><span
+                            class="material-icons v-middle">calendar_month</span> {{ _('Purchase Date') }}</label>
+                    <input type="date" name="purchase_date" id="purchase_date" class="form-control"
+                        value="{{ purchase.purchase_date or '' }}">
+                </div>
+
+                <div class="form-group mb-0">
+                    <label for="payment_status" class="header-label"><span
+                            class="material-icons v-middle">payments</span> {{ _('Payment Status') }}</label>
+                    <select name="payment_status" id="payment_status" class="form-control">
+                        <option value="pending" {% if (purchase.payment_status or 'pending' )=='pending' %}selected{%
+                            endif %}>{{ _('Pending') }}</option>
+                        <option value="done" {% if (purchase.payment_status or '' )=='done' or (purchase.payment_status
+                            or '' )=='Done' %}selected{% endif %}>{{ _('Done') }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid-3 mb-3">
+                <div class="form-group mb-0">
+                    <label for="paid_amount" class="header-label"><span class="material-icons v-middle">paid</span> {{
+                        _('Paid Amount') }}</label>
+                    <input type="number" step="0.01" name="paid_amount" id="paid_amount" class="form-control"
+                        value="{{ purchase.paid_amount or 0 }}">
+                </div>
+
+                <div class="form-group mb-0">
+                    <label for="voucher_file" class="header-label"><span
+                            class="material-icons v-middle">attach_file</span> {{ _('Voucher File') }}</label>
+                    <input type="file" name="voucher_file" id="voucher_file" class="form-control" accept="image/*">
+                    {% if purchase.voucher_file_path %}
+                    <div style="margin-top: 0.25rem;">
+                        <a class="shop-link" href="{{ url_for('shop_img', filename=purchase.voucher_file_path) }}"
+                            target="_blank" style="font-size: 0.75rem;">{{ _('View Current') }}</a>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group mb-0">
+                    <label for="notes" class="header-label"><span class="material-icons v-middle">note</span> {{
+                        _('Notes')
+                        }}</label>
+                    <textarea name="notes" id="notes" class="form-control" rows="1" style="height: 38px;"
+                        placeholder="{{ _('Optional remarks...') }}">{{ purchase.notes or '' }}</textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="items-section card">
+            <h3 class="mb-3" style="border-bottom: 2px solid #eee; padding-bottom: 0.5rem;">
+                <span class="material-icons v-middle">list</span> {{ _('Items') }}
+            </h3>
+
+            <div id="items-container">
+                {% if purchase.get('items') %}
+                {% for item in purchase.get('items') %}
+                <div class="purchase-item-row dynamic-row mb-3"
+                    style="border-bottom: 1px solid #eee; padding-bottom: 1rem;">
+                    <div class="purchase-item-grid">
+                        <div class="form-group mb-0">
+                            <label class="header-label"><span class="material-icons v-middle"
+                                    style="font-size: 14px;">label</span> {{ _('Product') }}</label>
+                            <input type="text" name="product_name" class="form-control" required
+                                value="{{ item.product_name or '' }}">
+                        </div>
+                        <div class="form-group mb-0">
+                            <label class="header-label"><span class="material-icons v-middle"
+                                    style="font-size: 14px;">info</span> {{ _('Measurement') }}</label>
+                            <input type="text" name="specification" class="form-control"
+                                value="{{ item.specification or '' }}" placeholder="e.g. 10x20">
+                        </div>
+                        <div class="form-group mb-0">
+                            <label class="header-label"><span class="material-icons v-middle"
+                                    style="font-size: 14px;">balance</span> {{ _('Qty') }}</label>
+                            <input type="number" step="0.01" name="quantity" class="form-control js-qty"
+                                value="{{ item.quantity if item.quantity else '' }}" placeholder="0">
+                        </div>
+                        <div class="form-group mb-0">
+                            <label class="header-label"><span class="material-icons v-middle"
+                                    style="font-size: 14px;">sell</span> {{ _('Rate') }}</label>
+                            <input type="number" step="0.01" name="rate_per_unit" class="form-control js-rate"
+                                value="{{ item.rate_per_unit if item.rate_per_unit else '' }}" placeholder="0">
+                        </div>
+                        <div class="form-group mb-0">
+                            <label class="header-label"><span class="material-icons v-middle"
+                                    style="font-size: 14px;">fitness_center</span> {{ _('Weight') }}</label>
+                            <input type="number" step="0.01" name="weight" class="form-control"
+                                value="{{ item.weight if item.weight else '' }}" placeholder="0">
+                        </div>
+                        <div class="form-group mb-0">
+                            <label class="header-label"><span class="material-icons v-middle"
+                                    style="font-size: 14px;">straighten</span> {{ _('Unit') }}</label>
+                            <select name="unit" class="form-control">
+                                <option value="">-- {{ _('Unit') }} --</option>
+                                {{ unit_options(item.unit) }}
+                            </select>
+                        </div>
+                        <div class="form-group mb-0">
+                            <label class="header-label"><span class="material-icons v-middle"
+                                    style="font-size: 14px;">payments</span> {{
+                                _('Total') }}</label>
+                            <div class="js-item-total-box"
+                                style="height: 38px; display: flex; align-items: center; color: #166534; background: rgba(22, 101, 52, 0.05); border: 1px solid rgba(22, 101, 52, 0.1); border-radius: 8px; padding: 0 10px; backdrop-filter: blur(4px); box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                                <span class="js-item-total-display"
+                                    style="font-weight: bold; font-size: 0.95rem;">0.00</span>
+                            </div>
+                        </div>
+                        <div class="form-group mb-0 text-center">
+                            <label class="header-label">{{ _('Action') }}</label>
+                            <button type="button" class="btn btn-red btn-action btn-remove-item"
+                                title="{{ _('Remove Item') }}" style="width: 38px; height: 38px; padding: 0;">
+                                <span class="material-icons" style="font-size: 18px;">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="purchase-item-row dynamic-row mb-3"
+                    style="border-bottom: 1px solid #eee; padding-bottom: 1rem;">
+                    <div class="purchase-item-grid">
+                        <div class="form-group mb-0">
+                            <label class="header-label"><span class="material-icons v-middle"
+                                    style="font-size: 14px;">label</span> {{ _('Product') }}</label>
+                            <input type="text" name="product_name" class="form-control" required>
+                        </div>
+                        <div class="form-group mb-0">
+                            <label class="header-label"><span class="material-icons v-middle"
+                                    style="font-size: 14px;">info</span> {{ _('Measurement') }}</label>
+                            <input type="text" name="specification" class="form-control" placeholder="e.g. 10x20">
+                        </div>
+                        <div class="form-group mb-0">
+                            <label class="header-label"><span class="material-icons v-middle"
+                                    style="font-size: 14px;">balance</span> {{ _('Qty') }}</label>
+                            <input type="number" step="0.01" name="quantity" class="form-control js-qty"
+                                placeholder="0">
+                        </div>
+                        <div class="form-group mb-0">
+                            <label class="header-label"><span class="material-icons v-middle"
+                                    style="font-size: 14px;">sell</span> {{ _('Rate') }}</label>
+                            <input type="number" step="0.01" name="rate_per_unit" class="form-control js-rate"
+                                placeholder="0">
+                        </div>
+                        <div class="form-group mb-0">
+                            <label class="header-label"><span class="material-icons v-middle"
+                                    style="font-size: 14px;">fitness_center</span> {{ _('Weight') }}</label>
+                            <input type="number" step="0.01" name="weight" class="form-control" placeholder="0">
+                        </div>
+                        <div class="form-group mb-0">
+                            <label class="header-label"><span class="material-icons v-middle"
+                                    style="font-size: 14px;">straighten</span> {{ _('Unit') }}</label>
+                            <select name="unit" class="form-control">
+                                <option value="">-- {{ _('Unit') }} --</option>
+                                {{ unit_options() }}
+                            </select>
+                        </div>
+                        <div class="form-group mb-0">
+                            <label class="header-label"><span class="material-icons v-middle"
+                                    style="font-size: 14px;">payments</span> {{
+                                _('Total') }}</label>
+                            <div class="js-item-total-box"
+                                style="height: 38px; display: flex; align-items: center; color: #166534; background: rgba(22, 101, 52, 0.05); border: 1px solid rgba(22, 101, 52, 0.1); border-radius: 8px; padding: 0 10px; backdrop-filter: blur(4px); box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                                <span class="js-item-total-display"
+                                    style="font-weight: bold; font-size: 0.95rem;">0.00</span>
+                            </div>
+                        </div>
+                        <div class="form-group mb-0 text-center">
+                            <label class="header-label">{{ _('Action') }}</label>
+                            <button type="button" class="btn btn-red btn-action btn-remove-item"
+                                title="{{ _('Remove Item') }}" style="width: 38px; height: 38px; padding: 0;">
+                                <span class="material-icons" style="font-size: 18px;">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <button type="button" id="btn-add-item" class="btn btn-secondary" style="margin-top: 0.2rem;">
+                <span class="material-icons">add</span> {{ _('Add Item') }}
+            </button>
+        </div>
+
+        <div class="form-actions mt-4">
+            <button type="submit" class="btn btn-navy">
+                <span class="material-icons">save</span>
+                {% if action == 'add' %}
+                {{ _('Save Purchase') }}
+                {% else %}
+                {{ _('Save Changes') }}
+                {% endif %}
+            </button>
+            <a href="{{ url_for('purchases.purchase_list') }}" class="btn btn-secondary">
+                <span class="material-icons">close</span> {{ _('Cancel') }}
+            </a>
+        </div>
+    </form>
+
+    <datalist id="unit-list-old" style="display:none;"></datalist>
+</section>
+
+<template id="purchase-item-template">
+    <div class="purchase-item-row dynamic-row mb-3" style="border-bottom: 1px solid #eee; padding-bottom: 1rem;">
+        <div class="purchase-item-grid">
+            <div class="form-group mb-0">
+                <label class="header-label"><span class="material-icons v-middle" style="font-size: 14px;">label</span>
+                    {{ _('Product') }}</label>
+                <input type="text" name="product_name" class="form-control" required>
+            </div>
+            <div class="form-group mb-0">
+                <label class="header-label"><span class="material-icons v-middle" style="font-size: 14px;">info</span>
+                    {{ _('Measurement') }}</label>
+                <input type="text" name="specification" class="form-control" placeholder="e.g. 10x20">
+            </div>
+            <div class="form-group mb-0">
+                <label class="header-label"><span class="material-icons v-middle"
+                        style="font-size: 14px;">balance</span> {{ _('Qty') }}</label>
+                <input type="number" step="0.01" name="quantity" class="form-control js-qty" placeholder="0">
+            </div>
+            <div class="form-group mb-0">
+                <label class="header-label"><span class="material-icons v-middle" style="font-size: 14px;">sell</span>
+                    {{ _('Rate') }}</label>
+                <input type="number" step="0.01" name="rate_per_unit" class="form-control js-rate" placeholder="0">
+            </div>
+            <div class="form-group mb-0">
+                <label class="header-label"><span class="material-icons v-middle"
+                        style="font-size: 14px;">fitness_center</span> {{ _('Weight') }}</label>
+                <input type="number" step="0.01" name="weight" class="form-control" placeholder="0">
+            </div>
+            <div class="form-group mb-0">
+                <label class="header-label"><span class="material-icons v-middle"
+                        style="font-size: 14px;">straighten</span> {{ _('Unit') }}</label>
+                <select name="unit" class="form-control">
+                    <option value="">-- {{ _('Unit') }} --</option>
+                    {{ unit_options() }}
+                </select>
+            </div>
+            <div class="form-group mb-0">
+                <label class="header-label"><span class="material-icons v-middle"
+                        style="font-size: 14px;">payments</span> {{ _('Total') }}</label>
+                <div class="js-item-total-box"
+                    style="height: 38px; display: flex; align-items: center; color: #166534; background: rgba(22, 101, 52, 0.05); border: 1px solid rgba(22, 101, 52, 0.1); border-radius: 8px; padding: 0 10px; backdrop-filter: blur(4px); box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                    <span class="js-item-total-display" style="font-weight: bold; font-size: 0.95rem;">0.00</span>
+                </div>
+            </div>
+            <div class="form-group mb-0 text-center">
+                <label class="header-label">{{ _('Action') }}</label>
+                <button type="button" class="btn btn-red btn-action btn-remove-item" title="{{ _('Remove Item') }}"
+                    style="width: 38px; height: 38px; padding: 0;">
+                    <span class="material-icons" style="font-size: 18px;">delete</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</template>
+
+<style>
+    .header-label {
+        margin-bottom: 2px !important;
+        font-size: 0.725rem !important;
+        color: #166534 !important;
+        font-weight: bold !important;
+        display: flex !important;
+        align-items: center;
+        min-height: 24px;
+    }
+
+    .purchase-item-grid {
+        display: grid;
+        grid-template-columns: 2fr 1.8fr 1fr 1fr 1fr 1fr 1.2fr 45px;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
+    @media (max-width: 992px) {
+        .purchase-item-grid {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+    }
+</style>
+
+<script>
+    function updateRowTotal(row) {
+        const qtyEl = row.querySelector('.js-qty');
+        const rateEl = row.querySelector('.js-rate');
+        const displayEl = row.querySelector('.js-item-total-display');
+        const boxEl = row.querySelector('.js-item-total-box');
+
+        if (!qtyEl || !rateEl || !displayEl || !boxEl) return;
+
+        const qty = parseFloat(qtyEl.value || '0');
+        const rate = parseFloat(rateEl.value || '0');
+        const total = qty * rate;
+
+        displayEl.textContent = total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function attachRowHandlers() {
+        document.querySelectorAll('.purchase-item-row').forEach(row => {
+            row.querySelectorAll('.js-qty, .js-rate').forEach(inp => {
+                inp.oninput = function () { updateRowTotal(row); };
+            });
+        });
+
+        document.querySelectorAll('.btn-remove-item').forEach(btn => {
+            btn.onclick = function () {
+                const rows = document.querySelectorAll('.purchase-item-row');
+                if (rows.length > 1) {
+                    this.closest('.purchase-item-row').remove();
+                } else {
+                    this.closest('.purchase-item-row').querySelectorAll('input').forEach(input => {
+                        if (input.type !== 'hidden') input.value = '';
+                    });
+                    this.closest('.purchase-item-row').querySelectorAll('select').forEach(sel => sel.selectedIndex = 0);
+                }
+            };
+        });
+
+        document.querySelectorAll('.purchase-item-row').forEach(updateRowTotal);
+    }
+
+    document.getElementById('btn-add-item').addEventListener('click', function () {
+        const container = document.getElementById('items-container');
+        const template = document.getElementById('purchase-item-template');
+        const clone = template.content.cloneNode(true);
+        container.appendChild(clone);
+        attachRowHandlers();
+    });
+
+    const purchaseDate = document.getElementById('purchase_date');
+    if (purchaseDate && !purchaseDate.value) {
+        purchaseDate.valueAsDate = new Date();
+    }
+
+    attachRowHandlers();
+</script>
+{% endblock %}

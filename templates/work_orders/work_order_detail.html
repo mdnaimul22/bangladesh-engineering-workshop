@@ -1,0 +1,445 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ _('Work Order') }} {{ work_order.display_id or work_order.id }} - {{ work_order.job_name }}
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/work_order/work_order_detail.css') }}">
+{% endblock %}
+
+{% block content %}
+<!-- ====== PAGE HEADER (Standardized) ====== -->
+<section class="page-header">
+    <div class="wo-header-info">
+        <div class="wo-header-icon-box">
+            <span class="material-icons">assignment</span>
+        </div>
+        <div>
+            <h1 class="wo-header-title">{{ work_order.job_name }}</h1>
+            <div class="subtitle">
+                {{ _('Work Order') }} #{{ work_order.display_id or work_order.id }}
+                {% if work_order.company_name %} |
+                <a href="{{ url_for('buyers.buyer_detail', buyer_id=work_order.company_id) }}"
+                    style="color: var(--primary); text-decoration: none;">
+                    {{ work_order.company_name }}
+                </a>
+                {% endif %}
+                | <span class="material-icons v-middle" style="font-size: 14px;">calendar_today</span> {{
+                work_order.job_date_display }}
+            </div>
+        </div>
+    </div>
+    <div class="header-actions">
+        <a href="{{ url_for('work_orders.edit_work_order', work_order_id=work_order.id) }}" class="btn btn-navy">
+            <span class="material-icons">edit</span> {{ _('Edit') }}
+        </a>
+        <a href="{{ url_for('work_orders.work_order_list') }}" class="btn btn-secondary">
+            <span class="material-icons">arrow_back</span> {{ _('Back') }}
+        </a>
+    </div>
+</section>
+
+<!-- ====== QUICK STATS ROW (Standardized) ====== -->
+{% set profit = (work_order.quoted_price or 0) - (work_order.total_cost or 0) %}
+<div class="grid-4 mb-2 wo-stats-grid">
+    <div class="section-card wo-stat-card price">
+        <div class="header-label wo-stat-label">{{ _('QUOTED PRICE') }}</div>
+        <div class="wo-stat-value">৳ {{ "{:,.0f}".format(work_order.quoted_price or 0) }}</div>
+    </div>
+    <div class="section-card wo-stat-card cost">
+        <div class="header-label wo-stat-label">{{ _('TOTAL COST') }}</div>
+        <div class="wo-stat-value">৳ {{ "{:,.0f}".format(work_order.total_cost or 0) }}</div>
+    </div>
+    <div class="section-card wo-stat-card {% if profit >= 0 %}profit{% else %}loss{% endif %}">
+        <div class="header-label wo-stat-label">{{ _('PROFIT / LOSS') }}</div>
+        <div class="wo-stat-value" style="color: {% if profit >= 0 %}#10b981{% else %}#ef4444{% endif %};">
+            {% if profit >= 0 %}+{% endif %}৳ {{ "{:,.0f}".format(profit) }}
+            <span class="material-icons" style="font-size: 16px; vertical-align: middle;">
+                {% if profit >= 0 %}trending_up{% else %}trending_down{% endif %}
+            </span>
+        </div>
+    </div>
+    <div class="section-card wo-stat-card status">
+        <div class="header-label wo-stat-label">{{ _('STATUS') }}</div>
+        <div class="wo-stat-value"
+            style="color: {% if (work_order.status or '').lower() == 'closed' %}#10b981{% else %}#f59e0b{% endif %};">
+            <span class="material-icons" style="font-size: 16px; vertical-align: middle;">
+                {% if (work_order.status or '').lower() == 'closed' %}check_circle{% else %}pending{% endif %}
+            </span>
+            {{ _(work_order.status or 'Open')|upper }}
+        </div>
+    </div>
+</div>
+
+<!-- ====== MAIN CONTENT GRID ====== -->
+<div class="wo-content-grid">
+
+    <!-- LEFT COLUMN: Sidebar Info -->
+    <div class="section-card">
+        {% if work_order.job_description %}
+        <div style="margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #f1f5f9;">
+            <h4 class="section-header-compact">
+                <span class="material-icons" style="font-size: 16px;">description</span>
+                {{ _('Job Description') }}
+            </h4>
+            <div
+                style="font-size: 0.85rem; color: #475569; line-height: 1.6; background: #f8fafc; padding: 10px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                {{ work_order.job_description }}
+            </div>
+        </div>
+        {% endif %}
+
+        <div style="margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #f1f5f9;">
+            <h4 class="section-header-compact">
+                <span class="material-icons" style="font-size: 16px;">event</span>
+                {{ _('Schedule') }}
+            </h4>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                    <span style="color: #64748b;">{{ _('Job Date') }}</span>
+                    <span style="color: #1e293b; font-weight: 500;">{{ work_order.job_date_display or '-' }}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem;">
+                    <span style="color: #64748b;">{{ _('Delivery Date') }}</span>
+                    <span style="color: #1e293b; font-weight: 500;">{{ work_order.delivery_date_display or '-' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid #f1f5f9;">
+            <h4 class="section-header-compact">
+                <span class="material-icons" style="font-size: 16px;">analytics</span>
+                {{ _('Cost Breakdown') }}
+            </h4>
+            <div style="display: flex; flex-direction: column; gap: 7px;">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed #f1f5f9;">
+                    <span style="color: #64748b; font-size: 0.85rem;">{{ _('Labor Charges') }}</span>
+                    <span style="color: #475569; font-weight: 500;">৳ {{ "{:,.0f}".format(work_order.labor_cost or 0)
+                        }}</span>
+                </div>
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px dashed #f1f5f9;">
+                    <span style="color: #64748b; font-size: 0.85rem;">{{ _('Material Cost') }}</span>
+                    <span style="color: #475569; font-weight: 500;">৳ {{ "{:,.0f}".format(work_order.material_cost or 0)
+                        }}</span>
+                </div>
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; margin-top: 6px; border-top: 2px solid #e2e8f0;">
+                    <span style="font-weight: 700; color: #1e293b; font-size: 0.95rem;">{{ _('Grand Total') }}</span>
+                    <strong style="font-size: 1.1rem; color: var(--primary);">৳ {{
+                        "{:,.0f}".format(work_order.total_cost or 0) }}</strong>
+                </div>
+            </div>
+        </div>
+
+        {% if work_order.hard_copy_path %}
+        <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #f1f5f9;">
+            <h4 class="section-header-compact">
+                <span class="material-icons" style="font-size: 16px;">description</span>
+                {{ _('Work Order') }}
+            </h4>
+            <div class="hard-copy-box">
+                {% set hc_url = url_for('shop_img', filename=work_order.hard_copy_path) %}
+                {% set hc_title = _('Work Order') %}
+                {% if (work_order.hard_copy_path or '').lower().endswith(('.png', '.jpg', '.jpeg', '.webp')) %}
+                <a href="javascript:void(0)" onclick="openPreview('{{ hc_url }}', '{{ hc_title }}')"
+                    style="cursor: pointer; display: block;">
+                    <img src="{{ hc_url }}"
+                        style="width: 100%; height: 240px; object-fit: cover; object-position: top; display: block;">
+                </a>
+                {% else %}
+                <div style="position: relative;">
+                    <canvas id="pdf-thumbnail-canvas" data-pdf-url="{{ hc_url }}"
+                        style="width: 100%; height: 240px; object-fit: cover; object-position: top; cursor: pointer; display: block; background: #f8fafc;"
+                        onclick="openPreview('{{ hc_url }}', '{{ hc_title }}')">
+                    </canvas>
+                    <div id="pdf-loading"
+                        style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #64748b; font-size: 0.85rem;">
+                        <span class="material-icons"
+                            style="font-size: 32px; color: #ef4444; display: block; margin-bottom: 8px;">picture_as_pdf</span>
+                        {{ _('Loading preview...') }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if work_order.notes %}
+        <div
+            style="margin-top: 1.5rem; padding: 1rem; background: #fffbeb; border-radius: 8px; border: 1px solid #fde68a;">
+            <h4
+                style="font-size: 0.85rem; font-weight: 600; color: #854d0e; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid rgba(133, 77, 14, 0.1); display: flex; align-items: center; gap: 8px;">
+                <span class="material-icons" style="font-size: 16px;">sticky_note_2</span>
+                {{ _('Production Notes') }}
+            </h4>
+            <div style="font-size: 0.85rem; color: #92400e; line-height: 1.5;">{{ work_order.notes }}</div>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- RIGHT COLUMN: Details & Lists -->
+    <div class="section-card" style="padding: 1.5rem;">
+
+        <!-- Gallery Section -->
+        {% if work_order.documents %}
+        <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid #f1f5f9;">
+            <h3
+                style="font-size: 1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 8px; color: #1e293b;">
+                <span class="material-icons" style="color: var(--primary); font-size: 20px;">collections</span>
+                {{ _('Parts Gallery') }}
+            </h3>
+            <div class="gallery-grid">
+                {% for doc in work_order.documents %}
+                {% set doc_url = url_for('shop_img', filename=doc.file_path) %}
+                {% set doc_title = _(doc.document_type) if doc.document_type else _('Document') %}
+                <div class="gallery-item-card">
+                    <div class="gallery-preview-box">
+                        {% if (doc.file_path or '').lower().endswith(('.png', '.jpg', '.jpeg', '.webp', '.gif')) %}
+                        <img src="{{ doc_url }}">
+                        <a href="javascript:void(0)" onclick="openPreview('{{ doc_url }}', '{{ doc_title }}')"
+                            class="gallery-overlay">
+                            <span class="material-icons">zoom_in</span>
+                        </a>
+                        {% else %}
+                        <div style="text-align: center;">
+                            <span class="material-icons" style="font-size: 36px; color: #ef4444;">picture_as_pdf</span>
+                            <div style="font-size: 0.65rem; font-weight: 700; color: #64748b; margin-top: 4px;">PDF
+                            </div>
+                        </div>
+                        <a href="javascript:void(0)" onclick="openPreview('{{ doc_url }}', '{{ doc_title }}')"
+                            class="gallery-overlay">
+                            <span class="material-icons">open_in_new</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                    <div style="padding: 8px 10px; border-top: 1px solid #f1f5f9;">
+                        <span
+                            style="display: inline-block; background: #f1f5f9; color: #475569; font-size: 0.6rem; font-weight: 700; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; margin-bottom: 4px;">
+                            {{ doc_title }}
+                        </span>
+                        <div style="font-size: 0.7rem; color: #64748b; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+                            title="{{ doc.notes or '' }}">
+                            {{ doc.notes or _('No description') }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Raw Materials Table -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3 style="font-size: 1.1rem; margin: 0; display: flex; align-items: center; gap: 10px; color: #1e293b;">
+                <span class="material-icons" style="color: var(--primary);">settings_suggest</span>
+                {{ _('Raw Materials & Parts') }}
+            </h3>
+        </div>
+
+        {% if work_order.parts %}
+        <div class="shops-table-container">
+            <table class="shops-table">
+                <thead>
+                    <tr>
+                        <th>{{ _('Part Name') }}</th>
+                        <th>{{ _('Measurement') }}</th>
+                        <th>{{ _('Supplier') }}</th>
+                        <th>{{ _('Qty') }}</th>
+                        <th>{{ _('Weight') }}</th>
+                        <th style="text-align: right;">{{ _('Amount') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in work_order.parts %}
+                    {% set part_voucher_url = url_for('shop_img', filename=p.voucher_file_path) if p.voucher_file_path
+                    else '' %}
+                    {% set part_voucher_title = _('Voucher') ~ ': ' ~ p.part_name %}
+                    <tr>
+                        <td>
+                            <div style="font-weight: 600; color: #1e293b;">{{ p.part_name }}</div>
+                            {% if p.voucher_file_path %}
+                            <a href="javascript:void(0)"
+                                onclick="openPreview('{{ part_voucher_url }}', '{{ part_voucher_title }}')"
+                                style="display: inline-flex; align-items: center; gap: 4px; background: {% if p.voucher_file_path.lower().endswith('.pdf') %}#fef2f2{% else %}#f8fafc{% endif %}; border: 1px solid {% if p.voucher_file_path.lower().endswith('.pdf') %}#fee2e2{% else %}#e2e8f0{% endif %}; color: {% if p.voucher_file_path.lower().endswith('.pdf') %}#dc2626{% else %}#64748b{% endif %}; font-size: 0.7rem; font-weight: 600; padding: 3px 8px; border-radius: 4px; text-decoration: none; margin-top: 6px;">
+                                <span class="material-icons" style="font-size: 12px;">{% if
+                                    p.voucher_file_path.lower().endswith('.pdf') %}picture_as_pdf{% else %}receipt{%
+                                    endif %}</span>
+                                {{ _('Voucher') }}
+                            </a>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div style="font-size: 0.85rem; color: #475569;">{{ p.measurement or '-' }}</div>
+                        </td>
+                        <td>
+                            {% if p.supplier_id %}
+                            <a href="{{ url_for('shops.shop_detail', shop_id=p.supplier_id) }}"
+                                style="display: flex; align-items: center; gap: 4px; color: var(--primary); text-decoration: none; font-weight: 500; font-size: 0.9rem;">
+                                <span class="material-icons" style="font-size: 14px;">store</span>
+                                {{ p.supplier_name or '-' }}
+                            </a>
+                            {% else %}<span style="color: #94a3b8;">-</span>{% endif %}
+                        </td>
+                        <td>
+                            <div style="font-weight: 500; color: #1e293b;">{{ p.qty or '-' }} {{ p.unit or '' }}</div>
+                        </td>
+                        <td>
+                            <div style="font-size: 0.9rem; color: #1e293b;">{% if p.weight %}{{ p.weight }} Kg{% else
+                                %}-{% endif %}</div>
+                        </td>
+                        <td style="text-align: right;">
+                            <div style="font-weight: 700; color: var(--primary); font-size: 0.95rem;">৳ {{
+                                "{:,.0f}".format(p.price or 0) }}</div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Total Cost Summary Strip -->
+        <div
+            style="background: linear-gradient(to right, rgba(14, 165, 233, 0.12), rgba(255, 255, 255, 0.05)); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(14, 165, 233, 0.15); color: #0c4a6e; padding: 1rem 1.75rem; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; box-shadow: 0 8px 32px rgba(14, 165, 233, 0.05);">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div
+                    style="width: 44px; height: 44px; background: rgba(14, 165, 233, 0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                    <span class="material-icons" style="font-size: 22px; color: #0369a1;">payments</span>
+                </div>
+                <div
+                    style="font-size: 1.1rem; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; color: #0369a1;">
+                    {{ _('Grand Total') }}</div>
+            </div>
+            <div style="font-size: 1.75rem; font-weight: 900; color: #0369a1;">
+                <span style="font-size: 1rem; font-weight: 700; opacity: 0.7; margin-right: 6px;">৳</span>{{
+                "{:,.0f}".format(work_order.total_cost or 0) }}
+            </div>
+        </div>
+
+        {% else %}
+        <div style="text-align: center; padding: 50px; color: #94a3b8;">
+            <span class="material-icons"
+                style="font-size: 48px; opacity: 0.2; display: block; margin-bottom: 10px;">inventory_2</span>
+            {{ _('No parts or materials recorded for this order.') }}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- ====== PREVIEW MODAL (Standardized & Improved) ====== -->
+<div id="preview-modal" class="pdf-modal-overlay">
+    <div class="pdf-modal-container">
+        <div class="pdf-modal-header">
+            <h3 id="preview-modal-title" style="margin: 0; font-size: 1.1rem; color: #1e293b;">{{ _('Preview') }}</h3>
+            <div class="pdf-modal-actions">
+                <a id="preview-direct-link" href="" target="_blank" class="btn btn-secondary btn-action-sm">
+                    <span class="material-icons">open_in_new</span> {{ _('View Full') }}
+                </a>
+                <button onclick="closePreview()" class="pdf-modal-close">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+        </div>
+        <div class="pdf-modal-body">
+            <iframe id="preview-iframe" src="" style="display: none;"></iframe>
+            <div id="preview-img-container" style="display: none;">
+                <img id="preview-img" src="" alt="Full Preview">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    function openPreview(url, title) {
+        const modal = document.getElementById('preview-modal');
+        const iframe = document.getElementById('preview-iframe');
+        const imgContainer = document.getElementById('preview-img-container');
+        const img = document.getElementById('preview-img');
+        const titleEl = document.getElementById('preview-modal-title');
+        const directLink = document.getElementById('preview-direct-link');
+
+        titleEl.innerText = title;
+        directLink.href = url;
+
+        // Reset state
+        iframe.src = 'about:blank';
+        img.src = '';
+        iframe.style.display = 'none';
+        imgContainer.style.display = 'none';
+
+        const isPDF = url.toLowerCase().endsWith('.pdf');
+
+        if (isPDF) {
+            iframe.src = url;
+            iframe.style.display = 'block';
+        } else {
+            img.src = url;
+            imgContainer.style.display = 'flex';
+        }
+
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closePreview() {
+        const modal = document.getElementById('preview-modal');
+        const iframe = document.getElementById('preview-iframe');
+        const img = document.getElementById('preview-img');
+
+        modal.style.display = 'none';
+        iframe.src = 'about:blank';
+        img.src = '';
+        document.body.style.overflow = '';
+    }
+
+    // Modal Background & ESC Key Close logic
+    document.getElementById('preview-modal').addEventListener('click', function (e) {
+        if (e.target === this) closePreview();
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closePreview();
+    });
+
+    // PDF Thumbnail (High Scale for Better Preview)
+    document.addEventListener('DOMContentLoaded', function () {
+        const canvas = document.getElementById('pdf-thumbnail-canvas');
+        if (!canvas) return;
+
+        const pdfUrl = canvas.getAttribute('data-pdf-url');
+        const loadingDiv = document.getElementById('pdf-loading');
+
+        if (pdfUrl) {
+            pdfjsLib.getDocument(pdfUrl).promise.then(function (pdf) {
+                pdf.getPage(1).then(function (page) {
+                    const scale = 1.5;
+                    const viewport = page.getViewport({ scale: scale });
+                    const context = canvas.getContext('2d');
+
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    const renderContext = {
+                        canvasContext: context,
+                        viewport: viewport
+                    };
+
+                    page.render(renderContext).promise.then(function () {
+                        if (loadingDiv) loadingDiv.style.display = 'none';
+                    });
+                });
+            }).catch(function (error) {
+                console.error('Error loading PDF:', error);
+                if (loadingDiv) {
+                    loadingDiv.innerHTML = '<span class="material-icons" style="font-size: 24px; color: #ef4444; display: block;">error_outline</span>';
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

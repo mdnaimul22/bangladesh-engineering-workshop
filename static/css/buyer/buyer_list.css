@@ -1,0 +1,97 @@
+/* Buyer List - Semantic Styles */
+
+/* ====== SEARCH BOX ====== */
+.buyer-search-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.buyer-search-clear-btn {
+    color: #64748b;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.buyer-search-clear-btn .material-icons {
+    font-size: 18px;
+}
+
+/* ====== TABLE ENHANCEMENTS ====== */
+.buyer-list-table th .material-icons {
+    font-size: 18px;
+    vertical-align: middle;
+    margin-right: 0.1rem !important;
+}
+
+/* Explicit Column Alignments */
+/* ALL Columns (1-5): Center Aligned */
+.buyer-list-table th:nth-child(1),
+.buyer-list-table td:nth-child(1),
+.buyer-list-table th:nth-child(2),
+.buyer-list-table td:nth-child(2),
+.buyer-list-table th:nth-child(3),
+.buyer-list-table td:nth-child(3),
+.buyer-list-table th:nth-child(4),
+.buyer-list-table td:nth-child(4),
+.buyer-list-table th:nth-child(5),
+.buyer-list-table td:nth-child(5) {
+    text-align: center !important;
+}
+
+.buyer-company-link {
+    color: var(--text-main);
+    text-decoration: none;
+}
+
+.buyer-company-link:hover {
+    color: var(--primary);
+}
+
+.buyer-company-link strong {
+    font-weight: 700;
+}
+
+/* ====== CONTACT COLUMN ====== */
+.buyer-primary-contact-name {
+    font-weight: 600;
+}
+
+.buyer-contact-designation {
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: normal;
+    margin-bottom: 2px;
+}
+
+.buyer-mobile-list {
+    padding-left: 0;
+    margin-top: 2px;
+}
+
+.buyer-mobile-link {
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.buyer-mobile-link .material-icons {
+    font-size: 14px;
+}
+
+/* ====== ACTIONS COLUMN ====== */
+.buyer-list-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.buyer-list-actions .btn-sm .material-icons {
+    font-size: 18px;
+}

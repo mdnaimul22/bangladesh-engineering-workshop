@@ -1,8 +1,25 @@
+import os
+import sys
+import uuid
+import json
+import datetime
+from flask import url_for
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import or_
-import datetime
+from sqlalchemy.orm import joinedload
 
-class ExtendedSQLAlchemy(SQLAlchemy):
+# Add the 'python' directory to the system path to allow imports from it
+basedir = os.path.abspath(os.path.dirname(__file__))
+python_dir = os.path.join(basedir, 'python')
+if python_dir not in sys.path:
+    sys.path.append(python_dir)
+
+# These are added to path in app.py but needed here too for standalone
+from semantic_search import SemanticSearch
+from search_engine import normalize_text, tokenize, calculate_score
+
+
+class SQLAlchemy(SQLAlchemy):
     def get_all_categories(self):
         cats = Category.query.order_by(Category.id).all()
         return [c.to_dict() for c in cats]
@@ -32,14 +49,9 @@ class ExtendedSQLAlchemy(SQLAlchemy):
         return [s.to_dict() for s in shops]
 
     def search_shops(self, query):
-        from search_engine import normalize_text, tokenize, calculate_score
-        from sqlalchemy.orm import joinedload
-        from semantic_search import SemanticSearch
-        
         if not query:
             return []
             
-        # Pre-process query
         normalized_query = normalize_text(query)
         query_tokens = tokenize(query)
         
@@ -51,7 +63,6 @@ class ExtendedSQLAlchemy(SQLAlchemy):
         
         semantic_scores = {r['shop_id']: r['score'] * 100 for r in semantic_results} # Scale up 0-1 to 0-100 logic
             
-        # Fetch all shops with eager loaded tags to avoid N+1 query problem
         shops = Shop.query.options(
              joinedload(Shop.shop_tags).joinedload(ShopTag.tag)
         ).all()
@@ -189,7 +200,6 @@ class ExtendedSQLAlchemy(SQLAlchemy):
         return [s.to_dict() for s in shops]
 
     def import_from_json(self, json_path):
-        import json
         with open(json_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
 
@@ -230,7 +240,821 @@ class ExtendedSQLAlchemy(SQLAlchemy):
         self.session.commit()
         return len(data['categories']), len(data['shops'])
 
-db = ExtendedSQLAlchemy()
+    # ==================== BUYER HELPERS ====================
+    def get_all_buyers(self):
+        buyers = Buyer.query.order_by(Buyer.company_name).all()
+        return [b.to_dict() for b in buyers]
+
+    def get_buyer_by_id(self, buyer_id):
+        buyer = Buyer.query.get(buyer_id)
+        return buyer.to_dict() if buyer else None
+
+    def get_buyer_profile(self, buyer_id):
+        
+        buyer = Buyer.query.get(buyer_id)
+        if not buyer:
+            return None
+        
+        data = buyer.to_dict()
+        
+        # Transaction History
+        history = []
+        for s in buyer.sales:
+            history.append({
+                'date': s.sale_date,
+                'id': s.display_id or f"S-{s.id}",
+                'type': 'Sales Order',
+                'description': f"{len(s.items)} Product(s)",
+                'amount': s.total_amount,
+                'status': 'Paid',
+                'url': url_for('sales.sale_detail', sale_id=s.id)
+            })
+            
+        
+        work_orders = WorkOrder.query.filter_by(company_id=buyer_id).order_by(WorkOrder.job_date.desc()).all()
+        for w in work_orders:
+            history.append({
+                'date': w.job_date,
+                'id': w.display_id or w.id,
+                'type': 'Work Order',
+                'description': w.job_name,
+                'amount': w.quoted_price,
+                'status': w.status.title() if w.status else 'Open',
+                'url': url_for('work_orders.work_order_detail', work_order_id=w.id)
+            })
+            
+        # Sort history by date descending
+        history.sort(key=lambda x: x['date'], reverse=True)
+        
+        # Format dates for display AFTER sorting
+        for item in history:
+            if isinstance(item['date'], (datetime.date, datetime.datetime)):
+                item['date'] = item['date'].strftime('%d-%m-%Y')
+            elif not item['date']:
+                item['date'] = '-'
+
+        data['history'] = history
+        data['work_orders_count'] = len(work_orders)
+        data['sales_count'] = len(buyer.sales)
+        data['total_sales_amount'] = sum(s.total_amount for s in buyer.sales)
+        data['created_at'] = buyer.created_at.strftime('%d-%m-%Y') if buyer.created_at else None
+        return data
+
+    def add_buyer(self, data):
+        buyer = Buyer(
+            display_id=generate_id(ID_PREFIX_BUYER),
+            company_name=data.get('company_name'),
+            address=data.get('address')
+        )
+        self.session.add(buyer)
+        self.session.flush()
+
+        contacts = data.get('contacts', [])
+        for c in contacts:
+            contact = BuyerContact(
+                buyer_id=buyer.id,
+                name=c.get('name'),
+                designation=c.get('designation'),
+                mobile=json.dumps(c.get('mobiles', [])),
+                whatsapp=c.get('whatsapp'),
+                email=c.get('email'),
+                is_primary=c.get('is_primary', False)
+            )
+            self.session.add(contact)
+        
+        self.session.commit()
+        return buyer.id
+
+    def update_buyer(self, buyer_id, data):
+        buyer = Buyer.query.get(buyer_id)
+        if not buyer:
+            return False
+        
+        buyer.company_name = data.get('company_name')
+        buyer.address = data.get('address')
+        buyer.updated_at = datetime.datetime.now()
+
+        BuyerContact.query.filter_by(buyer_id=buyer_id).delete()
+        
+        contacts = data.get('contacts', [])
+        for c in contacts:
+            contact = BuyerContact(
+                buyer_id=buyer_id,
+                name=c.get('name'),
+                designation=c.get('designation'),
+                mobile=json.dumps(c.get('mobiles', [])),
+                whatsapp=c.get('whatsapp'),
+                email=c.get('email'),
+                is_primary=c.get('is_primary', False)
+            )
+            self.session.add(contact)
+            
+        self.session.commit()
+        return True
+
+        self.session.commit()
+        return True
+
+    def delete_buyer(self, buyer_id):
+        buyer = Buyer.query.get(buyer_id)
+        if not buyer:
+            return False, 'not_found'
+            
+        if buyer.sales:
+            return False, 'has_sales'
+            
+        work_orders = WorkOrder.query.filter_by(company_id=buyer_id).first()
+        if work_orders:
+            return False, 'has_work_orders'
+            
+        try:
+            self.session.delete(buyer)
+            self.session.commit()
+            return True, None
+        except Exception:
+            self.session.rollback()
+            return False, 'error'
+
+    # ==================== INVENTORY HELPERS ====================
+    def get_all_inventory(self):
+        inventory = InventoryItem.query.order_by(InventoryItem.purchase_date.desc()).all()
+        return [i.to_dict() for i in inventory]
+
+    def add_inventory(self, data):
+        new_item = InventoryItem(
+            shop_id=data.get('shop_id'),
+            material_name=data.get('material_name'),
+            purchase_date=data.get('purchase_date') or datetime.date.today(),
+            quantity=data.get('quantity', 0),
+            cost=data.get('cost', 0),
+            tags=data.get('tags', '')
+        )
+        self.session.add(new_item)
+        self.session.commit()
+        return new_item.id
+    
+    def get_inventory_by_id(self, item_id):
+        item = InventoryItem.query.get(item_id)
+        return item.to_dict() if item else None
+
+    def delete_inventory(self, item_id):
+        item = InventoryItem.query.get(item_id)
+        if not item:
+            return False
+        self.session.delete(item)
+        self.session.commit()
+        return True
+
+    # ==================== SALES HELPERS ====================
+    def get_all_sales(self, limit=100, offset=0):
+        sales = Sale.query.order_by(Sale.sale_date.desc()).limit(limit).offset(offset).all()
+        return [s.to_dict() for s in sales]
+        
+    def get_sales_count(self):
+        return Sale.query.count()
+
+    def get_sale_by_id(self, sale_id):
+        sale = Sale.query.get(sale_id)
+        if not sale:
+            return None
+        
+        # Detailed dict for sale
+        data = sale.to_dict()
+        data['items'] = [i.to_dict() for i in sale.items]
+        return data
+
+    def add_sale(self, data):
+        new_sale = Sale(
+            display_id=generate_id(ID_PREFIX_SALE),
+            voucher_id=generate_id(ID_PREFIX_VOUCHER_SALE),
+            buyer_id=data.get('buyer_id'),
+            sale_date=data.get('sale_date') or datetime.date.today(),
+            voucher_image=data.get('voucher_image'),
+            total_amount=0
+        )
+        self.session.add(new_sale)
+        self.session.flush()
+        
+        total = 0
+        if 'items' in data:
+            for item in data['items']:
+                line_total = float(item.get('quantity', 0)) * float(item.get('unit_price', 0))
+                total += line_total
+                
+                new_item = SaleItem(
+                    sale_id=new_sale.id,
+                    product_name=item.get('product_name'),
+                    quantity=item.get('quantity', 0),
+                    unit_price=item.get('unit_price', 0),
+                    total_price=line_total,
+                    weight=item.get('weight', 0),
+                    inventory_link_id=item.get('inventory_link_id')
+                )
+                self.session.add(new_item)
+        
+        new_sale.total_amount = total
+        self.session.commit()
+        return new_sale.id
+
+    def update_sale(self, sale_id, data):
+        sale = Sale.query.get(sale_id)
+        if not sale:
+            return False
+        
+        sale.buyer_id = data.get('buyer_id')
+        sale.sale_date = data.get('sale_date') or datetime.date.today()
+        if 'voucher_image' in data and data.get('voucher_image'):
+            sale.voucher_image = data.get('voucher_image')
+        
+        SaleItem.query.filter_by(sale_id=sale_id).delete()
+        
+        total = 0
+        if 'items' in data:
+            for item in data['items']:
+                line_total = float(item.get('quantity', 0)) * float(item.get('unit_price', 0))
+                total += line_total
+                
+                new_item = SaleItem(
+                    sale_id=sale.id,
+                    product_name=item.get('product_name'),
+                    quantity=item.get('quantity', 0),
+                    unit_price=item.get('unit_price', 0),
+                    total_price=line_total,
+                    weight=item.get('weight', 0),
+                    inventory_link_id=item.get('inventory_link_id')
+                )
+                self.session.add(new_item)
+        
+        sale.total_amount = total
+        sale.updated_at = datetime.datetime.now()
+        self.session.commit()
+        return True
+
+    def delete_sale(self, sale_id):
+        sale = Sale.query.get(sale_id)
+        if not sale:
+            return False
+        self.session.delete(sale)
+        self.session.commit()
+        return True
+
+    def get_all_supplier_purchases(self, limit=1000, offset=0):
+        purchases = SupplierPurchase.query.order_by(SupplierPurchase.purchase_date.desc()).limit(limit).offset(offset).all()
+        return [p.to_dict(include_items=False) for p in purchases]
+
+    def get_supplier_purchases(self, supplier_id, limit=1000, offset=0):
+        purchases = SupplierPurchase.query.filter_by(supplier_id=supplier_id).order_by(SupplierPurchase.purchase_date.desc()).limit(limit).offset(offset).all()
+        return [p.to_dict(include_items=False) for p in purchases]
+
+    def get_supplier_purchase_by_id(self, purchase_id):
+        purchase = SupplierPurchase.query.get(purchase_id)
+        return purchase.to_dict(include_items=True) if purchase else None
+
+    def add_supplier_purchase(self, data):
+        display_id = generate_id(ID_PREFIX_PURCHASE)
+        voucher_no = data.get('voucher_no') or ''
+        voucher_file_path = data.get('voucher_file_path') or ''
+        
+        # If file is uploaded but no custom voucher_no provided, use display_id
+        if voucher_file_path and not voucher_no:
+            voucher_no = display_id
+
+        purchase = SupplierPurchase(
+            display_id=display_id,
+            voucher_id=generate_id(ID_PREFIX_VOUCHER_PURCHASE),
+            supplier_id=int(data.get('supplier_id')),
+            purchase_date=data.get('purchase_date') or datetime.date.today(),
+            voucher_no=voucher_no,
+            voucher_file_path=voucher_file_path,
+            work_order_id=data.get('work_order_id'),
+            payment_status=data.get('payment_status') or 'pending',
+            paid_amount=float(data.get('paid_amount') or 0),
+            notes=data.get('notes') or ''
+        )
+        self.session.add(purchase)
+        self.session.flush()
+
+        items = data.get('items') or []
+        for item in items:
+            qty = float(item.get('quantity') or 0)
+            rate = float(item.get('rate_per_unit') or 0)
+            total = float(item.get('total_amount') or (qty * rate))
+            purchase_item = SupplierPurchaseItem(
+                purchase_id=purchase.id,
+                raw_material_id=item.get('raw_material_id'),  # Link to master material
+                product_name=item.get('product_name') or '',
+                specification=item.get('specification') or '',
+                quantity=qty,
+                weight=float(item.get('weight') or 0),
+                unit=item.get('unit') or '',
+                rate_per_unit=rate,
+                total_amount=total
+            )
+            self.session.add(purchase_item)
+
+        self.session.commit()
+        return purchase.id
+
+    def update_supplier_purchase(self, purchase_id, data):
+        purchase = SupplierPurchase.query.get(purchase_id)
+        if not purchase:
+            return False
+
+        if 'supplier_id' in data and data.get('supplier_id') is not None:
+            purchase.supplier_id = int(data.get('supplier_id'))
+
+        if 'purchase_date' in data and data.get('purchase_date') is not None:
+            purchase.purchase_date = data.get('purchase_date')
+
+        if 'voucher_no' in data:
+            purchase.voucher_no = data.get('voucher_no') or ''
+
+        if 'voucher_file_path' in data:
+            purchase.voucher_file_path = data.get('voucher_file_path') or ''
+
+        # If file exists and voucher_no is empty, auto-fill it
+        if purchase.voucher_file_path and not purchase.voucher_no:
+            purchase.voucher_no = purchase.display_id
+
+        if 'payment_status' in data:
+            purchase.payment_status = data.get('payment_status') or 'pending'
+
+        if 'paid_amount' in data:
+            purchase.paid_amount = float(data.get('paid_amount') or 0)
+
+        if 'notes' in data:
+            purchase.notes = data.get('notes') or ''
+
+        if 'work_order_id' in data:
+            purchase.work_order_id = data.get('work_order_id') or None
+
+        purchase.updated_at = datetime.datetime.now()
+
+        if 'items' in data:
+            SupplierPurchaseItem.query.filter_by(purchase_id=purchase_id).delete()
+            for item in (data.get('items') or []):
+                qty = float(item.get('quantity') or 0)
+                rate = float(item.get('rate_per_unit') or 0)
+                total = float(item.get('total_amount') or (qty * rate))
+                purchase_item = SupplierPurchaseItem(
+                    purchase_id=purchase.id,
+                    raw_material_id=item.get('raw_material_id'),
+                    product_name=item.get('product_name') or '',
+                    specification=item.get('specification') or '',
+                    quantity=qty,
+                    weight=float(item.get('weight') or 0),
+                    unit=item.get('unit') or '',
+                    rate_per_unit=rate,
+                    total_amount=total
+                )
+                self.session.add(purchase_item)
+
+        self.session.commit()
+        return True
+
+    def delete_supplier_purchase(self, purchase_id):
+        purchase = SupplierPurchase.query.get(purchase_id)
+        if not purchase:
+            return False
+        self.session.delete(purchase)
+        self.session.commit()
+        return True
+
+    def get_all_work_orders(self, limit=1000, offset=0):
+        work_orders = WorkOrder.query.order_by(WorkOrder.job_date.desc()).limit(limit).offset(offset).all()
+        return [w.to_dict(include_parts=False) for w in work_orders]
+
+    def get_work_order_by_id(self, work_order_id):
+        work_order = WorkOrder.query.get(work_order_id)
+        return work_order.to_dict(include_parts=True) if work_order else None
+
+    def add_work_order(self, data):
+        wo_id = generate_id(ID_PREFIX_WORK_ORDER)
+        work_order = WorkOrder(
+            id=wo_id,
+            display_id=wo_id,
+            voucher_id=generate_id(ID_PREFIX_VOUCHER_WORK_ORDER),
+            company_id=int(data.get('company_id')),
+            job_date=data.get('job_date') or datetime.date.today(),
+            job_name=data.get('job_name') or '',
+            job_description=data.get('job_description') or '',
+            status=data.get('status') or 'open',
+            payment_status=data.get('payment_status') or 'pending',
+            paid_amount=float(data.get('paid_amount') or 0),
+            pending_amount=float(data.get('pending_amount') or 0),
+            quoted_price=float(data.get('quoted_price') or 0),
+            delivery_date=data.get('delivery_date'),
+            labor_cost=float(data.get('labor_cost') or 0),
+            material_cost=float(data.get('material_cost') or 0),
+            total_cost=float(data.get('total_cost') or 0),
+            hard_copy_path=data.get('hard_copy_path') or '',
+            notes=data.get('notes') or ''
+        )
+        self.session.add(work_order)
+        self.session.flush()
+
+        parts = data.get('parts') or []
+        for part in parts:
+            s_id = part.get('supplier_id')
+            
+            # Common part data
+            part_name = part.get('part_name') or ''
+            measurement = part.get('measurement') or ''
+            qty = float(part.get('qty') or 0)
+            weight = float(part.get('weight') or 0)
+            unit = part.get('unit') or ''
+            price = float(part.get('price') or 0)
+            voucher_file_path = part.get('voucher_file_path') or ''
+            raw_mat_id = part.get('raw_material_id')
+
+            if s_id:
+                purchase_display_id = generate_id(ID_PREFIX_PURCHASE)
+                voucher_no = part.get('voucher_no') or ''
+                
+                # If file is uploaded but no custom voucher_no provided, use display_id
+                if voucher_file_path and not voucher_no:
+                    voucher_no = purchase_display_id
+
+                # Create a unified Purchase record for this part
+                purchase = SupplierPurchase(
+                    display_id=purchase_display_id,
+                    voucher_id=generate_id(ID_PREFIX_VOUCHER_PURCHASE),
+                    supplier_id=int(s_id),
+                    purchase_date=work_order.job_date,
+                    voucher_no=voucher_no,
+                    voucher_file_path=voucher_file_path,
+                    work_order_id=work_order.id,
+                    notes=f"Project Part: {part_name}",
+                    payment_status='pending',
+                    paid_amount=0.0
+                )
+                self.session.add(purchase)
+                self.session.flush()
+
+                # Add the item to the purchase
+                purchase_item = SupplierPurchaseItem(
+                    purchase_id=purchase.id,
+                    raw_material_id=raw_mat_id,
+                    product_name=part_name,
+                    specification=measurement,
+                    quantity=qty,
+                    weight=weight,
+                    unit=unit,
+                    rate_per_unit=price / qty if qty > 0 else price,
+                    total_amount=price
+                )
+                self.session.add(purchase_item)
+            else:
+                # No supplier selected, save to WorkOrderPart for tracking
+                new_part = WorkOrderPart(
+                    work_order_id=work_order.id,
+                    raw_material_id=raw_mat_id,
+                    part_name=part_name,
+                    voucher_file_path=voucher_file_path,
+                    measurement=measurement,
+                    unit=unit,
+                    qty=qty,
+                    weight=weight,
+                    price=price
+                )
+                self.session.add(new_part)
+
+        # Add Gallery Documents
+        docs = data.get('documents') or []
+        for doc in docs:
+            f_path = doc.get('file_path')
+            if not f_path:
+                continue
+            new_doc = WorkOrderDocument(
+                work_order_id=work_order.id,
+                file_path=f_path,
+                document_type=doc.get('document_type') or 'Other',
+                notes=doc.get('notes') or ''
+            )
+            self.session.add(new_doc)
+
+        self.session.commit()
+        return work_order.id
+
+    def update_work_order(self, work_order_id, data):
+        work_order = WorkOrder.query.get(work_order_id)
+        if not work_order:
+            return False
+
+        if 'company_id' in data and data.get('company_id') is not None:
+            work_order.company_id = int(data.get('company_id'))
+
+        if 'job_date' in data and data.get('job_date') is not None:
+            work_order.job_date = data.get('job_date')
+
+        if 'job_name' in data:
+            work_order.job_name = data.get('job_name') or ''
+
+        if 'job_description' in data:
+            work_order.job_description = data.get('job_description') or ''
+
+        if 'status' in data:
+            work_order.status = data.get('status') or 'open'
+
+        if 'payment_status' in data:
+            work_order.payment_status = data.get('payment_status') or 'pending'
+
+        if 'paid_amount' in data:
+            work_order.paid_amount = float(data.get('paid_amount') or 0)
+
+        if 'pending_amount' in data:
+            work_order.pending_amount = float(data.get('pending_amount') or 0)
+
+        if 'quoted_price' in data:
+            work_order.quoted_price = float(data.get('quoted_price') or 0)
+
+        if 'delivery_date' in data:
+            work_order.delivery_date = data.get('delivery_date')
+
+        if 'labor_cost' in data:
+            work_order.labor_cost = float(data.get('labor_cost') or 0)
+
+        if 'material_cost' in data:
+            work_order.material_cost = float(data.get('material_cost') or 0)
+
+        if 'total_cost' in data:
+            work_order.total_cost = float(data.get('total_cost') or 0)
+
+        if 'hard_copy_path' in data:
+            work_order.hard_copy_path = data.get('hard_copy_path') or ''
+
+        if 'notes' in data:
+            work_order.notes = data.get('notes') or ''
+
+        work_order.updated_at = datetime.datetime.now()
+
+        if 'parts' in data:
+            # Cleanup existing linked purchases and parts for this work order
+            SupplierPurchase.query.filter_by(work_order_id=work_order.id).delete()
+            WorkOrderPart.query.filter_by(work_order_id=work_order.id).delete()
+            
+            for part in (data.get('parts') or []):
+                s_id = part.get('supplier_id')
+                
+                # Common part data
+                part_name = part.get('part_name') or ''
+                measurement = part.get('measurement') or ''
+                qty = float(part.get('qty') or 0)
+                weight = float(part.get('weight') or 0)
+                unit = part.get('unit') or ''
+                price = float(part.get('price') or 0)
+                voucher_file_path = part.get('voucher_file_path') or ''
+                raw_mat_id = part.get('raw_material_id')
+
+                if s_id:
+                    purchase_display_id = generate_id(ID_PREFIX_PURCHASE)
+                    voucher_no = part.get('voucher_no') or ''
+                    
+                    if voucher_file_path and not voucher_no:
+                        voucher_no = purchase_display_id
+
+                    purchase = SupplierPurchase(
+                        display_id=purchase_display_id,
+                        voucher_id=generate_id(ID_PREFIX_VOUCHER_PURCHASE),
+                        supplier_id=int(s_id),
+                        purchase_date=work_order.job_date,
+                        voucher_no=voucher_no,
+                        voucher_file_path=voucher_file_path,
+                        work_order_id=work_order.id,
+                        notes=f"Project Part: {part_name}",
+                        payment_status='pending',
+                        paid_amount=0.0
+                    )
+                    self.session.add(purchase)
+                    self.session.flush()
+
+                    purchase_item = SupplierPurchaseItem(
+                        purchase_id=purchase.id,
+                        raw_material_id=raw_mat_id,
+                        product_name=part_name,
+                        specification=measurement,
+                        quantity=qty,
+                        weight=weight,
+                        unit=unit,
+                        rate_per_unit=price / qty if qty > 0 else price,
+                        total_amount=price
+                    )
+                    self.session.add(purchase_item)
+                else:
+                    # No supplier selected, save to WorkOrderPart
+                    new_part = WorkOrderPart(
+                        work_order_id=work_order.id,
+                        raw_material_id=raw_mat_id,
+                        part_name=part_name,
+                        voucher_file_path=voucher_file_path,
+                        measurement=measurement,
+                        unit=unit,
+                        qty=qty,
+                        weight=weight,
+                        price=price
+                    )
+                    self.session.add(new_part)
+
+            # Update Gallery Documents
+            # Simple approach: delete all and re-add (like parts)
+            WorkOrderDocument.query.filter_by(work_order_id=work_order.id).delete()
+            for doc in (data.get('documents') or []):
+                f_path = doc.get('file_path')
+                if not f_path:
+                    continue
+                new_doc = WorkOrderDocument(
+                    work_order_id=work_order.id,
+                    file_path=f_path,
+                    document_type=doc.get('document_type') or 'Other',
+                    notes=doc.get('notes') or ''
+                )
+                self.session.add(new_doc)
+
+
+        self.session.commit()
+        return True
+
+    def delete_work_order(self, work_order_id):
+        work_order = WorkOrder.query.get(work_order_id)
+        if not work_order:
+            return False
+        
+        # Manually cleanup linked purchases (since they only have a nullable FK)
+        SupplierPurchase.query.filter_by(work_order_id=work_order_id).delete()
+        
+        self.session.delete(work_order)
+        self.session.commit()
+        return True
+
+db = SQLAlchemy()
+
+# ==================== ID SEQUENCE SYSTEM ====================
+class IDSequence(db.Model):
+    """Stores the next sequence number for each ID type"""
+    __tablename__ = 'id_sequences'
+    prefix = db.Column(db.String(20), primary_key=True)  # 'BEW-B-', 'BEW-WO-', etc.
+    next_number = db.Column(db.Integer, default=1)
+
+def generate_id(prefix):
+    """Thread-safe ID generation"""
+    seq = IDSequence.query.filter_by(prefix=prefix).first()
+    if not seq:
+        seq = IDSequence(prefix=prefix, next_number=1)
+        db.session.add(seq)
+        db.session.flush()
+    current = seq.next_number
+    seq.next_number += 1
+    db.session.flush()
+    return f"{prefix}{current}"
+
+# ID Prefix Constants
+ID_PREFIX_BUYER = 'BEW-B-'
+ID_PREFIX_WORK_ORDER = 'BEW-WO-'
+ID_PREFIX_SALE = 'BEW-TRX-'
+ID_PREFIX_PURCHASE = 'BEW-BUY-'
+ID_PREFIX_RAW_MATERIAL = 'BEW-ITEM-'
+ID_PREFIX_VOUCHER_PURCHASE = 'BEW-VCH-P-'
+ID_PREFIX_VOUCHER_SALE = 'BEW-VCH-S-'
+ID_PREFIX_VOUCHER_WORK_ORDER = 'BEW-VCH-W-'
+
+# ==================== RAW MATERIAL CATEGORY ====================
+class RawMaterialCategory(db.Model):
+    """Categories for raw materials (Steel, Iron, Electrical, etc.)"""
+    __tablename__ = 'raw_material_categories'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False, unique=True)
+    name_bn = db.Column(db.String(200))  # Bengali name
+    description = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+
+    materials = db.relationship('RawMaterial', backref='category', lazy=True)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'name_bn': self.name_bn,
+            'description': self.description,
+            'material_count': len(self.materials) if self.materials else 0
+        }
+
+# ==================== RAW MATERIAL (MASTER) ====================
+class RawMaterial(db.Model):
+    """Master list of all raw materials - single source of truth for product names"""
+    __tablename__ = 'raw_materials'
+    id = db.Column(db.Integer, primary_key=True)
+    display_id = db.Column(db.String(50), unique=True, index=True)  # BEW-ITEM-1
+    category_id = db.Column(db.Integer, db.ForeignKey('raw_material_categories.id'), nullable=True)
+    name = db.Column(db.String(500), nullable=False, index=True)
+    name_bn = db.Column(db.String(500))  # Bengali name
+    default_unit = db.Column(db.String(50))  # kg, pcs, feet, etc.
+    description = db.Column(db.Text)
+    min_stock_level = db.Column(db.Float, default=0)  # Alert threshold
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+
+    # Relationships
+    stock_movements = db.relationship('StockMovement', backref='raw_material', lazy=True)
+    supplier_rates = db.relationship('SupplierMaterialRate', backref='raw_material', lazy=True)
+
+    @property
+    def current_stock(self):
+        """Calculate current stock from movements"""
+        from sqlalchemy import func
+        in_qty = db.session.query(func.coalesce(func.sum(StockMovement.quantity), 0))\
+            .filter(StockMovement.raw_material_id == self.id, 
+                    StockMovement.movement_type == 'IN').scalar() or 0
+        out_qty = db.session.query(func.coalesce(func.sum(StockMovement.quantity), 0))\
+            .filter(StockMovement.raw_material_id == self.id, 
+                    StockMovement.movement_type == 'OUT').scalar() or 0
+        return float(in_qty) - float(out_qty)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'display_id': self.display_id,
+            'category_id': self.category_id,
+            'category_name': self.category.name if self.category else None,
+            'name': self.name,
+            'name_bn': self.name_bn,
+            'default_unit': self.default_unit,
+            'description': self.description,
+            'min_stock_level': self.min_stock_level,
+            'current_stock': self.current_stock,
+            'created_at': self.created_at.isoformat() if self.created_at else None
+        }
+
+# ==================== STOCK MOVEMENT ====================
+class StockMovement(db.Model):
+    """Tracks all stock IN/OUT movements for accurate inventory"""
+    __tablename__ = 'stock_movements'
+    id = db.Column(db.Integer, primary_key=True)
+    raw_material_id = db.Column(db.Integer, db.ForeignKey('raw_materials.id'), nullable=False, index=True)
+    movement_type = db.Column(db.String(10), nullable=False)  # 'IN', 'OUT', 'ADJUST'
+    quantity = db.Column(db.Float, nullable=False)
+    unit = db.Column(db.String(50))
+    
+    # Source tracking
+    source_type = db.Column(db.String(50))  # 'purchase', 'sale', 'work_order', 'adjustment'
+    source_id = db.Column(db.String(50))    # Reference to source record (display_id)
+    
+    # For purchases: track supplier and rate
+    supplier_id = db.Column(db.Integer, db.ForeignKey('shops.id'), nullable=True)
+    rate_per_unit = db.Column(db.Float, default=0)
+    total_amount = db.Column(db.Float, default=0)
+    
+    notes = db.Column(db.Text)
+    movement_date = db.Column(db.Date, default=datetime.date.today)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+
+    # Relationships
+    supplier = db.relationship('Shop')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'raw_material_id': self.raw_material_id,
+            'raw_material_name': self.raw_material.name if self.raw_material else None,
+            'movement_type': self.movement_type,
+            'quantity': self.quantity,
+            'unit': self.unit,
+            'source_type': self.source_type,
+            'source_id': self.source_id,
+            'supplier_id': self.supplier_id,
+            'supplier_name': self.supplier.name if self.supplier else None,
+            'rate_per_unit': self.rate_per_unit,
+            'total_amount': self.total_amount,
+            'movement_date': self.movement_date.isoformat() if self.movement_date else None,
+            'movement_date_display': self.movement_date.strftime('%d-%m-%Y') if self.movement_date else '-',
+            'notes': self.notes
+        }
+
+# ==================== SUPPLIER MATERIAL RATE ====================
+class SupplierMaterialRate(db.Model):
+    """Historical rates for each material from each supplier"""
+    __tablename__ = 'supplier_material_rates'
+    id = db.Column(db.Integer, primary_key=True)
+    supplier_id = db.Column(db.Integer, db.ForeignKey('shops.id'), nullable=False, index=True)
+    raw_material_id = db.Column(db.Integer, db.ForeignKey('raw_materials.id'), nullable=False, index=True)
+    rate = db.Column(db.Float, nullable=False)
+    effective_date = db.Column(db.Date, default=datetime.date.today)
+    notes = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+
+    supplier = db.relationship('Shop')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'supplier_id': self.supplier_id,
+            'supplier_name': self.supplier.name if self.supplier else None,
+            'raw_material_id': self.raw_material_id,
+            'raw_material_name': self.raw_material.name if self.raw_material else None,
+            'rate': self.rate,
+            'effective_date': self.effective_date.isoformat() if self.effective_date else None,
+            'effective_date_display': self.effective_date.strftime('%d-%m-%Y') if self.effective_date else '-',
+            'notes': self.notes
+        }
 
 class Category(db.Model):
     __tablename__ = 'categories'
@@ -319,10 +1143,384 @@ class ShopTag(db.Model):
     
     __table_args__ = (db.UniqueConstraint('shop_id', 'tag_id', name='unique_shop_tag'),)
 
+class Buyer(db.Model):
+    __tablename__ = 'buyers'
+    id = db.Column(db.Integer, primary_key=True)
+    display_id = db.Column(db.String(50), unique=True, index=True)  # BEW-B-1
+    company_name = db.Column(db.String(500), nullable=False)
+    address = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+
+    contacts = db.relationship('BuyerContact', backref='buyer', lazy=True, cascade='all, delete-orphan')
+    sales = db.relationship('Sale', backref='buyer', lazy=True)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'display_id': self.display_id,
+            'company_name': self.company_name,
+            'address': self.address,
+            'created_at': self.created_at.isoformat(),
+            'contacts': [c.to_dict() for c in self.contacts]
+        }
+
+class BuyerContact(db.Model):
+    __tablename__ = 'buyer_contacts'
+    id = db.Column(db.Integer, primary_key=True)
+    buyer_id = db.Column(db.Integer, db.ForeignKey('buyers.id'), nullable=False)
+    name = db.Column(db.String(500))
+    designation = db.Column(db.String(500))
+    mobile = db.Column(db.Text)  # JSON-encoded list of mobiles
+    whatsapp = db.Column(db.String(200))
+    email = db.Column(db.String(200))
+    is_primary = db.Column(db.Boolean, default=False)
+
+    def to_dict(self):
+        mobiles = []
+        try:
+            if self.mobile:
+                mobiles = json.loads(self.mobile)
+                if isinstance(mobiles, str): # Handle legacy single string mobile
+                    mobiles = [mobiles]
+        except:
+            if self.mobile:
+                mobiles = [self.mobile]
+
+        return {
+            'id': self.id,
+            'buyer_id': self.buyer_id,
+            'name': self.name,
+            'designation': self.designation,
+            'mobiles': mobiles,
+            'mobile_display': ", ".join(mobiles) if mobiles else "-",
+            'whatsapp': self.whatsapp,
+            'email': self.email,
+            'is_primary': self.is_primary
+        }
+
+class InventoryItem(db.Model):
+    __tablename__ = 'inventory_items'
+    id = db.Column(db.Integer, primary_key=True)
+    shop_id = db.Column(db.Integer, db.ForeignKey('shops.id'), nullable=False)
+    material_name = db.Column(db.String(1000), nullable=False)
+    purchase_date = db.Column(db.Date, default=datetime.date.today)
+    quantity = db.Column(db.Float, default=0.0)
+    cost = db.Column(db.Float, default=0.0)
+    tags = db.Column(db.String(2000)) # Comma separated for now, or link to Tag? keeping simple as string for specific material tags
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    
+    # Relationship to shop
+    shop = db.relationship('Shop', backref='inventory_supplied')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'shop_id': self.shop_id,
+            'shop_name': self.shop.name if self.shop else 'Unknown',
+            'material_name': self.material_name,
+            'purchase_date': self.purchase_date.isoformat() if self.purchase_date else None,
+            'purchase_date_display': self.purchase_date.strftime('%d-%m-%Y') if self.purchase_date else '-',
+            'quantity': self.quantity,
+            'cost': self.cost,
+            'tags': self.tags
+        }
+
+class Sale(db.Model):
+    __tablename__ = 'sales'
+    id = db.Column(db.Integer, primary_key=True)
+    display_id = db.Column(db.String(50), unique=True, index=True)  # BEW-TRX-1
+    voucher_id = db.Column(db.String(50))  # BEW-VCH-S-1
+    buyer_id = db.Column(db.Integer, db.ForeignKey('buyers.id'), nullable=False)
+    sale_date = db.Column(db.Date, default=datetime.date.today)
+    voucher_image = db.Column(db.String(5000))
+    total_amount = db.Column(db.Float, default=0.0)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+
+    items = db.relationship('SaleItem', backref='sale', lazy=True, cascade='all, delete-orphan')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'display_id': self.display_id,
+            'voucher_id': self.voucher_id,
+            'buyer_id': self.buyer_id,
+            'buyer_name': self.buyer.company_name if self.buyer else 'Unknown',
+            'sale_date': self.sale_date.isoformat() if self.sale_date else None,
+            'sale_date_display': self.sale_date.strftime('%d-%m-%Y') if self.sale_date else '-',
+            'voucher_image': self.voucher_image,
+            'total_amount': self.total_amount,
+            'item_count': len(self.items) if self.items else 0
+        }
+
+class SaleItem(db.Model):
+    __tablename__ = 'sale_items'
+    id = db.Column(db.Integer, primary_key=True)
+    sale_id = db.Column(db.Integer, db.ForeignKey('sales.id'), nullable=False)
+    raw_material_id = db.Column(db.Integer, db.ForeignKey('raw_materials.id'), nullable=True)  # Link to master
+    product_name = db.Column(db.String(1000))  # Kept for backward compatibility
+    quantity = db.Column(db.Float, default=0.0)
+    unit_price = db.Column(db.Float, default=0.0)
+    total_price = db.Column(db.Float, default=0.0)
+    weight = db.Column(db.Float, default=0.0)
+    
+    # Traceability: Link to inventory item used (deprecated, use raw_material_id)
+    inventory_link_id = db.Column(db.Integer, db.ForeignKey('inventory_items.id'), nullable=True)
+    inventory_item = db.relationship('InventoryItem')
+    raw_material = db.relationship('RawMaterial')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'sale_id': self.sale_id,
+            'raw_material_id': self.raw_material_id,
+            'product_name': self.raw_material.name if self.raw_material else self.product_name,
+            'quantity': self.quantity,
+            'unit_price': self.unit_price,
+            'total_price': self.total_price,
+            'weight': self.weight,
+            'inventory_link_id': self.inventory_link_id,
+            'inventory_material_name': self.inventory_item.material_name if self.inventory_item else None
+        }
+
+
+class SupplierPurchase(db.Model):
+    __tablename__ = 'supplier_purchases'
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    display_id = db.Column(db.String(50), unique=True, index=True)  # BEW-BUY-1
+    voucher_id = db.Column(db.String(50))  # BEW-VCH-P-1
+    supplier_id = db.Column(db.Integer, db.ForeignKey('shops.id'), nullable=False, index=True)
+    purchase_date = db.Column(db.Date, default=datetime.date.today, nullable=False)
+    work_order_id = db.Column(db.String(36), db.ForeignKey('work_orders.id'), nullable=True, index=True)
+    voucher_no = db.Column(db.String(200))
+    voucher_file_path = db.Column(db.String(5000))
+    payment_status = db.Column(db.String(50), default='pending')
+    paid_amount = db.Column(db.Float, default=0.0)
+    notes = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+
+    supplier = db.relationship('Shop')
+    items = db.relationship('SupplierPurchaseItem', backref='purchase', lazy=True, cascade='all, delete-orphan')
+
+    def to_dict(self, include_items=False):
+        data = {
+            'id': self.id,
+            'display_id': self.display_id,
+            'voucher_id': self.voucher_id,
+            'supplier_id': self.supplier_id,
+            'supplier_name': self.supplier.name if self.supplier else 'Unknown',
+            'purchase_date': self.purchase_date.isoformat() if self.purchase_date else None,
+            'purchase_date_display': self.purchase_date.strftime('%d-%m-%Y') if self.purchase_date else '-',
+            'work_order_id': self.work_order_id,
+            'voucher_no': self.voucher_no,
+            'voucher_file_path': self.voucher_file_path,
+            'payment_status': self.payment_status,
+            'paid_amount': self.paid_amount,
+            'notes': self.notes,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }
+
+        if include_items:
+            items = [i.to_dict() for i in self.items]
+            data['items'] = items
+            data['total_amount'] = sum(float(i.get('total_amount') or 0) for i in items)
+        else:
+            data['item_count'] = len(self.items) if self.items else 0
+            data['total_amount'] = sum(float(i.total_amount or 0) for i in self.items) if self.items else 0
+
+        return data
+
+
+class SupplierPurchaseItem(db.Model):
+    __tablename__ = 'supplier_purchase_items'
+    id = db.Column(db.Integer, primary_key=True)
+    purchase_id = db.Column(db.String(36), db.ForeignKey('supplier_purchases.id', ondelete='CASCADE'), nullable=False, index=True)
+    raw_material_id = db.Column(db.Integer, db.ForeignKey('raw_materials.id'), nullable=True)  # Link to master
+    product_name = db.Column(db.String(1000))  # Kept for backward compatibility
+    specification = db.Column(db.String(2000))
+    quantity = db.Column(db.Float, default=0.0)
+    weight = db.Column(db.Float, default=0.0)
+    unit = db.Column(db.String(100))
+    rate_per_unit = db.Column(db.Float, default=0.0)
+    total_amount = db.Column(db.Float, default=0.0)
+    # stock_status removed - now tracked via StockMovement
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+
+    raw_material = db.relationship('RawMaterial')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'purchase_id': self.purchase_id,
+            'raw_material_id': self.raw_material_id,
+            'product_name': self.raw_material.name if self.raw_material else self.product_name,
+            'specification': self.specification,
+            'quantity': self.quantity,
+            'weight': self.weight,
+            'unit': self.unit,
+            'rate_per_unit': self.rate_per_unit,
+            'total_amount': self.total_amount,
+            'current_stock': self.raw_material.current_stock if self.raw_material else None
+        }
+
+
+class WorkOrder(db.Model):
+    __tablename__ = 'work_orders'
+    id = db.Column(db.String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    display_id = db.Column(db.String(50), unique=True, index=True)  # BEW-WO-1
+    voucher_id = db.Column(db.String(50))  # BEW-VCH-W-1
+    company_id = db.Column(db.Integer, db.ForeignKey('buyers.id'), nullable=False, index=True)
+    job_date = db.Column(db.Date, default=datetime.date.today, nullable=False)
+    job_name = db.Column(db.String(1000), nullable=False)
+    job_description = db.Column(db.Text)
+    status = db.Column(db.String(50), default='open')
+    payment_status = db.Column(db.String(50), default='pending')
+    paid_amount = db.Column(db.Float, default=0.0)
+    pending_amount = db.Column(db.Float, default=0.0)
+    quoted_price = db.Column(db.Float, default=0.0)
+    delivery_date = db.Column(db.Date)
+    labor_cost = db.Column(db.Float, default=0.0)
+    material_cost = db.Column(db.Float, default=0.0)
+    total_cost = db.Column(db.Float, default=0.0)
+    hard_copy_path = db.Column(db.String(5000))
+    notes = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+    updated_at = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+
+    company = db.relationship('Buyer')
+    parts = db.relationship('WorkOrderPart', backref='work_order', lazy=True, cascade='all, delete-orphan')
+    documents = db.relationship('WorkOrderDocument', backref='work_order', lazy=True, cascade='all, delete-orphan')
+
+    def to_dict(self, include_parts=False):
+        data = {
+            'id': self.id,
+            'display_id': self.display_id,
+            'voucher_id': self.voucher_id,
+            'company_id': self.company_id,
+            'company_name': self.company.company_name if self.company else 'Unknown',
+            'job_date': self.job_date.isoformat() if self.job_date else None,
+            'job_date_display': self.job_date.strftime('%d-%m-%Y') if self.job_date else '-',
+            'job_name': self.job_name,
+            'job_description': self.job_description,
+            'status': self.status,
+            'payment_status': self.payment_status,
+            'paid_amount': self.paid_amount,
+            'pending_amount': self.pending_amount,
+            'quoted_price': self.quoted_price,
+            'delivery_date': self.delivery_date.isoformat() if self.delivery_date else None,
+            'delivery_date_display': self.delivery_date.strftime('%d-%m-%Y') if self.delivery_date else '-',
+            'labor_cost': self.labor_cost,
+            'material_cost': self.material_cost,
+            'total_cost': self.total_cost,
+            'hard_copy_path': self.hard_copy_path,
+            'notes': self.notes,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }
+
+        if include_parts:
+            # Fetch parts from linked SupplierPurchase (Unified Procurement)
+            linked_purchases = SupplierPurchase.query.filter_by(work_order_id=self.id).all()
+            parts = []
+            for p in linked_purchases:
+                for item in p.items:
+                    item_dict = item.to_dict()
+                    # Map to legacy WorkOrderPart field names for UI compatibility
+                    item_dict['supplier_id'] = p.supplier_id
+                    item_dict['supplier_name'] = p.supplier.name if p.supplier else None
+                    item_dict['voucher_no'] = p.voucher_no
+                    item_dict['voucher_file_path'] = p.voucher_file_path
+                    item_dict['qty'] = item.quantity
+                    item_dict['price'] = item.total_amount
+                    item_dict['measurement'] = item.specification
+                    item_dict['part_name'] = item.product_name
+                    # Mark as linked purchase
+                    item_dict['is_linked_purchase'] = True
+                    parts.append(item_dict)
+            
+            # Also include direct parts (WorkOrderPart)
+            if self.parts:
+                parts.extend([p.to_dict() for p in self.parts])
+                
+            data['parts'] = parts
+            data['parts_cost_total'] = sum(float(p.get('price') or 0) for p in parts)
+        else:
+            # Count from both sources
+            items_count = 0
+            linked_purchases = SupplierPurchase.query.filter_by(work_order_id=self.id).all()
+            for p in linked_purchases:
+                items_count += len(p.items)
+            
+            legacy_count = len(self.parts) if self.parts else 0
+            data['parts_count'] = items_count + legacy_count
+
+        # Always include documents (for both detail and edit views)
+        data['documents'] = [d.to_dict() for d in self.documents]
+
+        return data
+
+
+class WorkOrderDocument(db.Model):
+    __tablename__ = 'work_order_documents'
+    id = db.Column(db.Integer, primary_key=True)
+    work_order_id = db.Column(db.String(36), db.ForeignKey('work_orders.id', ondelete='CASCADE'), nullable=False, index=True)
+    file_path = db.Column(db.String(5000), nullable=False)
+    document_type = db.Column(db.String(200))  # e.g., 'Drawing', 'Photo', 'HardCopy'
+    notes = db.Column(db.String(1000))
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'work_order_id': self.work_order_id,
+            'file_path': self.file_path,
+            'document_type': self.document_type,
+            'notes': self.notes,
+            'created_at': self.created_at.isoformat() if self.created_at else None
+        }
+
+class WorkOrderPart(db.Model):
+    __tablename__ = 'work_order_parts'
+    id = db.Column(db.Integer, primary_key=True)
+    work_order_id = db.Column(db.String(36), db.ForeignKey('work_orders.id', ondelete='CASCADE'), nullable=False, index=True)
+    raw_material_id = db.Column(db.Integer, db.ForeignKey('raw_materials.id'), nullable=True)  # Link to master
+    part_name = db.Column(db.String(1000))  # Kept for backward compatibility
+    supplier_id = db.Column(db.Integer, db.ForeignKey('shops.id'), nullable=True, index=True)
+    voucher_no = db.Column(db.String(200))
+    voucher_file_path = db.Column(db.String(5000))
+    measurement = db.Column(db.String(200))
+    unit = db.Column(db.String(100))
+    qty = db.Column(db.Float, default=0.0)
+    weight = db.Column(db.Float, default=0.0)
+    price = db.Column(db.Float, default=0.0)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+
+    supplier = db.relationship('Shop')
+    raw_material = db.relationship('RawMaterial')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'work_order_id': self.work_order_id,
+            'raw_material_id': self.raw_material_id,
+            'part_name': self.raw_material.name if self.raw_material else self.part_name,
+            'supplier_id': self.supplier_id,
+            'supplier_name': self.supplier.name if self.supplier else None,
+            'voucher_no': self.voucher_no,
+            'voucher_file_path': self.voucher_file_path,
+            'measurement': self.measurement,
+            'unit': self.unit,
+            'qty': self.qty,
+            'weight': self.weight,
+            'price': self.price,
+            'current_stock': self.raw_material.current_stock if self.raw_material else None
+        }
+
 if __name__ == '__main__':
     from app import app, db as app_db
-    import os
-    
     script_dir = os.path.dirname(os.path.abspath(__file__))
     json_path = os.path.join(script_dir, 'shops_data.json')
     

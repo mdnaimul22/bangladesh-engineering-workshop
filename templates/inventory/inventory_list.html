@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ _('Inventory') }} - {{ _('Bangladesh Engineering Workshop') }}{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <h1><span class="material-icons v-middle">inventory_2</span> {{ _('Raw Materials') }}</h1>
+    <div class="header-actions">
+        <a href="{{ url_for('inventory.new_inventory') }}" class="btn btn-navy">
+            <span class="material-icons">add_circle</span> {{ _('Add Material') }}
+        </a>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary">
+            <span class="material-icons">arrow_back</span> {{ _('Back') }}
+        </a>
+    </div>
+</section>
+
+<section class="shops-section">
+    {% if inventory %}
+    <div class="shops-table-container">
+        <table class="shops-table">
+            <thead>
+                <tr>
+                    <th><span class="material-icons v-middle" style="font-size: 18px;">calendar_today</span> {{
+                        _('Date') }}</th>
+                    <th><span class="material-icons v-middle" style="font-size: 18px;">category</span> {{ _('Material
+                        Name') }}</th>
+
+                    <th><span class="material-icons v-middle" style="font-size: 18px;">storefront</span> {{ _('Source
+                        Shop') }}</th>
+                    <th><span class="material-icons v-middle" style="font-size: 18px;">balance</span> {{ _('Quantity')
+                        }}</th>
+                    <th><span class="material-icons v-middle" style="font-size: 18px;">payments</span> {{ _('Cost') }}
+                    </th>
+                    <th><span class="material-icons v-middle" style="font-size: 18px;">label</span> {{ _('Tags') }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in inventory %}
+                <tr>
+                    <td>{{ item.purchase_date_display or '-' }}</td>
+                    <td>
+                        <strong>{{ item.material_name }}</strong>
+                    </td>
+                    <td>
+                        {% if item.shop_name %}
+                        <a href="{{ url_for('shops.shop_detail', shop_id=item.shop_id) }}" class="shop-link">
+                            {{ item.shop_name }}
+                        </a>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.cost }}</td>
+                    <td>
+                        {% if item.tags %}
+                        <span style="font-size: 0.85rem; color: #64748b;">{{ item.tags }}</span>
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="no-results">
+        <p>{{ _('No inventory items found.') }}</p>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}
