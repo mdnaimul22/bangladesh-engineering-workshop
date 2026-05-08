@@ -105,14 +105,12 @@ _('Bangladesh Engineering Workshop') }}{% endblock %}
             </div>
         </div>
 
-        <div class="items-section card">
+        <div class="items-section card" x-data="purchaseItems()">
             <h3 class="mb-3" style="border-bottom: 2px solid #eee; padding-bottom: 0.5rem;">
                 <span class="material-icons v-middle">list</span> {{ _('Items') }}
             </h3>
 
-            <div id="items-container">
-                {% if purchase.get('items') %}
-                {% for item in purchase.get('items') %}
+            <template x-for="(item, index) in items" :key="index">
                 <div class="purchase-item-row dynamic-row mb-3"
                     style="border-bottom: 1px solid #eee; padding-bottom: 1rem;">
                     <div class="purchase-item-grid">
@@ -120,122 +118,60 @@ _('Bangladesh Engineering Workshop') }}{% endblock %}
                             <label class="header-label"><span class="material-icons v-middle"
                                     style="font-size: 14px;">label</span> {{ _('Product') }}</label>
                             <input type="text" name="product_name" class="form-control" required
-                                value="{{ item.product_name or '' }}">
+                                x-model="item.product_name">
                         </div>
                         <div class="form-group mb-0">
                             <label class="header-label"><span class="material-icons v-middle"
                                     style="font-size: 14px;">info</span> {{ _('Measurement') }}</label>
-                            <input type="text" name="specification" class="form-control"
-                                value="{{ item.specification or '' }}" placeholder="e.g. 10x20">
+                            <input type="text" name="specification" class="form-control" placeholder="e.g. 10x20"
+                                x-model="item.specification">
                         </div>
                         <div class="form-group mb-0">
                             <label class="header-label"><span class="material-icons v-middle"
                                     style="font-size: 14px;">balance</span> {{ _('Qty') }}</label>
-                            <input type="number" step="0.01" name="quantity" class="form-control js-qty"
-                                value="{{ item.quantity if item.quantity else '' }}" placeholder="0">
+                            <input type="number" step="0.01" name="quantity" class="form-control" placeholder="0"
+                                x-model.number="item.quantity">
                         </div>
                         <div class="form-group mb-0">
                             <label class="header-label"><span class="material-icons v-middle"
                                     style="font-size: 14px;">sell</span> {{ _('Rate') }}</label>
-                            <input type="number" step="0.01" name="rate_per_unit" class="form-control js-rate"
-                                value="{{ item.rate_per_unit if item.rate_per_unit else '' }}" placeholder="0">
+                            <input type="number" step="0.01" name="rate_per_unit" class="form-control" placeholder="0"
+                                x-model.number="item.rate_per_unit">
                         </div>
                         <div class="form-group mb-0">
                             <label class="header-label"><span class="material-icons v-middle"
                                     style="font-size: 14px;">fitness_center</span> {{ _('Weight') }}</label>
-                            <input type="number" step="0.01" name="weight" class="form-control"
-                                value="{{ item.weight if item.weight else '' }}" placeholder="0">
+                            <input type="number" step="0.01" name="weight" class="form-control" placeholder="0"
+                                x-model.number="item.weight">
                         </div>
                         <div class="form-group mb-0">
                             <label class="header-label"><span class="material-icons v-middle"
                                     style="font-size: 14px;">straighten</span> {{ _('Unit') }}</label>
-                            <select name="unit" class="form-control">
-                                <option value="">-- {{ _('Unit') }} --</option>
-                                {{ unit_options(item.unit) }}
-                            </select>
-                        </div>
-                        <div class="form-group mb-0">
-                            <label class="header-label"><span class="material-icons v-middle"
-                                    style="font-size: 14px;">payments</span> {{
-                                _('Total') }}</label>
-                            <div class="js-item-total-box"
-                                style="height: 38px; display: flex; align-items: center; color: #166534; background: rgba(22, 101, 52, 0.05); border: 1px solid rgba(22, 101, 52, 0.1); border-radius: 8px; padding: 0 10px; backdrop-filter: blur(4px); box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                                <span class="js-item-total-display"
-                                    style="font-weight: bold; font-size: 0.95rem;">0.00</span>
-                            </div>
-                        </div>
-                        <div class="form-group mb-0 text-center">
-                            <label class="header-label">{{ _('Action') }}</label>
-                            <button type="button" class="btn btn-red btn-action btn-remove-item"
-                                title="{{ _('Remove Item') }}" style="width: 38px; height: 38px; padding: 0;">
-                                <span class="material-icons" style="font-size: 18px;">delete</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-                {% else %}
-                <div class="purchase-item-row dynamic-row mb-3"
-                    style="border-bottom: 1px solid #eee; padding-bottom: 1rem;">
-                    <div class="purchase-item-grid">
-                        <div class="form-group mb-0">
-                            <label class="header-label"><span class="material-icons v-middle"
-                                    style="font-size: 14px;">label</span> {{ _('Product') }}</label>
-                            <input type="text" name="product_name" class="form-control" required>
-                        </div>
-                        <div class="form-group mb-0">
-                            <label class="header-label"><span class="material-icons v-middle"
-                                    style="font-size: 14px;">info</span> {{ _('Measurement') }}</label>
-                            <input type="text" name="specification" class="form-control" placeholder="e.g. 10x20">
-                        </div>
-                        <div class="form-group mb-0">
-                            <label class="header-label"><span class="material-icons v-middle"
-                                    style="font-size: 14px;">balance</span> {{ _('Qty') }}</label>
-                            <input type="number" step="0.01" name="quantity" class="form-control js-qty"
-                                placeholder="0">
-                        </div>
-                        <div class="form-group mb-0">
-                            <label class="header-label"><span class="material-icons v-middle"
-                                    style="font-size: 14px;">sell</span> {{ _('Rate') }}</label>
-                            <input type="number" step="0.01" name="rate_per_unit" class="form-control js-rate"
-                                placeholder="0">
-                        </div>
-                        <div class="form-group mb-0">
-                            <label class="header-label"><span class="material-icons v-middle"
-                                    style="font-size: 14px;">fitness_center</span> {{ _('Weight') }}</label>
-                            <input type="number" step="0.01" name="weight" class="form-control" placeholder="0">
-                        </div>
-                        <div class="form-group mb-0">
-                            <label class="header-label"><span class="material-icons v-middle"
-                                    style="font-size: 14px;">straighten</span> {{ _('Unit') }}</label>
-                            <select name="unit" class="form-control">
+                            <select name="unit" class="form-control" x-model="item.unit">
                                 <option value="">-- {{ _('Unit') }} --</option>
                                 {{ unit_options() }}
                             </select>
                         </div>
                         <div class="form-group mb-0">
                             <label class="header-label"><span class="material-icons v-middle"
-                                    style="font-size: 14px;">payments</span> {{
-                                _('Total') }}</label>
-                            <div class="js-item-total-box"
-                                style="height: 38px; display: flex; align-items: center; color: #166534; background: rgba(22, 101, 52, 0.05); border: 1px solid rgba(22, 101, 52, 0.1); border-radius: 8px; padding: 0 10px; backdrop-filter: blur(4px); box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                                <span class="js-item-total-display"
-                                    style="font-weight: bold; font-size: 0.95rem;">0.00</span>
+                                    style="font-size: 14px;">payments</span> {{ _('Total') }}</label>
+                            <div style="height: 38px; display: flex; align-items: center; color: #166534; background: rgba(22, 101, 52, 0.05); border: 1px solid rgba(22, 101, 52, 0.1); border-radius: 8px; padding: 0 10px;">
+                                <span style="font-weight: bold; font-size: 0.95rem;"
+                                    x-text="((item.quantity || 0) * (item.rate_per_unit || 0)).toFixed(2)">0.00</span>
                             </div>
                         </div>
                         <div class="form-group mb-0 text-center">
                             <label class="header-label">{{ _('Action') }}</label>
-                            <button type="button" class="btn btn-red btn-action btn-remove-item"
+                            <button type="button" class="btn btn-red btn-action" @click="removeItem(index)"
                                 title="{{ _('Remove Item') }}" style="width: 38px; height: 38px; padding: 0;">
                                 <span class="material-icons" style="font-size: 18px;">delete</span>
                             </button>
                         </div>
                     </div>
                 </div>
-                {% endif %}
-            </div>
+            </template>
 
-            <button type="button" id="btn-add-item" class="btn btn-secondary" style="margin-top: 0.2rem;">
+            <button type="button" class="btn btn-secondary" @click="addItem()" style="margin-top: 0.2rem;">
                 <span class="material-icons">add</span> {{ _('Add Item') }}
             </button>
         </div>
@@ -257,61 +193,6 @@ _('Bangladesh Engineering Workshop') }}{% endblock %}
 
     <datalist id="unit-list-old" style="display:none;"></datalist>
 </section>
-
-<template id="purchase-item-template">
-    <div class="purchase-item-row dynamic-row mb-3" style="border-bottom: 1px solid #eee; padding-bottom: 1rem;">
-        <div class="purchase-item-grid">
-            <div class="form-group mb-0">
-                <label class="header-label"><span class="material-icons v-middle" style="font-size: 14px;">label</span>
-                    {{ _('Product') }}</label>
-                <input type="text" name="product_name" class="form-control" required>
-            </div>
-            <div class="form-group mb-0">
-                <label class="header-label"><span class="material-icons v-middle" style="font-size: 14px;">info</span>
-                    {{ _('Measurement') }}</label>
-                <input type="text" name="specification" class="form-control" placeholder="e.g. 10x20">
-            </div>
-            <div class="form-group mb-0">
-                <label class="header-label"><span class="material-icons v-middle"
-                        style="font-size: 14px;">balance</span> {{ _('Qty') }}</label>
-                <input type="number" step="0.01" name="quantity" class="form-control js-qty" placeholder="0">
-            </div>
-            <div class="form-group mb-0">
-                <label class="header-label"><span class="material-icons v-middle" style="font-size: 14px;">sell</span>
-                    {{ _('Rate') }}</label>
-                <input type="number" step="0.01" name="rate_per_unit" class="form-control js-rate" placeholder="0">
-            </div>
-            <div class="form-group mb-0">
-                <label class="header-label"><span class="material-icons v-middle"
-                        style="font-size: 14px;">fitness_center</span> {{ _('Weight') }}</label>
-                <input type="number" step="0.01" name="weight" class="form-control" placeholder="0">
-            </div>
-            <div class="form-group mb-0">
-                <label class="header-label"><span class="material-icons v-middle"
-                        style="font-size: 14px;">straighten</span> {{ _('Unit') }}</label>
-                <select name="unit" class="form-control">
-                    <option value="">-- {{ _('Unit') }} --</option>
-                    {{ unit_options() }}
-                </select>
-            </div>
-            <div class="form-group mb-0">
-                <label class="header-label"><span class="material-icons v-middle"
-                        style="font-size: 14px;">payments</span> {{ _('Total') }}</label>
-                <div class="js-item-total-box"
-                    style="height: 38px; display: flex; align-items: center; color: #166534; background: rgba(22, 101, 52, 0.05); border: 1px solid rgba(22, 101, 52, 0.1); border-radius: 8px; padding: 0 10px; backdrop-filter: blur(4px); box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-                    <span class="js-item-total-display" style="font-weight: bold; font-size: 0.95rem;">0.00</span>
-                </div>
-            </div>
-            <div class="form-group mb-0 text-center">
-                <label class="header-label">{{ _('Action') }}</label>
-                <button type="button" class="btn btn-red btn-action btn-remove-item" title="{{ _('Remove Item') }}"
-                    style="width: 38px; height: 38px; padding: 0;">
-                    <span class="material-icons" style="font-size: 18px;">delete</span>
-                </button>
-            </div>
-        </div>
-    </div>
-</template>
 
 <style>
     .header-label {
@@ -340,58 +221,41 @@ _('Bangladesh Engineering Workshop') }}{% endblock %}
 </style>
 
 <script>
-    function updateRowTotal(row) {
-        const qtyEl = row.querySelector('.js-qty');
-        const rateEl = row.querySelector('.js-rate');
-        const displayEl = row.querySelector('.js-item-total-display');
-        const boxEl = row.querySelector('.js-item-total-box');
+    function purchaseItems() {
+        // Pre-populate from server-rendered data (edit mode)
+        const serverItems = {{ purchase.get('items', []) | tojson if purchase.get('items') else '[]' }};
+        return {
+            items: serverItems.length
+                ? serverItems.map(i => ({
+                    product_name: i.product_name || '',
+                    specification: i.specification || '',
+                    quantity: i.quantity || 0,
+                    rate_per_unit: i.rate_per_unit || 0,
+                    weight: i.weight || 0,
+                    unit: i.unit || '',
+                }))
+                : [{ product_name: '', specification: '', quantity: 0, rate_per_unit: 0, weight: 0, unit: '' }],
 
-        if (!qtyEl || !rateEl || !displayEl || !boxEl) return;
+            addItem() {
+                this.items.push({ product_name: '', specification: '', quantity: 0, rate_per_unit: 0, weight: 0, unit: '' });
+            },
 
-        const qty = parseFloat(qtyEl.value || '0');
-        const rate = parseFloat(rateEl.value || '0');
-        const total = qty * rate;
-
-        displayEl.textContent = total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    }
-
-    function attachRowHandlers() {
-        document.querySelectorAll('.purchase-item-row').forEach(row => {
-            row.querySelectorAll('.js-qty, .js-rate').forEach(inp => {
-                inp.oninput = function () { updateRowTotal(row); };
-            });
-        });
-
-        document.querySelectorAll('.btn-remove-item').forEach(btn => {
-            btn.onclick = function () {
-                const rows = document.querySelectorAll('.purchase-item-row');
-                if (rows.length > 1) {
-                    this.closest('.purchase-item-row').remove();
+            removeItem(index) {
+                if (this.items.length > 1) {
+                    this.items.splice(index, 1);
                 } else {
-                    this.closest('.purchase-item-row').querySelectorAll('input').forEach(input => {
-                        if (input.type !== 'hidden') input.value = '';
-                    });
-                    this.closest('.purchase-item-row').querySelectorAll('select').forEach(sel => sel.selectedIndex = 0);
+                    this.items[0] = { product_name: '', specification: '', quantity: 0, rate_per_unit: 0, weight: 0, unit: '' };
                 }
-            };
-        });
+            },
 
-        document.querySelectorAll('.purchase-item-row').forEach(updateRowTotal);
+            init() {
+                // Set purchase date to today if empty
+                const dateEl = document.getElementById('purchase_date');
+                if (dateEl && !dateEl.value) {
+                    dateEl.valueAsDate = new Date();
+                }
+            }
+        };
     }
-
-    document.getElementById('btn-add-item').addEventListener('click', function () {
-        const container = document.getElementById('items-container');
-        const template = document.getElementById('purchase-item-template');
-        const clone = template.content.cloneNode(true);
-        container.appendChild(clone);
-        attachRowHandlers();
-    });
-
-    const purchaseDate = document.getElementById('purchase_date');
-    if (purchaseDate && !purchaseDate.value) {
-        purchaseDate.valueAsDate = new Date();
-    }
-
-    attachRowHandlers();
 </script>
 {% endblock %}
