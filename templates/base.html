@@ -29,10 +29,24 @@
                         danger: 'var(--danger)',
                         surface: 'var(--surface)',
                         'card-bg': 'var(--card-bg)',
+                        'text-main': 'var(--text-main)',
+                        'text-muted': 'var(--text-muted)',
+                        'bew-border': 'var(--border)',
+                        'bew-bg': 'var(--background)',
+                        'footer-bg': 'var(--footer-bg)',
                     },
                     fontFamily: {
                         bengali: ['"Noto Sans Bengali"', 'sans-serif'],
                         sans: ['Inter', '"Noto Sans Bengali"', 'sans-serif'],
+                    },
+                    zIndex: {
+                        'overlay': '900',
+                        'sidebar': '950',
+                        'header': '1000',
+                        'dropdown': '1010',
+                    },
+                    height: {
+                        'header': 'var(--header-height)',
                     },
                 }
             }
@@ -45,76 +59,111 @@
     {% block extra_css %}{% endblock %}
 </head>
 
-<body>
-    <!-- Overlay for mobile/sidebar -->
-    <div class="overlay" id="overlay"></div>
+<body class="font-bengali">
 
-    <nav class="navbar">
-        <div class="container nav-container">
-            <div class="nav-left">
-                <button class="menu-toggle" id="menuToggle">
-                    <span class="material-icons">menu</span>
+    {# ══════════════════════════════════════════════════════════════
+       OVERLAY — Mobile sidebar backdrop
+       ══════════════════════════════════════════════════════════════ #}
+    <div id="overlay"
+        class="fixed top-[var(--header-height)] left-0 w-screen h-[calc(100vh-var(--header-height))]
+               bg-black/40 backdrop-blur-sm z-overlay
+               opacity-0 invisible transition-all duration-200">
+    </div>
+
+    {# ══════════════════════════════════════════════════════════════
+       NAVBAR — Sticky header with navigation
+       ══════════════════════════════════════════════════════════════ #}
+    <nav class="bg-surface h-header border-b border-bew-border sticky top-0 z-header
+                flex items-center shadow-sm px-0">
+        <div class="container mx-auto flex justify-between items-center w-full px-4">
+            <!-- Left: Menu + Logo -->
+            <div class="flex items-center gap-0.5">
+                <button id="menuToggle"
+                    class="bg-transparent border-none cursor-pointer text-text-muted p-2 rounded-md
+                           flex items-center justify-center hover:bg-bew-bg hover:text-primary transition-colors">
+                    <span class="material-icons text-2xl">menu</span>
                 </button>
-                <a href="{{ url_for('shops.index') }}" class="logo">
+                <a href="{{ url_for('shops.index') }}"
+                    class="flex items-center gap-2 text-primary no-underline font-bold text-xl tracking-tight">
                     <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="BW Logo"
-                        style="height: 85px; width: auto;">
-                    বাংলাদেশ ইঞ্জিনিয়ারিং ওয়ার্কসপ
+                        class="h-[60px] w-auto md:h-[85px]">
+                    <span class="text-base md:text-xl">বাংলাদেশ ইঞ্জিনিয়ারিং ওয়ার্কসপ</span>
                 </a>
             </div>
 
-            <div class="nav-links">
-                <a href="{{ url_for('shops.index') }}" class="nav-link">
+            <!-- Right: Nav Links (hidden on mobile) -->
+            <div class="hidden md:flex items-center gap-6">
+                <a href="{{ url_for('shops.index') }}"
+                    class="text-text-muted no-underline font-medium text-[0.95rem] hover:text-primary transition-colors">
                     <span class="material-icons v-middle">home</span> {{ _('Home') }}
                 </a>
 
-                <div class="dropdown">
-                    <a href="javascript:void(0)" class="nav-link">
+                <!-- ERP Dropdown -->
+                <div class="relative group flex items-center h-full">
+                    <a href="javascript:void(0)"
+                        class="text-text-muted no-underline font-medium text-[0.95rem] hover:text-primary transition-colors">
                         <span class="material-icons v-middle">business_center</span> {{ _('ERP') }}
-                        <span class="material-icons v-middle" style="font-size: 18px;">expand_more</span>
+                        <span class="material-icons v-middle text-lg">expand_more</span>
                     </a>
-                    <div class="dropdown-content">
-                        <a href="{{ url_for('buyers.buyer_list') }}">
-                            <span class="material-icons v-middle" style="font-size: 18px;">people</span> {{
-                            _('Buyers') }}
+                    <div class="hidden group-hover:flex flex-col absolute top-full left-0
+                                bg-surface min-w-[240px] shadow-lg z-dropdown rounded-lg
+                                py-2 border border-bew-border">
+                        <a href="{{ url_for('buyers.buyer_list') }}"
+                            class="text-text-muted no-underline px-4 py-3 text-sm font-medium
+                                   hover:bg-bew-bg hover:text-primary transition-all">
+                            <span class="material-icons v-middle text-lg">people</span> {{ _('Buyers') }}
                         </a>
-                        <a href="{{ url_for('purchases.purchase_list') }}">
-                            <span class="material-icons v-middle" style="font-size: 18px;">shopping_cart</span> {{
-                            _('Purchases') }}
+                        <a href="{{ url_for('purchases.purchase_list') }}"
+                            class="text-text-muted no-underline px-4 py-3 text-sm font-medium
+                                   hover:bg-bew-bg hover:text-primary transition-all">
+                            <span class="material-icons v-middle text-lg">shopping_cart</span> {{ _('Purchases') }}
                         </a>
-                        <a href="{{ url_for('inventory.inventory_list') }}">
-                            <span class="material-icons v-middle" style="font-size: 18px;">inventory_2</span> {{
-                            _('Inventory') }}
+                        <a href="{{ url_for('inventory.inventory_list') }}"
+                            class="text-text-muted no-underline px-4 py-3 text-sm font-medium
+                                   hover:bg-bew-bg hover:text-primary transition-all">
+                            <span class="material-icons v-middle text-lg">inventory_2</span> {{ _('Inventory') }}
                         </a>
-                        <a href="{{ url_for('work_orders.work_order_list') }}">
-                            <span class="material-icons v-middle" style="font-size: 18px;">assignment</span> {{ _('Work
-                            Orders') }}
-
+                        <a href="{{ url_for('work_orders.work_order_list') }}"
+                            class="text-text-muted no-underline px-4 py-3 text-sm font-medium
+                                   hover:bg-bew-bg hover:text-primary transition-all">
+                            <span class="material-icons v-middle text-lg">assignment</span> {{ _('Work Orders') }}
                         </a>
-                        <a href="{{ url_for('sales.sale_list') }}">
-                            <span class="material-icons v-middle" style="font-size: 18px;">receipt_long</span> {{
-                            _('Sales') }}
+                        <a href="{{ url_for('sales.sale_list') }}"
+                            class="text-text-muted no-underline px-4 py-3 text-sm font-medium
+                                   hover:bg-bew-bg hover:text-primary transition-all">
+                            <span class="material-icons v-middle text-lg">receipt_long</span> {{ _('Sales') }}
                         </a>
                     </div>
                 </div>
 
-                <a href="{{ url_for('shops.shop_list') }}" class="nav-link">
+                <a href="{{ url_for('shops.shop_list') }}"
+                    class="text-text-muted no-underline font-medium text-[0.95rem] hover:text-primary transition-colors">
                     <span class="material-icons v-middle">storefront</span> {{ _('All Shops') }}
                 </a>
                 <a href="{{ url_for('shops.new_shop') }}" class="btn btn-navy">
                     <span class="material-icons">add_circle</span>
                     {{ _('New Shop') }}
                 </a>
-                <div class="lang-toggle">
+
+                <!-- Language Toggle -->
+                <div class="flex items-center gap-1 text-sm">
                     <a href="{{ url_for('set_language', lang='bn') }}"
-                        class="nav-link {% if session.get('lang', 'bn') == 'bn' %}active-lang{% endif %}">বাংলা</a>
-                    <span class="divider">|</span>
+                        class="text-text-muted no-underline hover:text-primary transition-colors
+                               {% if session.get('lang', 'bn') == 'bn' %}!text-primary font-bold{% endif %}">বাংলা</a>
+                    <span class="text-text-muted">|</span>
                     <a href="{{ url_for('set_language', lang='en') }}"
-                        class="nav-link {% if session.get('lang') == 'en' %}active-lang{% endif %}">EN</a>
+                        class="text-text-muted no-underline hover:text-primary transition-colors
+                               {% if session.get('lang') == 'en' %}!text-primary font-bold{% endif %}">EN</a>
                 </div>
             </div>
         </div>
-        <div class="theme-toggle-container">
-            <button id="themeToggle" class="theme-btn" title="Toggle Theme">
+
+        <!-- Theme Toggle (absolute positioned) -->
+        <div class="absolute top-3 right-4 z-[1001] flex items-center">
+            <button id="themeToggle" title="Toggle Theme"
+                class="bg-transparent border-none cursor-pointer text-text-muted p-1.5
+                       rounded-full flex items-center justify-center transition-all opacity-80
+                       hover:bg-black/5 hover:text-primary hover:opacity-100">
                 <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="5"></circle>
@@ -135,26 +184,38 @@
         </div>
     </nav>
 
-    <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h3>{{ _('Categories') }}</h3>
+    {# ══════════════════════════════════════════════════════════════
+       SIDEBAR — Categories panel (slide-in from left)
+       ══════════════════════════════════════════════════════════════ #}
+    <aside id="sidebar"
+        class="sidebar fixed top-[var(--header-height)] -left-[280px] w-[280px]
+               h-[calc(100vh-var(--header-height))] bg-surface z-sidebar
+               transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
+               shadow-lg flex flex-col overflow-y-auto
+               md:w-[280px] md:-left-[280px]">
+        <div class="h-16 px-6 border-b border-bew-border flex justify-between items-center bg-surface">
+            <h3 class="text-lg font-semibold text-text-main">{{ _('Categories') }}</h3>
         </div>
-        <div class="sidebar-content">
-            <div class="category-list">
+        <div class="p-3">
+            <div class="space-y-0.5">
                 {% for cat in categories if categories %}
-                <a href="{{ url_for('shops.category_shops', category_id=cat.id) }}" class="sidebar-link">
+                <a href="{{ url_for('shops.category_shops', category_id=cat.id) }}"
+                    class="block px-4 py-2 text-text-muted no-underline rounded-md font-medium
+                           border-l-[3px] border-transparent
+                           hover:bg-bew-bg hover:text-primary hover:border-l-primary transition-all">
                     {{ cat.name }}
                 </a>
                 {% else %}
-                <!-- If categories not passed globally, fetching via ajax or they might be in context -->
-                <p class="no-cats">ক্যাটেগরি লোড হচ্ছে...</p>
+                <p class="text-text-muted text-sm px-4 py-2">ক্যাটেগরি লোড হচ্ছে...</p>
                 {% endfor %}
             </div>
         </div>
     </aside>
 
-    <main class="container">
+    {# ══════════════════════════════════════════════════════════════
+       MAIN CONTENT — Flash messages + page content
+       ══════════════════════════════════════════════════════════════ #}
+    <main class="container mx-auto px-4">
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
         <div class="flash-messages">
@@ -171,62 +232,110 @@
         {% block content %}{% endblock %}
     </main>
 
-    <footer class="main-footer">
-        <div class="container unified-footer-container">
+    {# ══════════════════════════════════════════════════════════════
+       FOOTER — Three-column layout with glassmorphism
+       ══════════════════════════════════════════════════════════════ #}
+    <footer class="bg-footer-bg backdrop-blur-[15px] backdrop-saturate-[180%]
+                   text-text-main pt-6 mt-16 border-t border-bew-border
+                   shadow-[0_-10px_30px_rgba(0,0,0,0.05)] text-sm">
+        <div class="container mx-auto px-4
+                    grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_1.5fr_1fr]
+                    gap-8 lg:gap-12 pb-1 items-start">
+
             <!-- Left: Quick Links -->
-            <div class="footer-side-column">
-                <h4>{{ _('Quick Links') }}</h4>
-                <ul class="footer-links">
-                    <li><a href="{{ url_for('core.about') }}"><span class="material-icons">chevron_right</span> {{ _('About
-                            Us') }}</a></li>
-
-                    <li><a href="{{ url_for('shops.shop_list') }}"><span class="material-icons">chevron_right</span> {{
-                            _('All
-                            Shops') }}</a></li>
-
+            <div class="text-center sm:text-left">
+                <h4 class="text-text-main text-[15px] font-bold mb-4 relative pb-1
+                           after:content-[''] after:absolute after:left-1/2 sm:after:left-0
+                           after:-translate-x-1/2 sm:after:translate-x-0
+                           after:bottom-0 after:w-6 after:h-0.5 after:bg-primary">
+                    {{ _('Quick Links') }}
+                </h4>
+                <ul class="list-none p-0 m-0 space-y-2">
+                    <li>
+                        <a href="{{ url_for('core.about') }}"
+                            class="text-text-muted no-underline flex items-center gap-2 text-sm
+                                   justify-center sm:justify-start
+                                   hover:text-primary hover:pl-1 transition-all">
+                            <span class="material-icons text-base opacity-70">chevron_right</span>
+                            {{ _('About Us') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('shops.shop_list') }}"
+                            class="text-text-muted no-underline flex items-center gap-2 text-sm
+                                   justify-center sm:justify-start
+                                   hover:text-primary hover:pl-1 transition-all">
+                            <span class="material-icons text-base opacity-70">chevron_right</span>
+                            {{ _('All Shops') }}
+                        </a>
+                    </li>
                 </ul>
             </div>
 
             <!-- Center: Brand identity -->
-            <div class="footer-center-column">
-                <div class="footer-logo">
-                    <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="BEW Logo">
-                    <h4>{{ _('Bangladesh Engineering Workshop') }}</h4>
+            <div class="text-center flex flex-col items-center">
+                <div class="flex items-center gap-3 mb-1 justify-center">
+                    <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="BEW Logo"
+                        class="h-9 w-auto">
+                    <h4 class="text-text-main text-base font-bold m-0 p-0">
+                        {{ _('Bangladesh Engineering Workshop') }}
+                    </h4>
                 </div>
-                <p class="footer-desc">{{ _('Your trusted partner for heavy machinery repair, precision machining, and
-                    engineering solutions since years.') }}</p>
-
+                <p class="text-text-muted leading-relaxed text-[13px] mt-2 max-w-[400px]">
+                    {{ _('Your trusted partner for heavy machinery repair, precision machining, and engineering solutions since years.') }}
+                </p>
             </div>
 
             <!-- Right: Contact Info -->
-            <div class="footer-side-column">
-                <div class="footer-header-row">
-                    <div class="footer-social">
-                        <a href="tel:+8801906399161" title="Call Us"><span class="material-icons">phone</span></a>
-                        <a href="https://wa.me/8801906399161" title="WhatsApp"><span
-                                class="material-icons">chat</span></a>
+            <div class="text-center sm:text-right flex flex-col items-center sm:items-end">
+                <div class="flex items-center justify-center sm:justify-end gap-6 mb-4">
+                    <div class="flex gap-2">
+                        <a href="tel:+8801906399161" title="Call Us"
+                            class="bg-surface text-text-main w-[30px] h-[30px] flex items-center justify-center
+                                   rounded-full border border-bew-border backdrop-blur-sm
+                                   hover:bg-primary hover:text-white hover:-translate-y-0.5
+                                   hover:shadow-md transition-all">
+                            <span class="material-icons text-lg">phone</span>
+                        </a>
+                        <a href="https://wa.me/8801906399161" title="WhatsApp"
+                            class="bg-surface text-text-main w-[30px] h-[30px] flex items-center justify-center
+                                   rounded-full border border-bew-border backdrop-blur-sm
+                                   hover:bg-primary hover:text-white hover:-translate-y-0.5
+                                   hover:shadow-md transition-all">
+                            <span class="material-icons text-lg">chat</span>
+                        </a>
                     </div>
-                    <h4>{{ _('Contact Info') }}</h4>
+                    <h4 class="text-text-main text-[15px] font-bold m-0 relative pb-1
+                               after:content-[''] after:absolute after:right-0
+                               after:bottom-0 after:w-6 after:h-0.5 after:bg-primary">
+                        {{ _('Contact Info') }}
+                    </h4>
                 </div>
-                <ul class="footer-contact-list">
-                    <li>
-                        <span class="material-icons">phone_android</span>
+                <ul class="list-none p-0 m-0 w-full space-y-2">
+                    <li class="flex justify-center sm:justify-end items-center gap-1.5
+                               text-text-muted text-[13px] leading-snug">
+                        <span class="material-icons text-primary text-lg shrink-0">phone_android</span>
                         <span>+880 1906 399161</span>
                     </li>
-                    <li>
-                        <span class="material-icons">email</span>
+                    <li class="flex justify-center sm:justify-end items-center gap-1.5
+                               text-text-muted text-[13px] leading-snug">
+                        <span class="material-icons text-primary text-lg shrink-0">email</span>
                         <span>info@bew-bd.com</span>
                     </li>
-                    <li>
-                        <span class="material-icons">place</span>
+                    <li class="flex justify-center sm:justify-end items-center gap-1.5
+                               text-text-muted text-[13px] leading-snug">
+                        <span class="material-icons text-primary text-lg shrink-0">place</span>
                         <span>{{ _('City Bypass, Mostofar Mor, Horintana, Khulna') }}</span>
                     </li>
                 </ul>
             </div>
         </div>
-        <div class="footer-bottom-bar">
-            <div class="container">
-                <p class="footer-copyright">&copy; 2026 {{ _('Bangladesh Engineering Workshop') }}. All rights reserved.
+
+        <!-- Bottom Bar -->
+        <div class="bg-black/[0.03] py-3 text-center border-t border-bew-border">
+            <div class="container mx-auto px-4">
+                <p class="text-text-muted text-xs m-0">
+                    &copy; 2026 {{ _('Bangladesh Engineering Workshop') }}. All rights reserved.
                 </p>
             </div>
         </div>
