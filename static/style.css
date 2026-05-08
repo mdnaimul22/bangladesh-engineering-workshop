@@ -2,7 +2,7 @@
 
 /* 1. Core and Variables */
 @import url('variables.css');
-
+@import url('themes.css');
 /* 2. Base Styles and Typography */
 @import url('base.css');
 
