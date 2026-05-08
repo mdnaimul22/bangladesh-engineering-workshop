@@ -1,0 +1,85 @@
+"""Sales routes — thin HTTP wrapper over sale service."""
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask_babel import _
+import src.services.sale_svc as sale_svc
+from src.helpers.exceptions import ValidationError
+from src.config import setup_logger, Settings
+
+logger = setup_logger(Settings.LOG_DIR / "routers.log", name="bew.routers.sales")
+
+sales_bp = Blueprint('sales', __name__)
+
+
+@sales_bp.route('/sales')
+def sale_list():
+    """Record of all material/product sales"""
+    sales = sale_svc.list_all()
+    return render_template('sales/sale_list.html', sales=sales)
+
+
+@sales_bp.route('/sales/new', methods=['GET', 'POST'])
+def new_sale():
+    """Create a new sales entry"""
+    buyers = sale_svc.get_buyers()
+    inventory_items = sale_svc.get_inventory()
+
+    if request.method == 'POST':
+        try:
+            sale_id = sale_svc.create(request.form, request.files)
+            flash(_('Sale created successfully!'), 'success')
+            return redirect(url_for('sales.sale_detail', sale_id=sale_id))
+        except ValidationError as e:
+            flash(_(str(e)), 'error')
+
+    pre_selected_buyer_id = request.args.get('buyer_id', type=int)
+    sale = {'buyer_id': pre_selected_buyer_id} if pre_selected_buyer_id else {}
+
+    return render_template('sales/sale_form.html', buyers=buyers, inventory=inventory_items,
+                           sale=sale, action='add')
+
+
+@sales_bp.route('/sales/<int:sale_id>/edit', methods=['GET', 'POST'])
+def edit_sale(sale_id):
+    """Modify existing sales entry"""
+    sale = sale_svc.get(sale_id)
+    if not sale:
+        flash(_('Sale record not found!'), 'error')
+        return redirect(url_for('sales.sale_list'))
+
+    buyers = sale_svc.get_buyers()
+    inventory_items = sale_svc.get_inventory()
+
+    if request.method == 'POST':
+        try:
+            sale_svc.update(sale_id, request.form, request.files, existing_sale=sale)
+            flash(_('Sale record updated successfully!'), 'success')
+            return redirect(url_for('sales.sale_detail', sale_id=sale_id))
+        except ValidationError as e:
+            flash(_(str(e)), 'error')
+
+    return render_template('sales/sale_form.html', buyers=buyers, inventory=inventory_items,
+                           sale=sale, action='edit')
+
+
+@sales_bp.route('/sales/<int:sale_id>')
+def sale_detail(sale_id):
+    """Invoice/Sale detailed view"""
+    sale = sale_svc.get(sale_id)
+    if not sale:
+        flash(_('Sale not found!'), 'error')
+        return redirect(url_for('sales.sale_list'))
+    return render_template('sales/sale_detail.html', sale=sale)
+
+
+@sales_bp.route('/sales/<int:sale_id>/delete', methods=['POST'])
+def delete_sale(sale_id):
+    """Remove sales record"""
+    password = request.form.get('delete_password', '')
+    try:
+        if sale_svc.delete(sale_id, password):
+            flash(_('Sale deleted successfully!'), 'success')
+        else:
+            flash(_('Error deleting sale!'), 'error')
+    except ValidationError as e:
+        flash(_(str(e)), 'error')
+    return redirect(url_for('sales.sale_list'))

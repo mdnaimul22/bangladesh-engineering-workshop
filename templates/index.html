@@ -7,7 +7,7 @@
     <h1>{{ _('Hardware & Mechanical Supplier Directory') }}</h1>
     <p class="hero-subtitle">{{ _('Information of Engineering Workshops, Suppliers and Sellers') }}</p>
 
-    <form class="search-form" action="{{ url_for('index') }}" method="GET">
+    <form class="search-form" action="{{ url_for('shops.index') }}" method="GET">
         <div class="search-box">
             <input type="text" name="q" value="{{ query }}"
                 placeholder="{{ _('Search by product, category, mobile number or shop name...') }}" class="search-input"
@@ -56,7 +56,7 @@
     {% endif %}
 
     <div style="margin-top: 2rem;">
-        <a href="{{ url_for('index') }}" class="btn btn-secondary"><span class="material-icons">refresh</span> {{
+        <a href="{{ url_for('shops.index') }}" class="btn btn-secondary"><span class="material-icons">refresh</span> {{
             _('Clear') }}</a>
     </div>
     {% endif %}

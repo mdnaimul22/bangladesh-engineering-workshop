@@ -14,7 +14,7 @@
             class="btn btn-navy">
             <span class="material-icons">add_circle</span> {{ _('New Purchase') }}
         </a>
-        <a href="{{ supplier and url_for('shops.shop_detail', shop_id=supplier.id) or url_for('index') }}"
+        <a href="{{ supplier and url_for('shops.shop_detail', shop_id=supplier.id) or url_for('shops.index') }}"
             class="btn btn-secondary">
             <span class="material-icons">arrow_back</span> {{ _('Back') }}
         </a>

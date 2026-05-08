@@ -1,0 +1,216 @@
+"""Work order service — business logic for production job management."""
+import os
+import datetime
+from sqlalchemy.exc import OperationalError
+from src.config import setup_logger, Settings, exists
+from src.db.database import db
+from src.helpers.exceptions import ValidationError
+from src.helpers.upload import save_upload
+from src.helpers.retry import retry
+from src.helpers.auth import verify_delete_password
+
+logger = setup_logger(Settings.LOG_DIR / "services.log", name="bew.services.work_order")
+
+
+def list_all():
+    """Return all work orders."""
+    return db.get_all_work_orders()
+
+
+def get(work_order_id):
+    """Get a single work order by ID."""
+    return db.get_work_order_by_id(work_order_id)
+
+
+def get_buyers():
+    """Return all buyers/companies for work order form."""
+    return db.get_all_buyers()
+
+
+def get_suppliers():
+    """Return all shops/suppliers for work order form."""
+    return db.get_all_shops()
+
+
+def create(form_data, files=None):
+    """Create a new work order.
+
+    Returns:
+        The new work order ID.
+    """
+    company_id = form_data.get('company_id')
+    if not company_id:
+        raise ValidationError("Company is required!")
+
+    job_date = _parse_date(form_data.get('job_date'))
+    delivery_date = _parse_date(form_data.get('delivery_date'))
+    parts = _parse_parts(form_data, files)
+    hard_copy_path = _handle_hard_copy(form_data, files)
+    documents = _parse_gallery_documents(form_data, files)
+
+    data = {
+        'company_id': company_id,
+        'job_date': job_date,
+        'job_name': form_data.get('job_name'),
+        'job_description': form_data.get('job_description'),
+        'status': form_data.get('status'),
+        'quoted_price': form_data.get('quoted_price'),
+        'delivery_date': delivery_date,
+        'labor_cost': form_data.get('labor_cost'),
+        'material_cost': form_data.get('material_cost'),
+        'total_cost': form_data.get('total_cost'),
+        'hard_copy_path': hard_copy_path,
+        'parts': parts,
+        'documents': documents,
+    }
+
+    work_order_id = db.add_work_order(data)
+    logger.info(f"Created work order #{work_order_id}")
+    return work_order_id
+
+
+def update(work_order_id, form_data, files=None):
+    """Update an existing work order."""
+    job_date = _parse_date(form_data.get('job_date'))
+    delivery_date = _parse_date(form_data.get('delivery_date'))
+    parts = _parse_parts(form_data, files)
+    hard_copy_path = _handle_hard_copy(form_data, files)
+    documents = _parse_gallery_documents(form_data, files)
+
+    data = {
+        'company_id': form_data.get('company_id'),
+        'job_date': job_date,
+        'job_name': form_data.get('job_name'),
+        'job_description': form_data.get('job_description'),
+        'status': form_data.get('status'),
+        'quoted_price': form_data.get('quoted_price'),
+        'delivery_date': delivery_date,
+        'labor_cost': form_data.get('labor_cost'),
+        'material_cost': form_data.get('material_cost'),
+        'total_cost': form_data.get('total_cost'),
+        'hard_copy_path': hard_copy_path,
+        'parts': parts,
+        'documents': documents,
+    }
+
+    db.update_work_order(work_order_id, data)
+    logger.info(f"Updated work order #{work_order_id}")
+    return True
+
+
+def delete(work_order_id, password: str = ''):
+    """Delete a work order."""
+    verify_delete_password(password)
+
+    if db.delete_work_order(work_order_id):
+        logger.info(f"Deleted work order #{work_order_id}")
+        return True
+    return False
+
+
+def _parse_date(date_str: str | None):
+    """Parse YYYY-MM-DD date string."""
+    if not date_str:
+        return None
+    try:
+        return datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
+    except ValueError:
+        raise ValidationError("Invalid date format. Use YYYY-MM-DD.")
+
+
+def _parse_parts(form_data, files=None) -> list[dict]:
+    """Parse dynamic part rows from form data, including voucher uploads."""
+    part_names = form_data.getlist('part_name')
+    supplier_ids = form_data.getlist('supplier_id')
+    voucher_file_paths = form_data.getlist('voucher_file_path')
+    measurements = form_data.getlist('measurement')
+    units = form_data.getlist('unit')
+    qtys = form_data.getlist('qty')
+    weights = form_data.getlist('weight')
+    prices = form_data.getlist('price')
+
+    parts = []
+    for i in range(len(part_names)):
+        if not part_names[i]:
+            continue
+
+        voucher_path = voucher_file_paths[i] if i < len(voucher_file_paths) else ''
+
+        if files:
+            file = files.get(f'voucher_file_{i}')
+            if file:
+                vp = save_upload(file, 'purchase_voucher')
+                if vp:
+                    # Delete old file if being replaced
+                    delete_upload(voucher_path)
+                    voucher_path = vp
+
+        parts.append({
+            'part_name': part_names[i],
+            'supplier_id': supplier_ids[i] if i < len(supplier_ids) and supplier_ids[i] else None,
+            'voucher_no': '',
+            'voucher_file_path': voucher_path,
+            'measurement': measurements[i] if i < len(measurements) else '',
+            'unit': units[i] if i < len(units) else '',
+            'qty': qtys[i] if i < len(qtys) else 0,
+            'weight': weights[i] if i < len(weights) else 0,
+            'price': prices[i] if i < len(prices) else 0,
+        })
+
+    return parts
+
+
+def _handle_hard_copy(form_data, files=None) -> str:
+    """Handle hard copy scan upload."""
+    hard_copy_path = form_data.get('hard_copy_path', '')
+
+    if files:
+        hard_copy_file = files.get('hard_copy_file')
+        if hard_copy_file:
+            hc = save_upload(hard_copy_file, 'work_orders')
+            if hc:
+                delete_upload(hard_copy_path)
+                hard_copy_path = hc
+
+    return hard_copy_path
+
+
+def _parse_gallery_documents(form_data, files=None) -> list[dict]:
+    """Parse gallery/document attachments from form data."""
+    doc_types = form_data.getlist('doc_type')
+    doc_notes = form_data.getlist('doc_notes')
+    doc_file_paths = form_data.getlist('doc_file_path')
+
+    documents = []
+    for i in range(len(doc_types)):
+        doc_path = doc_file_paths[i] if i < len(doc_file_paths) else ''
+
+        if files:
+            file = files.get(f'gallery_file_{i}')
+            if file:
+                dp = save_upload(file, 'gallery')
+                if dp:
+                    delete_upload(doc_path)
+                    doc_path = dp
+
+        if doc_path:
+            documents.append({
+                'file_path': doc_path,
+                'document_type': doc_types[i] if i < len(doc_types) else 'Other',
+                'notes': doc_notes[i] if i < len(doc_notes) else '',
+            })
+
+    return documents
+
+
+def delete_upload(file_path: str):
+    """Delete an uploaded file if it exists."""
+    if not file_path:
+        return
+    full_path = os.path.join(str(Settings.UPLOAD_DIR), file_path)
+    if os.path.exists(full_path):
+        try:
+            os.remove(full_path)
+            logger.info(f"Deleted upload: {full_path}")
+        except OSError as e:
+            logger.warning(f"Failed to delete {full_path}: {e}")

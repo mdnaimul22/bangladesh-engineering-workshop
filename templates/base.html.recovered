@@ -26,7 +26,7 @@
                 <button class="menu-toggle" id="menuToggle">
                     <span class="material-icons">menu</span>
                 </button>
-                <a href="{{ url_for('shops.index') }}" class="logo">
+                <a href="{{ url_for('core.index') }}" class="logo">
                     <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="BW Logo"
                         style="height: 85px; width: auto;">
                     বাংলাদেশ ইঞ্জিনিয়ারিং ওয়ার্কসপ
@@ -34,7 +34,7 @@
             </div>
 
             <div class="nav-links">
-                <a href="{{ url_for('shops.index') }}" class="nav-link">
+                <a href="{{ url_for('core.index') }}" class="nav-link">
                     <span class="material-icons v-middle">home</span> {{ _('Home') }}
                 </a>
 
@@ -76,10 +76,10 @@
                     {{ _('New Shop') }}
                 </a>
                 <div class="lang-toggle">
-                    <a href="{{ url_for('set_language', lang='bn') }}"
+                    <a href="{{ url_for('core.set_language', lang_code='bn') }}"
                         class="nav-link {% if session.get('lang', 'bn') == 'bn' %}active-lang{% endif %}">বাংলা</a>
                     <span class="divider">|</span>
-                    <a href="{{ url_for('set_language', lang='en') }}"
+                    <a href="{{ url_for('core.set_language', lang_code='en') }}"
                         class="nav-link {% if session.get('lang') == 'en' %}active-lang{% endif %}">EN</a>
                 </div>
             </div>
@@ -148,7 +148,8 @@
             <div class="footer-side-column">
                 <h4>{{ _('Quick Links') }}</h4>
                 <ul class="footer-links">
-                    <li><a href="{{ url_for('core.about') }}"><span class="material-icons">chevron_right</span> {{ _('About
+                    <li><a href="{{ url_for('core.about') }}"><span class="material-icons">chevron_right</span> {{
+                            _('About
                             Us') }}</a></li>
 
                     <li><a href="{{ url_for('shops.shop_list') }}"><span class="material-icons">chevron_right</span> {{
