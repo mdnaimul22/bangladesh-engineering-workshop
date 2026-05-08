@@ -21,18 +21,12 @@
         <table class="shops-table">
             <thead>
                 <tr>
-                    <th><span class="material-icons v-middle" style="font-size: 18px;">calendar_today</span> {{
-                        _('Date') }}</th>
-                    <th><span class="material-icons v-middle" style="font-size: 18px;">category</span> {{ _('Material
-                        Name') }}</th>
-
-                    <th><span class="material-icons v-middle" style="font-size: 18px;">storefront</span> {{ _('Source
-                        Shop') }}</th>
-                    <th><span class="material-icons v-middle" style="font-size: 18px;">balance</span> {{ _('Quantity')
-                        }}</th>
-                    <th><span class="material-icons v-middle" style="font-size: 18px;">payments</span> {{ _('Cost') }}
-                    </th>
-                    <th><span class="material-icons v-middle" style="font-size: 18px;">label</span> {{ _('Tags') }}</th>
+                    <th><span class="material-icons v-middle text-lg">calendar_today</span> {{ _('Date') }}</th>
+                    <th><span class="material-icons v-middle text-lg">category</span> {{ _('Material Name') }}</th>
+                    <th><span class="material-icons v-middle text-lg">storefront</span> {{ _('Source Shop') }}</th>
+                    <th><span class="material-icons v-middle text-lg">balance</span> {{ _('Quantity') }}</th>
+                    <th><span class="material-icons v-middle text-lg">payments</span> {{ _('Cost') }}</th>
+                    <th><span class="material-icons v-middle text-lg">label</span> {{ _('Tags') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -55,7 +49,7 @@
                     <td>{{ item.cost }}</td>
                     <td>
                         {% if item.tags %}
-                        <span style="font-size: 0.85rem; color: #64748b;">{{ item.tags }}</span>
+                        <span class="text-sm text-secondary">{{ item.tags }}</span>
                         {% else %}
                         -
                         {% endif %}

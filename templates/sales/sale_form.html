@@ -47,8 +47,9 @@
                             class="material-icons v-middle">attach_file</span> {{ _('Voucher / Bill') }}</label>
                     <input type="file" name="voucher_image" id="voucher_image" class="form-control" accept="image/*">
                     {% if sale.voucher_image %}
-                    <small class="text-muted" style="display: block; margin-top: 4px;">{{ _('Current') }}: <a
-                            href="{{ url_for('shop_img', filename=sale.voucher_image) }}" target="_blank">{{
+                    <small class="text-text-muted block mt-1 text-xs">{{ _('Current') }}: <a
+                            href="{{ url_for('shop_img', filename=sale.voucher_image) }}" target="_blank"
+                            class="text-primary hover:underline">{{
                             sale.voucher_image.split('/')[-1] }}</a></small>
                     {% endif %}
                 </div>
@@ -57,7 +58,7 @@
 
         <!-- Items Section -->
         <div class="items-section card" x-data="saleItems()">
-            <h3 class="mb-3" style="border-bottom: 2px solid #eee; padding-bottom: 0.5rem;">
+            <h3 class="mb-3 border-b-2 border-bew-border pb-2">
                 <span class="material-icons v-middle">list</span> {{ _('ITEMS') }}
             </h3>
 
@@ -100,15 +101,15 @@
 
                         <div class="form-group mb-0">
                             <button type="button" class="btn btn-red btn-sm" @click="removeItem(index)"
-                                style="height: 36px; width: 100%; display: flex; align-items: center; justify-content: center; padding: 0;">
-                                <span class="material-icons" style="font-size: 18px;">delete</span>
+                                class="h-9 w-full flex items-center justify-center p-0">
+                                <span class="material-icons text-lg">delete</span>
                             </button>
                         </div>
                     </div>
                 </div>
             </template>
 
-            <button type="button" class="btn btn-secondary" @click="addItem()" style="margin-top: 0.5rem;">
+            <button type="button" class="btn btn-secondary mt-2" @click="addItem()">
                 <span class="material-icons">add</span> {{ _('Add Item') }}
             </button>
         </div>

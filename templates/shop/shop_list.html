@@ -49,7 +49,7 @@
                     <td>
                         {% if shop.mobile %}
                         {% for num in shop.mobile.split() %}
-                        <div class="mobile-number">
+                        <div>
                             <a href="tel:{{ num }}" class="mobile-link">{{ num }}</a>
                         </div>
                         {% endfor %}
@@ -69,10 +69,11 @@
                     </td>
                     <td>
                         {% if shop.tags %}
-                        <div style="display: flex; flex-wrap: wrap; gap: 0.25rem;">
+                        <div class="flex flex-wrap gap-1">
                             {% for tag in shop.tags %}
                             <a href="{{ url_for('shops.search_by_tag', tag_name=tag.name) }}"
-                                style="display: inline-block; padding: 0.15rem 0.5rem; font-size: 0.75rem; background: #e0f2fe; color: #0284c7; border-radius: 4px; text-decoration: none;"
+                                class="inline-block px-2 py-0.5 text-xs bg-sky-100 text-sky-600 rounded no-underline
+                                       hover:bg-sky-200 transition-colors"
                                 title="{{ tag.name_bn or tag.name }}">
                                 {{ tag.name }}
                             </a>
@@ -96,8 +97,9 @@
 
         <span class="page-info">{{ _('Page') }} {{ page }} / {{ total_pages }}</span>
 
-        {% if page < total_pages %} <a href="?page={{ page + 1 }}" class="page-link">{{ _('Next') }} →</a>
-            {% endif %}
+        {% if page < total_pages %}
+        <a href="?page={{ page + 1 }}" class="page-link">{{ _('Next') }} →</a>
+        {% endif %}
     </div>
     {% endif %}
 
