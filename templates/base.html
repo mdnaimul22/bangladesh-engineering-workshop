@@ -13,6 +13,35 @@
         href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&family=Inter:wght@300;400;700&display=swap"
         rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Tailwind CSS (Play CDN — backward compatible with existing CSS) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwindcss.config = {
+            darkMode: ['class', '[data-theme="dark"]'],
+            theme: {
+                extend: {
+                    colors: {
+                        primary: 'var(--primary)',
+                        'primary-dark': 'var(--primary-dark)',
+                        secondary: 'var(--secondary)',
+                        success: 'var(--success)',
+                        danger: 'var(--danger)',
+                        surface: 'var(--surface)',
+                        'card-bg': 'var(--card-bg)',
+                    },
+                    fontFamily: {
+                        bengali: ['"Noto Sans Bengali"', 'sans-serif'],
+                        sans: ['Inter', '"Noto Sans Bengali"', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
     {% block extra_css %}{% endblock %}
 </head>
 
