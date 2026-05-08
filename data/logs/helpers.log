@@ -1,0 +1,10 @@
+2026-05-09 03:34:03  WARNING   bew.helpers.retry                    Retry 1/2 for bad_func: fail (next attempt in 0.0s)
+2026-05-09 03:34:03  WARNING   bew.helpers.retry                    Retry 2/2 for bad_func: fail (next attempt in 0.0s)
+2026-05-09 03:34:03  ERROR     bew.helpers.retry                    All 2 retries exhausted for bad_func: fail
+2026-05-09 03:34:03  WARNING   bew.helpers.retry                    Retry 1/3 for flaky_func: not yet (next attempt in 0.0s)
+2026-05-09 03:34:03  WARNING   bew.helpers.retry                    Retry 2/3 for flaky_func: not yet (next attempt in 0.0s)
+2026-05-09 03:34:30  WARNING   bew.helpers.retry                    Retry 1/2 for bad_func: fail (next attempt in 0.0s)
+2026-05-09 03:34:30  WARNING   bew.helpers.retry                    Retry 2/2 for bad_func: fail (next attempt in 0.0s)
+2026-05-09 03:34:30  ERROR     bew.helpers.retry                    All 2 retries exhausted for bad_func: fail
+2026-05-09 03:34:30  WARNING   bew.helpers.retry                    Retry 1/3 for flaky_func: not yet (next attempt in 0.0s)
+2026-05-09 03:34:30  WARNING   bew.helpers.retry                    Retry 2/3 for flaky_func: not yet (next attempt in 0.0s)

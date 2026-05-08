@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}404 - {{ _('পৃষ্ঠা পাওয়া যায়নি') }}{% endblock %}
+{% block content %}
+<div class="container" style="text-align:center; padding: 60px 20px;">
+    <h1 style="font-size: 4rem; color: var(--navy);">404</h1>
+    <p style="font-size: 1.2rem; color: var(--text-muted);">{{ _('দুঃখিত, এই পৃষ্ঠাটি খুঁজে পাওয়া যায়নি।') }}</p>
+    <a href="{{ url_for('shops.index') }}" class="btn btn-navy" style="margin-top: 20px;">{{ _('হোমপেজে ফিরে যান') }}</a>
+</div>
+{% endblock %}
