@@ -1,3 +1,4 @@
+{% from 'components/_pagination.html' import render_pagination %}
 {% extends 'base.html' %}
 {% from 'components/_navigation.html' import page_header, breadcrumb with context %}
 {% from 'components/_buttons.html' import btn with context %}
@@ -10,8 +11,6 @@
 {% endblock %}
 
 {% block content %}
-{% set crumbs = [{'label': _('Home'), 'url': url_for('shops.index')}, {'label': _('Sales'), 'url': ''}] %}
-{{ breadcrumb(crumbs) }}
 {{ breadcrumb_schema(crumbs) }}
 
 {% set header_actions %}
@@ -30,6 +29,9 @@
                         <span class="material-icons text-sm align-middle mr-0.5">calendar_today</span> {{ _('Date') }}
                     </th>
                     <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
+                        <span class="material-icons text-sm align-middle mr-0.5">tag</span> {{ _('ID') }}
+                    </th>
+                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
                         <span class="material-icons text-sm align-middle mr-0.5">business</span> {{ _('Buyer') }}
                     </th>
                     <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
@@ -41,8 +43,8 @@
                     <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
                         <span class="material-icons text-sm align-middle mr-0.5">attach_file</span> {{ _('Voucher') }}
                     </th>
-                    <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
-                        <span class="material-icons text-sm align-middle mr-0.5">settings</span> {{ _('Action') }}
+                    <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)] w-24">
+                        <span class="material-icons text-sm align-middle mr-0.5">settings</span> {{ _('Actions') }}
                     </th>
                 </tr>
             </thead>
@@ -50,6 +52,7 @@
                 {% for sale in sales %}
                 <tr class="border-b border-[var(--color-border)] hover:bg-[var(--color-bg)]/50 transition-colors">
                     <td class="px-4 py-2.5 text-[var(--color-text-muted)]" data-label="{{ _('Date') }}">{{ sale.sale_date_display or '-' }}</td>
+                    <td class="px-4 py-2.5 font-bold text-[var(--color-primary)] whitespace-nowrap" data-label="{{ _('ID') }}">#{{ sale.display_id | lower }}</td>
                     <td class="px-4 py-2.5 font-semibold text-[var(--color-text)]" data-label="{{ _('Buyer') }}">{{ sale.buyer_name }}</td>
                     <td class="px-4 py-2.5 text-right font-bold text-[var(--color-text)]" data-label="{{ _('Total Amount') }}">৳ {{ sale.total_amount }}</td>
                     <td class="px-4 py-2.5 text-center text-[var(--color-text)]" data-label="{{ _('Items') }}">{{ sale.item_count }} {{ _('items') }}</td>
@@ -58,8 +61,8 @@
                         <span class="material-icons text-[var(--color-primary)]">receipt</span>
                         {% else %}-{% endif %}
                     </td>
-                    <td class="px-4 py-2.5" data-label="{{ _('Action') }}">
-                        <div class="flex gap-1.5 justify-center flex-nowrap">
+                    <td class="px-4 py-3 text-right" data-label="{{ _('Actions') }}">
+                        <div class="flex gap-1.5 justify-end flex-nowrap">
                             {{ btn(icon='visibility', variant='secondary', size='sm', href=url_for('sales.sale_detail', sale_id=sale.id)) }}
                             {{ btn(icon='edit', variant='primary', size='sm', href=url_for('sales.edit_sale', sale_id=sale.id)) }}
                             <form action="{{ url_for('sales.delete_sale', sale_id=sale.id) }}" method="POST" class="inline-flex"
@@ -72,6 +75,8 @@
                 {% endfor %}
             </tbody>
         </table>
+
+            {{ render_pagination(meta, 'sales.sale_list', search_query) }}
     </div>
     {% else %}
     <div class="text-center py-12 text-[var(--color-text-muted)]">

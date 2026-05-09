@@ -1,3 +1,4 @@
+{% from 'components/_pagination.html' import render_pagination %}
 {% extends 'base.html' %}
 {% from 'components/_navigation.html' import page_header, pagination, breadcrumb with context %}
 {% from 'components/_badges.html' import badge with context %}
@@ -23,14 +24,12 @@
 {% block content %}
 
 {# ── Breadcrumb ──────────────────────────────────────────── #}
-{% set crumbs = [{'label': _('Home'), 'url': url_for('shops.index')}] %}
 {% if current_category %}
 {% set _void = crumbs.append({'label': _('All Shops'), 'url': url_for('shops.shop_list')}) %}
 {% set _void = crumbs.append({'label': current_category.name, 'url': ''}) %}
 {% else %}
 {% set _void = crumbs.append({'label': _('All Shops'), 'url': ''}) %}
 {% endif %}
-{{ breadcrumb(crumbs) }}
 {{ breadcrumb_schema(crumbs) }}
 
 {# ── Page Header ─────────────────────────────────────────── #}
@@ -160,6 +159,8 @@
             {% endfor %}
         </tbody>
     </table>
+
+            {{ render_pagination(meta, 'shops.shop_list', search_query) }}
 </div>
 
 {# ── Pagination ──────────────────────────────────────────── #}

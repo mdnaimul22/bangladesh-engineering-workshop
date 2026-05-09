@@ -14,7 +14,10 @@ purchases_bp = Blueprint('purchases', __name__)
 def purchase_list():
     """List all supplier purchases"""
     purchases = purchase_svc.list_all()
-    return render_template('purchase/purchase_list.html', purchases=purchases, supplier=None)
+    page = request.args.get('page', 1, type=int)
+    from src.helpers.utils import paginate_list
+    purchases, meta = paginate_list(purchases, page, per_page=10)
+    return render_template('purchase/purchase_list.html', purchases=purchases, supplier=None, meta=meta)
 
 
 @purchases_bp.route('/shops/<int:shop_id>/purchases')
@@ -25,7 +28,10 @@ def shop_purchases(shop_id):
         flash(_('দোকান খুঁজে পাওয়া যায়নি!'), 'error')
         return redirect(url_for('shops.shop_list'))
     purchases = purchase_svc.list_by_supplier(shop_id)
-    return render_template('purchase/purchase_list.html', purchases=purchases, supplier=supplier)
+    page = request.args.get('page', 1, type=int)
+    from src.helpers.utils import paginate_list
+    purchases, meta = paginate_list(purchases, page, per_page=10)
+    return render_template('purchase/purchase_list.html', purchases=purchases, supplier=supplier, meta=meta)
 
 
 @purchases_bp.route('/purchases/new', methods=['GET', 'POST'])

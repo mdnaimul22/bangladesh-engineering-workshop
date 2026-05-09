@@ -1,3 +1,4 @@
+{% from 'components/_pagination.html' import render_pagination %}
 {% extends 'base.html' %}
 {% from 'components/_navigation.html' import page_header, breadcrumb with context %}
 {% from 'components/_buttons.html' import btn with context %}
@@ -15,11 +16,6 @@
 
 {% block content %}
 {# ── Breadcrumb ──────────────────────────────────────────── #}
-{% set crumbs = [
-    {'label': _('Home'), 'url': url_for('shops.index')},
-    {'label': _('Inventory'), 'url': ''}
-] %}
-{{ breadcrumb(crumbs) }}
 {{ breadcrumb_schema(crumbs) }}
 
 {# ── Page Header ─────────────────────────────────────────── #}
@@ -83,6 +79,8 @@
                 {% endfor %}
             </tbody>
         </table>
+
+            {{ render_pagination(meta, 'inventory.inventory_list', search_query) }}
     </div>
     {% else %}
     <div class="text-center py-12 text-[var(--color-text-muted)]">

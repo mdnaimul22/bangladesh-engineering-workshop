@@ -15,12 +15,6 @@
 
 {% block content %}
 {# ── Breadcrumb ──────────────────────────────────────────── #}
-{% set crumbs = [
-    {'label': _('Home'), 'url': url_for('shops.index')},
-    {'label': _('Inventory'), 'url': url_for('inventory.inventory_list')},
-    {'label': _('Add Item'), 'url': ''}
-] %}
-{{ breadcrumb(crumbs) }}
 {{ breadcrumb_schema(crumbs) }}
 
 {# ── Page Header ─────────────────────────────────────────── #}
@@ -100,7 +94,7 @@
 
         {# ── Submit Actions ──────────────────────────────── #}
         <div class="flex flex-wrap items-center gap-3 pt-4 border-t border-[var(--color-border)]">
-            {{ btn(text=_('Save Item'), icon='add_circle', variant='primary', type='submit') }}
+            {{ btn(text=_('Save'), icon='save', variant='primary', type='submit') }}
             {{ btn(text=_('Cancel'), icon='close', variant='secondary', href=url_for('inventory.inventory_list')) }}
         </div>
     </form>

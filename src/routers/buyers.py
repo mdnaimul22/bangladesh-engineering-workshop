@@ -1,6 +1,7 @@
 """Buyer routes — thin HTTP wrapper over buyer service."""
 from flask import Blueprint, render_template, request, redirect, url_for, flash, abort
 from flask_babel import _
+from src.helpers.utils import paginate_list
 import src.services.buyer_svc as buyer_svc
 from src.helpers.exceptions import ValidationError
 from src.config import setup_logger, Settings
@@ -15,7 +16,9 @@ def buyer_list():
     """List all buyers with search functionality"""
     query = request.args.get('q', '').strip()
     buyers = buyer_svc.list_all(query)
-    return render_template('buyer/buyer_list.html', buyers=buyers, search_query=query)
+    page = request.args.get('page', 1, type=int)
+    buyers, meta = paginate_list(buyers, page, per_page=10)
+    return render_template('buyer/buyer_list.html', buyers=buyers, meta=meta, search_query=query)
 
 
 @buyers_bp.route('/buyers/new', methods=['GET', 'POST'])

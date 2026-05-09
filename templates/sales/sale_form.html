@@ -10,12 +10,6 @@
 {% endblock %}
 
 {% block content %}
-{% set crumbs = [
-    {'label': _('Home'), 'url': url_for('shops.index')},
-    {'label': _('Sales'), 'url': url_for('sales.sale_list')},
-    {'label': _('Edit Sale') if action == 'edit' else _('New Sale'), 'url': ''}
-] %}
-{{ breadcrumb(crumbs) }}
 {{ breadcrumb_schema(crumbs) }}
 
 {% set header_actions %}
@@ -57,9 +51,15 @@
         {# ── Items Section (Alpine.js) ───────────────────── #}
         <div class="p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)] mb-5"
              x-data="saleItems()">
-            <h3 class="text-base font-semibold m-0 mb-4 pb-2 border-b-2 border-[var(--color-border)] flex items-center gap-2 text-[var(--color-text)]">
-                <span class="material-icons text-lg">list</span> {{ _('ITEMS') }}
-            </h3>
+            <div class="flex justify-between items-center mb-4 pb-2 border-b border-[var(--color-border)]">
+                <h3 class="text-base font-semibold m-0 flex items-center gap-2 text-[var(--color-text)]">
+                    <span class="material-icons text-lg">list</span> {{ _('ITEMS') }}
+                </h3>
+                <button type="button" @click="addItem()"
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[var(--color-primary)]/10 text-[var(--color-primary)] border border-[var(--color-primary)]/20 rounded-md text-xs font-bold uppercase tracking-wider hover:bg-[var(--color-primary)] hover:text-white transition-all">
+                    <span class="material-icons text-sm">add</span> {{ _('Add Item') }}
+                </button>
+            </div>
 
             <template x-for="(item, index) in items" :key="index">
                 <div class="mb-3 pb-3 border-b border-[var(--color-border)]">
@@ -99,15 +99,11 @@
                 </div>
             </template>
 
-            <button type="button" @click="addItem()"
-                    class="mt-1 inline-flex items-center gap-1.5 px-4 py-2 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-md text-[var(--color-text)] text-sm font-medium hover:bg-[var(--color-surface)] transition-all">
-                <span class="material-icons text-lg">add</span> {{ _('Add Item') }}
-            </button>
         </div>
 
         {# ── Submit Actions ──────────────────────────────── #}
         <div class="flex flex-wrap items-center gap-3 pt-4 border-t border-[var(--color-border)]">
-            {{ btn(text=_('Save Changes') if action == 'edit' else _('Save Record'), icon='save', variant='primary', type='submit') }}
+            {{ btn(text=_('Save'), icon='save', variant='primary', type='submit') }}
             {% if action == 'edit' %}
             {{ btn(text=_('Cancel'), icon='close', variant='secondary', href=url_for('sales.sale_detail', sale_id=sale.id)) }}
             {% else %}

@@ -17,12 +17,6 @@
 
 {% block content %}
 {# ── Breadcrumb ──────────────────────────────────────────── #}
-{% set crumbs = [
-    {'label': _('Home'), 'url': url_for('shops.index')},
-    {'label': _('All Shops'), 'url': url_for('shops.shop_list')},
-    {'label': _('Add New Shop') if action == 'add' else _('Edit Shop'), 'url': ''}
-] %}
-{{ breadcrumb(crumbs) }}
 {{ breadcrumb_schema(crumbs) }}
 
 {# ── Page Header ─────────────────────────────────────────── #}

@@ -23,13 +23,33 @@
 
 {% block content %}
 {# ── Breadcrumb ──────────────────────────────────────────── #}
-{% set crumbs = [
-    {'label': _('Home'), 'url': url_for('shops.index')},
-    {'label': _('All Shops'), 'url': url_for('shops.shop_list')},
-    {'label': shop.name, 'url': ''}
-] %}
-{{ breadcrumb(crumbs) }}
 {{ breadcrumb_schema(crumbs) }}
+
+<div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 mb-4
+            bg-[var(--color-surface)] p-4 rounded-[var(--radius)] shadow-[var(--shadow)] border border-[var(--color-border)]">
+    <div class="flex items-center gap-3">
+        <div class="w-11 h-11 bg-[var(--color-btn-primary)] text-white rounded-lg flex items-center justify-center shadow-sm">
+            <span class="material-icons text-2xl">storefront</span>
+        </div>
+        <div>
+            <h1 class="m-0 text-xl md:text-2xl font-bold text-[var(--color-text)] leading-tight">{{ shop.name }}</h1>
+            <div class="text-sm text-[var(--color-text-muted)]">
+                {{ shop.category_name if shop.category_name else _('Shop Profile') }}
+            </div>
+        </div>
+    </div>
+    <div class="flex gap-2 flex-wrap">
+        {{ btn(text=_('Purchases'), icon='receipt_long', variant='secondary', href=url_for('purchases.shop_purchases', shop_id=shop.id)) }}
+        {{ btn(text=_('New Purchase'), icon='add_shopping_cart', variant='primary', href=url_for('purchases.new_purchase', supplier_id=shop.id)) }}
+        {{ btn(text=_('Edit'), icon='edit', variant='primary', href=url_for('shops.edit_shop', shop_id=shop.id)) }}
+        <form action="{{ url_for('shops.delete_shop', shop_id=shop.id) }}" method="POST" class="inline"
+              onsubmit='return confirm({{ _("Are you sure you want to delete this shop?")|tojson }});'>
+            <input type="hidden" name="delete_password" id="delete_password_field">
+            {{ btn(text=_('Delete'), icon='delete', variant='danger', type='submit') }}
+        </form>
+        {{ btn(text=_('Back'), icon='arrow_back', variant='secondary', href=url_for('shops.index')) }}
+    </div>
+</div>
 
 <section class="bg-[var(--color-surface)] rounded-[var(--radius)] p-4 md:p-6 my-4 shadow-[var(--shadow)] border border-[var(--color-border)]">
 
@@ -184,17 +204,6 @@
         </div>
     </div>
 
-    {# ── Action Buttons ──────────────────────────────────── #}
-    <div class="flex flex-wrap items-center gap-3 mt-6 pt-6 border-t border-[var(--color-border)]">
-        {{ btn(text=_('Purchases'), icon='receipt_long', variant='secondary', href=url_for('purchases.shop_purchases', shop_id=shop.id)) }}
-        {{ btn(text=_('New Purchase'), icon='add_shopping_cart', variant='primary', href=url_for('purchases.new_purchase', supplier_id=shop.id)) }}
-        {{ btn(text=_('Edit'), icon='edit', variant='primary', href=url_for('shops.edit_shop', shop_id=shop.id)) }}
-        <form action="{{ url_for('shops.delete_shop', shop_id=shop.id) }}" method="POST" class="inline"
-              onsubmit='return confirm({{ _("Are you sure you want to delete this shop?")|tojson }});'>
-            <input type="hidden" name="delete_password" id="delete_password_field">
-            {{ btn(text=_('Delete'), icon='delete', variant='danger', type='submit') }}
-        </form>
-        {{ btn(text=_('Back'), icon='arrow_back', variant='secondary', href=url_for('shops.index')) }}
-    </div>
+
 </section>
 {% endblock %}

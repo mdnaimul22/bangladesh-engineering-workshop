@@ -3,19 +3,13 @@
 {% from 'components/_buttons.html' import btn with context %}
 {% from 'components/_seo.html' import og_tags, breadcrumb_schema with context %}
 
-{% block title %}{{ _('Sale Detail') }} - #{{ sale.id }}{% endblock %}
+{% block title %}{{ _('Sale Detail') }} - #{{ sale.display_id | lower }}{% endblock %}
 
 {% block extra_head %}
-{{ og_tags(title=_('Sale') ~ ' #' ~ sale.id, description=_('Sale record for') ~ ' ' ~ sale.buyer_name, url=request.url) }}
+{{ og_tags(title=_('Sale') ~ ' #' ~ (sale.display_id | lower), description=_('Sale record for') ~ ' ' ~ sale.buyer_name, url=request.url) }}
 {% endblock %}
 
 {% block content %}
-{% set crumbs = [
-    {'label': _('Home'), 'url': url_for('shops.index')},
-    {'label': _('Sales'), 'url': url_for('sales.sale_list')},
-    {'label': '#' ~ sale.id, 'url': ''}
-] %}
-{{ breadcrumb(crumbs) }}
 {{ breadcrumb_schema(crumbs) }}
 
 {# ── Page Header ─────────────────────────────────────────── #}
@@ -24,7 +18,7 @@
     <div>
         <h1 class="m-0 text-xl font-bold text-[var(--color-text)] flex items-center gap-2">
             <span class="material-icons text-[var(--color-primary)]">receipt_long</span>
-            {{ _('Sale Record') }} #{{ sale.id }}
+            {{ _('Sale Record') }} #{{ sale.display_id | lower }}
         </h1>
     </div>
     <div class="flex gap-2 flex-wrap">

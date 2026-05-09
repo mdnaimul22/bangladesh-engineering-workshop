@@ -41,12 +41,19 @@ def shop_list():
     total_pages = (total + per_page - 1) // per_page
     categories = shop_svc.get_categories()
 
+    meta = {
+        'page': page,
+        'per_page': per_page,
+        'total_pages': total_pages,
+        'total_items': total,
+        'has_prev': page > 1,
+        'has_next': page < total_pages
+    }
+
     return render_template('shop/shop_list.html',
                            shops=shops,
                            categories=categories,
-                           page=page,
-                           total_pages=total_pages,
-                           total=total)
+                           meta=meta)
 
 
 @shops_bp.route('/category/<int:category_id>')

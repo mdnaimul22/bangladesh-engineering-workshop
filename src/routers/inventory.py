@@ -14,7 +14,10 @@ inventory_bp = Blueprint('inventory', __name__)
 def inventory_list():
     """List all inventory items"""
     inventory = inventory_svc.list_all()
-    return render_template('inventory/inventory_list.html', inventory=inventory)
+    page = request.args.get('page', 1, type=int)
+    from src.helpers.utils import paginate_list
+    inventory, meta = paginate_list(inventory, page, per_page=10)
+    return render_template('inventory/inventory_list.html', inventory=inventory, meta=meta)
 
 
 @inventory_bp.route('/inventory/new', methods=['GET', 'POST'])

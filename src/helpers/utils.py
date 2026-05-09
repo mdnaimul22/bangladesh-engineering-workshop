@@ -100,3 +100,42 @@ def expand_designation(value: str) -> str:
         return mappings[lower_val]
 
     return value
+
+
+def paginate_list(data_list: list, page: int, per_page: int = 10) -> tuple[list, dict]:
+    """Paginate a list of dictionaries/objects.
+    
+    Args:
+        data_list: The full list of data to paginate.
+        page: The current page number (1-indexed).
+        per_page: Number of items per page.
+        
+    Returns:
+        Tuple of (paginated_data_slice, pagination_metadata_dict)
+    """
+    try:
+        page = int(page)
+    except (ValueError, TypeError):
+        page = 1
+        
+    total_items = len(data_list)
+    total_pages = (total_items + per_page - 1) // per_page if per_page > 0 else 1
+    
+    if page < 1:
+        page = 1
+    elif page > total_pages and total_pages > 0:
+        page = total_pages
+        
+    start = (page - 1) * per_page
+    end = start + per_page
+    
+    metadata = {
+        'page': page,
+        'per_page': per_page,
+        'total_pages': total_pages,
+        'total_items': total_items,
+        'has_prev': page > 1,
+        'has_next': page < total_pages
+    }
+    
+    return data_list[start:end], metadata

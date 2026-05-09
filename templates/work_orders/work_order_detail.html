@@ -4,12 +4,12 @@
 {% from 'components/_seo.html' import og_tags, breadcrumb_schema with context %}
 
 {% block title %}
-{{ _('Work Order') }} {{ work_order.display_id or work_order.id }} - {{ work_order.job_name }}
+{{ _('Work Order') }} {{ (work_order.display_id or work_order.id)|lower }} - {{ work_order.job_name }}
 {% endblock %}
 
 {% block extra_head %}
 {{ og_tags(
-    title=_('Work Order') ~ ' ' ~ (work_order.display_id or work_order.id),
+    title=_('Work Order') ~ ' ' ~ (work_order.display_id or work_order.id)|lower,
     description=work_order.job_name ~ ' - ' ~ (work_order.company_name or ''),
     url=request.url
 ) }}
@@ -17,12 +17,6 @@
 
 {% block content %}
 {# ── Breadcrumb ──────────────────────────────────────────── #}
-{% set crumbs = [
-    {'label': _('Home'), 'url': url_for('shops.index')},
-    {'label': _('Work Orders'), 'url': url_for('work_orders.work_order_list')},
-    {'label': work_order.job_name, 'url': ''}
-] %}
-{{ breadcrumb(crumbs) }}
 {{ breadcrumb_schema(crumbs) }}
 
 {# ── Page Header ─────────────────────────────────────────── #}
@@ -35,7 +29,7 @@
         <div>
             <h1 class="m-0 text-xl font-bold text-[var(--color-text)] leading-tight">{{ work_order.job_name }}</h1>
             <div class="text-sm text-[var(--color-text-muted)] mt-0.5 flex items-center gap-1 flex-wrap">
-                {{ _('Work Order') }} #{{ work_order.display_id or work_order.id }}
+                {{ _('Work Order') }} #{{ (work_order.display_id or work_order.id)|lower }}
                 {% if work_order.company_name %} |
                 <a href="{{ url_for('buyers.buyer_detail', buyer_id=work_order.company_id) }}"
                    class="text-[var(--color-primary)] no-underline hover:underline font-medium">{{ work_order.company_name }}</a>

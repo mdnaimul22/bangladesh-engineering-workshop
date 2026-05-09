@@ -3,11 +3,11 @@
 {% from 'components/_buttons.html' import btn with context %}
 {% from 'components/_seo.html' import og_tags, breadcrumb_schema with context %}
 
-{% block title %}{{ _('Purchase') }} #{{ purchase.id }} - {{ _('Bangladesh Engineering Workshop') }}{% endblock %}
+{% block title %}{{ _('Purchase') }} #{{ purchase.display_id or purchase.id }} - {{ _('Bangladesh Engineering Workshop') }}{% endblock %}
 
 {% block extra_head %}
 {{ og_tags(
-    title=_('Purchase') ~ ' #' ~ purchase.id,
+    title=_('Purchase') ~ ' #' ~ (purchase.display_id or purchase.id),
     description=_('Purchase voucher details for') ~ ' ' ~ purchase.supplier_name,
     url=request.url
 ) }}
@@ -15,12 +15,6 @@
 
 {% block content %}
 {# ── Breadcrumb ──────────────────────────────────────────── #}
-{% set crumbs = [
-    {'label': _('Home'), 'url': url_for('shops.index')},
-    {'label': _('Purchases'), 'url': url_for('purchases.purchase_list')},
-    {'label': '#' ~ purchase.id, 'url': ''}
-] %}
-{{ breadcrumb(crumbs) }}
 {{ breadcrumb_schema(crumbs) }}
 
 {# ── Page Header ─────────────────────────────────────────── #}
@@ -29,7 +23,7 @@
     <div>
         <h1 class="m-0 text-xl font-bold text-[var(--color-text)] flex items-center gap-2">
             <span class="material-icons text-[var(--color-primary)]">receipt_long</span>
-            {{ _('Purchase') }} #{{ purchase.id }}
+            {{ _('Purchase') }} #{{ purchase.display_id or purchase.id }}
         </h1>
         <div class="text-sm text-[var(--color-text-muted)] mt-0.5 flex items-center gap-1 flex-wrap">
             <span class="material-icons text-sm">storefront</span> {{ _('Supplier') }}:

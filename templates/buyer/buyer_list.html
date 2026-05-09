@@ -1,3 +1,4 @@
+{% from 'components/_pagination.html' import render_pagination %}
 {% extends 'base.html' %}
 {% from 'components/_navigation.html' import page_header, breadcrumb with context %}
 {% from 'components/_buttons.html' import btn with context %}
@@ -16,11 +17,6 @@
 
 {% block content %}
 {# ── Breadcrumb ──────────────────────────────────────────── #}
-{% set crumbs = [
-    {'label': _('Home'), 'url': url_for('shops.index')},
-    {'label': _('Buyer Companies'), 'url': ''}
-] %}
-{{ breadcrumb(crumbs) }}
 {{ breadcrumb_schema(crumbs) }}
 
 {# ── Page Header ─────────────────────────────────────────── #}
@@ -70,7 +66,7 @@
                     <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
                         <span class="material-icons text-sm align-middle mr-0.5">people</span> {{ _('Contacts') }}
                     </th>
-                    <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
+                    <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)] w-24">
                         <span class="material-icons text-sm align-middle mr-0.5">settings</span> {{ _('Actions') }}
                     </th>
                 </tr>
@@ -104,8 +100,8 @@
                         {% endif %}
                         {% else %}-{% endif %}
                     </td>
-                    <td class="px-4 py-3" data-label="{{ _('Actions') }}">
-                        <div class="flex gap-1.5 justify-center flex-nowrap">
+                    <td class="px-4 py-3 text-right" data-label="{{ _('Actions') }}">
+                        <div class="flex gap-1.5 justify-end flex-nowrap">
                             {{ btn(icon='visibility', variant='secondary', size='sm', href=url_for('buyers.buyer_detail', buyer_id=buyer.id)) }}
                             {{ btn(icon='edit', variant='primary', size='sm', href=url_for('buyers.edit_buyer', buyer_id=buyer.id)) }}
                             <form action="{{ url_for('buyers.delete_buyer', buyer_id=buyer.id) }}" method="POST"
@@ -119,6 +115,8 @@
                 {% endfor %}
             </tbody>
         </table>
+
+            {{ render_pagination(meta, 'buyers.buyer_list', search_query) }}
     </div>
     {% else %}
     <div class="text-center py-12 text-[var(--color-text-muted)]">

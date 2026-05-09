@@ -1,3 +1,4 @@
+{% from 'components/_pagination.html' import render_pagination %}
 {% extends 'base.html' %}
 {% from 'components/_navigation.html' import page_header, breadcrumb with context %}
 {% from 'components/_buttons.html' import btn with context %}
@@ -15,11 +16,6 @@
 
 {% block content %}
 {# ── Breadcrumb ──────────────────────────────────────────── #}
-{% set crumbs = [
-    {'label': _('Home'), 'url': url_for('shops.index')},
-    {'label': _('Work Orders'), 'url': ''}
-] %}
-{{ breadcrumb(crumbs) }}
 {{ breadcrumb_schema(crumbs) }}
 
 {# ── Page Header ─────────────────────────────────────────── #}
@@ -62,8 +58,8 @@
                     <th class="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
                         <span class="material-icons text-sm align-middle mr-0.5">info</span> {{ _('Status') }}
                     </th>
-                    <th class="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
-                        <span class="material-icons text-sm align-middle mr-0.5">settings_suggest</span> {{ _('Action') }}
+                    <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)] w-24">
+                        <span class="material-icons text-sm align-middle mr-0.5">settings</span> {{ _('Actions') }}
                     </th>
                 </tr>
             </thead>
@@ -77,7 +73,7 @@
                     </td>
                     <td class="px-3 py-2.5 text-center text-xs font-mono whitespace-nowrap" data-label="ID">
                         <a href="{{ url_for('work_orders.work_order_detail', work_order_id=w.id) }}"
-                           class="text-[var(--color-primary)] no-underline hover:underline">{{ w.display_id or w.id }}</a>
+                           class="text-[var(--color-primary)] no-underline hover:underline">{{ (w.display_id or w.id)|lower }}</a>
                     </td>
                     <td class="px-3 py-2.5" data-label="{{ _('Company') }}">
                         <a href="{{ url_for('work_orders.work_order_detail', work_order_id=w.id) }}"
@@ -102,8 +98,8 @@
                             {{ _(w.status or 'open') }}
                         </span>
                     </td>
-                    <td class="px-3 py-2.5" data-label="{{ _('Action') }}">
-                        <div class="flex gap-1.5 justify-center flex-nowrap">
+                    <td class="px-4 py-3 text-right" data-label="{{ _('Actions') }}">
+                        <div class="flex gap-1.5 justify-end flex-nowrap">
                             {{ btn(icon='visibility', variant='secondary', size='sm', href=url_for('work_orders.work_order_detail', work_order_id=w.id)) }}
                             {{ btn(icon='edit', variant='primary', size='sm', href=url_for('work_orders.edit_work_order', work_order_id=w.id)) }}
                             <form action="{{ url_for('work_orders.delete_work_order', work_order_id=w.id) }}"
@@ -117,6 +113,8 @@
                 {% endfor %}
             </tbody>
         </table>
+
+            {{ render_pagination(meta, 'work_orders.work_order_list', search_query) }}
     </div>
     {% else %}
     <div class="text-center py-12 text-[var(--color-text-muted)]">

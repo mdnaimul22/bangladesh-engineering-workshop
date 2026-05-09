@@ -10,12 +10,6 @@
 {% endblock %}
 
 {% block content %}
-{% set crumbs = [
-    {'label': _('Home'), 'url': url_for('shops.index')},
-    {'label': _('Work Orders'), 'url': url_for('work_orders.work_order_list')},
-    {'label': _('Add Order') if action == 'add' else _('Edit Order'), 'url': ''}
-] %}
-{{ breadcrumb(crumbs) }}
 {{ breadcrumb_schema(crumbs) }}
 
 {% set header_actions %}
@@ -123,9 +117,14 @@
 
         {# ── Document Gallery ────────────────────────────── #}
         <div class="p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)] mb-5">
-            <h3 class="text-base font-semibold m-0 mb-3 flex items-center gap-2 text-[var(--color-text)]">
-                <span class="material-icons text-[var(--color-primary)]">collections</span> {{ _('Document Gallery') }}
-            </h3>
+            <div class="flex justify-between items-center mb-3 pb-2 border-b border-[var(--color-border)]">
+                <h3 class="text-base font-semibold m-0 flex items-center gap-2 text-[var(--color-text)]">
+                    <span class="material-icons text-[var(--color-primary)]">collections</span> {{ _('Document Gallery') }}
+                </h3>
+                <button type="button" id="btn-add-doc" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[var(--color-primary)]/10 text-[var(--color-primary)] border border-[var(--color-primary)]/20 rounded-md text-xs font-bold uppercase tracking-wider hover:bg-[var(--color-primary)] hover:text-white transition-all">
+                    <span class="material-icons text-sm">add_photo_alternate</span> {{ _('Add Item') }}
+                </button>
+            </div>
             <div id="gallery-container">
                 {% set docs = work_order.documents if work_order.documents else [None] %}
                 {% for doc in docs %}
@@ -134,13 +133,13 @@
                         <span class="material-icons text-sm">close</span>
                     </button>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pr-10">
-                        <div>
+                        <div class="flex flex-col justify-end">
                             <label class="{{ lbl }}">{{ _('Document File') }}</label>
                             <input type="file" name="gallery_file_{{ loop.index0 }}" accept="image/*,application/pdf"
                                    class="{{ inp }} file:mr-2 file:py-0.5 file:px-2 file:rounded file:border file:border-[var(--color-border)] file:bg-[var(--color-bg)] file:text-xs">
                             <input type="hidden" name="doc_file_path" value="{{ doc.file_path if doc else '' }}">
                         </div>
-                        <div>
+                        <div class="flex flex-col justify-end">
                             <label class="{{ lbl }}">{{ _('Document Type') }}</label>
                             <select name="doc_type" class="{{ inp }}">
                                 <option value="Drawing" {% if doc and doc.document_type=='Drawing' %}selected{% endif %}>{{ _('Technical Drawing') }}</option>
@@ -149,7 +148,7 @@
                                 <option value="Other" {% if doc and doc.document_type=='Other' %}selected{% endif %}>{{ _('Other') }}</option>
                             </select>
                         </div>
-                        <div>
+                        <div class="flex flex-col justify-end">
                             <label class="{{ lbl }}">{{ _('Name') }}</label>
                             <input type="text" name="doc_notes" class="{{ inp }}" value="{{ doc.notes if doc else '' }}" placeholder="{{ _('Short description') }}">
                         </div>
@@ -157,16 +156,18 @@
                 </div>
                 {% endfor %}
             </div>
-            <button type="button" id="btn-add-doc" class="mt-1 inline-flex items-center gap-1.5 px-4 py-2 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-md text-[var(--color-text)] text-sm font-medium hover:bg-[var(--color-surface)] transition-all">
-                <span class="material-icons text-lg">add_photo_alternate</span> {{ _('Add Item') }}
-            </button>
         </div>
 
         {# ── Parts & Materials ───────────────────────────── #}
         <div class="p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)] mb-5">
-            <h3 class="text-base font-semibold m-0 mb-3 flex items-center gap-2 text-[var(--color-text)]">
-                <span class="material-icons text-[var(--color-primary)]">settings_suggest</span> {{ _('Parts & Materials') }}
-            </h3>
+            <div class="flex justify-between items-center mb-3 pb-2 border-b border-[var(--color-border)]">
+                <h3 class="text-base font-semibold m-0 flex items-center gap-2 text-[var(--color-text)]">
+                    <span class="material-icons text-[var(--color-primary)]">settings_suggest</span> {{ _('Parts & Materials') }}
+                </h3>
+                <button type="button" id="btn-add-part" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[var(--color-primary)]/10 text-[var(--color-primary)] border border-[var(--color-primary)]/20 rounded-md text-xs font-bold uppercase tracking-wider hover:bg-[var(--color-primary)] hover:text-white transition-all">
+                    <span class="material-icons text-sm">add</span> {{ _('Add Part') }}
+                </button>
+            </div>
             <div id="parts-container">
                 {% set parts = work_order.parts if work_order.parts else [None] %}
                 {% for part in parts %}
@@ -176,43 +177,43 @@
                     </button>
                     <input type="hidden" name="voucher_file_path" value="{{ part.voucher_file_path if part else '' }}">
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 pr-10 mb-2">
-                        <div>
+                        <div class="flex flex-col justify-end">
                             <label class="{{ lbl }}"><span class="material-icons text-sm">label</span> {{ _('Part Name') }}</label>
                             <input type="text" name="part_name" class="{{ inp }}" required value="{{ part.part_name if part else '' }}" placeholder="{{ _('Name of the part/service') }}">
                         </div>
-                        <div>
+                        <div class="flex flex-col justify-end">
                             <label class="{{ lbl }}"><span class="material-icons text-sm">info</span> {{ _('Measurement') }}</label>
                             <input type="text" name="measurement" class="{{ inp }}" value="{{ part.measurement if part else '' }}" placeholder="e.g. 10x20">
                         </div>
-                        <div>
+                        <div class="flex flex-col justify-end">
                             <label class="{{ lbl }}"><span class="material-icons text-sm">balance</span> {{ _('Qty') }}</label>
                             <input type="number" step="0.01" name="qty" class="{{ inp }}" value="{{ part.qty if part else '' }}" placeholder="0">
                         </div>
-                        <div>
+                        <div class="flex flex-col justify-end">
                             <label class="{{ lbl }}"><span class="material-icons text-sm">payments</span> {{ _('Price') }}</label>
                             <input type="number" step="0.01" name="price" class="{{ inp }} js-part-price" value="{{ part.price if part else '' }}" placeholder="0">
                         </div>
                     </div>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 pr-10">
-                        <div>
+                        <div class="flex flex-col justify-end">
                             <label class="{{ lbl }}"><span class="material-icons text-sm">fitness_center</span> {{ _('Weight') }}</label>
                             <input type="number" step="0.01" name="weight" class="{{ inp }}" value="{{ part.weight if part else '' }}" placeholder="0">
                         </div>
-                        <div>
+                        <div class="flex flex-col justify-end">
                             <label class="{{ lbl }}"><span class="material-icons text-sm">straighten</span> {{ _('Unit') }}</label>
                             <select name="unit" class="{{ inp }}">
                                 <option value="">-- {{ _('Unit') }} --</option>
                                 {{ unit_options(part.unit if part else '') }}
                             </select>
                         </div>
-                        <div>
+                        <div class="flex flex-col justify-end">
                             <label class="{{ lbl }}"><span class="material-icons text-sm">history_edu</span> {{ _('Voucher') }}</label>
                             <input type="file" name="voucher_file_{{ loop.index0 }}" class="{{ inp }} file:mr-2 file:py-0.5 file:px-2 file:rounded file:border file:border-[var(--color-border)] file:bg-[var(--color-bg)] file:text-xs" accept="image/*">
                             {% if part and part.voucher_file_path %}
                             <a href="{{ url_for('shop_img', filename=part.voucher_file_path) }}" target="_blank" class="text-[var(--color-primary)] text-xs mt-0.5 inline-block hover:underline">{{ _('View Current') }}</a>
                             {% endif %}
                         </div>
-                        <div>
+                        <div class="flex flex-col justify-end">
                             <label class="{{ lbl }}"><span class="material-icons text-sm">store</span> {{ _('Supplier') }}</label>
                             <select name="supplier_id" class="{{ inp }}">
                                 <option value="">--</option>
@@ -225,15 +226,12 @@
                 </div>
                 {% endfor %}
             </div>
-            <button type="button" id="btn-add-part" class="mt-1 inline-flex items-center gap-1.5 px-4 py-2 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-md text-[var(--color-text)] text-sm font-medium hover:bg-[var(--color-surface)] transition-all">
-                <span class="material-icons text-lg">add</span> {{ _('Add Part') }}
-            </button>
         </div>
 
         {# ── Submit Actions ──────────────────────────────── #}
         <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-[var(--color-border)]">
             <div class="flex gap-3">
-                {{ btn(text=_('Save Order') if action == 'add' else _('Save Changes'), icon='save', variant='primary', type='submit') }}
+                {{ btn(text=_('Save'), icon='save', variant='primary', type='submit') }}
                 {{ btn(text=_('Cancel'), icon='close', variant='secondary', href=url_for('work_orders.work_order_list')) }}
             </div>
             <div class="text-right">
@@ -255,37 +253,37 @@
         </button>
         <input type="hidden" name="voucher_file_path" value="">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 pr-10 mb-2">
-            <div>
+            <div class="flex flex-col justify-end">
                 <label class="{{ lbl }}"><span class="material-icons text-sm">label</span> {{ _('Part Name') }}</label>
                 <input type="text" name="part_name" class="{{ inp }}" required placeholder="{{ _('Name of the part/service') }}">
             </div>
-            <div>
+            <div class="flex flex-col justify-end">
                 <label class="{{ lbl }}"><span class="material-icons text-sm">info</span> {{ _('Measurement') }}</label>
                 <input type="text" name="measurement" class="{{ inp }}" placeholder="e.g. 10x20">
             </div>
-            <div>
+            <div class="flex flex-col justify-end">
                 <label class="{{ lbl }}"><span class="material-icons text-sm">balance</span> {{ _('Qty') }}</label>
                 <input type="number" step="0.01" name="qty" class="{{ inp }}" placeholder="0">
             </div>
-            <div>
+            <div class="flex flex-col justify-end">
                 <label class="{{ lbl }}"><span class="material-icons text-sm">payments</span> {{ _('Price') }}</label>
                 <input type="number" step="0.01" name="price" class="{{ inp }} js-part-price" placeholder="0">
             </div>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 pr-10">
-            <div>
+            <div class="flex flex-col justify-end">
                 <label class="{{ lbl }}"><span class="material-icons text-sm">fitness_center</span> {{ _('Weight') }}</label>
                 <input type="number" step="0.01" name="weight" class="{{ inp }}" placeholder="0">
             </div>
-            <div>
+            <div class="flex flex-col justify-end">
                 <label class="{{ lbl }}"><span class="material-icons text-sm">straighten</span> {{ _('Unit') }}</label>
                 <select name="unit" class="{{ inp }}"><option value="">-- {{ _('Unit') }} --</option>{{ unit_options() }}</select>
             </div>
-            <div>
+            <div class="flex flex-col justify-end">
                 <label class="{{ lbl }}"><span class="material-icons text-sm">history_edu</span> {{ _('Voucher') }}</label>
                 <input type="file" name="voucher_file_0" class="{{ inp }} file:mr-2 file:py-0.5 file:px-2 file:rounded file:border file:border-[var(--color-border)] file:bg-[var(--color-bg)] file:text-xs" accept="image/*">
             </div>
-            <div>
+            <div class="flex flex-col justify-end">
                 <label class="{{ lbl }}"><span class="material-icons text-sm">store</span> {{ _('Supplier') }}</label>
                 <select name="supplier_id" class="{{ inp }}"><option value="">--</option>{% for s in suppliers %}<option value="{{ s.id }}">{{ s.name }}</option>{% endfor %}</select>
             </div>
@@ -304,7 +302,7 @@
                        class="{{ inp }} file:mr-2 file:py-0.5 file:px-2 file:rounded file:border file:border-[var(--color-border)] file:bg-[var(--color-bg)] file:text-xs">
                 <input type="hidden" name="doc_file_path" value="">
             </div>
-            <div>
+            <div class="flex flex-col justify-end">
                 <label class="{{ lbl }}">{{ _('Document Type') }}</label>
                 <select name="doc_type" class="{{ inp }}">
                     <option value="Drawing">{{ _('Technical Drawing') }}</option>
@@ -313,7 +311,7 @@
                     <option value="Other">{{ _('Other') }}</option>
                 </select>
             </div>
-            <div>
+            <div class="flex flex-col justify-end">
                 <label class="{{ lbl }}">{{ _('Name') }}</label>
                 <input type="text" name="doc_notes" class="{{ inp }}" value="" placeholder="{{ _('Short description') }}">
             </div>

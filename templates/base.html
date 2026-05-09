@@ -90,7 +90,7 @@
     {% block extra_head %}{% endblock %}
 </head>
 
-<body class="font-bengali legacy-styles">
+<body class="font-bengali bg-[var(--color-bg)] text-[var(--color-text)] min-h-screen flex flex-col antialiased">
 
     {# ══════════════════════════════════════════════════════════════
        OVERLAY — Mobile sidebar backdrop (Alpine-controlled)
@@ -145,8 +145,8 @@
                         <span class="material-icons align-middle text-lg">expand_more</span>
                     </a>
                     <div class="hidden group-hover:flex flex-col absolute top-full left-0
-                                bg-surface min-w-[240px] shadow-lg z-dropdown rounded-lg
-                                py-2 border border-bew-border">
+                                bg-[var(--color-surface)] min-w-[240px] shadow-lg z-[var(--z-dropdown)] rounded-lg
+                                py-2 border border-[var(--color-border)]">
                         <a href="{{ url_for('buyers.buyer_list') }}"
                             class="text-text-muted no-underline px-4 py-3 text-sm font-medium
                                    hover:bg-bew-bg hover:text-primary transition-all">

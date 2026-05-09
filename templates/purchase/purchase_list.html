@@ -1,3 +1,4 @@
+{% from 'components/_pagination.html' import render_pagination %}
 {% extends 'base.html' %}
 {% from 'components/_navigation.html' import page_header, breadcrumb with context %}
 {% from 'components/_buttons.html' import btn with context %}
@@ -15,19 +16,8 @@
 
 {% block content %}
 {# ── Breadcrumb ──────────────────────────────────────────── #}
-{% set crumbs = [
-    {'label': _('Home'), 'url': url_for('shops.index')},
-    {'label': _('Purchases'), 'url': ''}
-] %}
 {% if supplier %}
-{% set crumbs = [
-    {'label': _('Home'), 'url': url_for('shops.index')},
-    {'label': _('All Shops'), 'url': url_for('shops.shop_list')},
-    {'label': supplier.name, 'url': url_for('shops.shop_detail', shop_id=supplier.id)},
-    {'label': _('Purchases'), 'url': ''}
-] %}
 {% endif %}
-{{ breadcrumb(crumbs) }}
 {{ breadcrumb_schema(crumbs) }}
 
 {# ── Page Header ─────────────────────────────────────────── #}
@@ -58,6 +48,9 @@
                         <span class="material-icons text-sm align-middle mr-0.5">storefront</span> {{ _('Supplier') }}
                     </th>
                     <th class="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
+                        ID
+                    </th>
+                    <th class="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
                         <span class="material-icons text-sm align-middle mr-0.5">receipt</span> {{ _('Voucher No') }}
                     </th>
                     <th class="px-3 py-3 text-right text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
@@ -75,8 +68,8 @@
                     <th class="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
                         <span class="material-icons text-sm align-middle mr-0.5">attach_file</span> {{ _('Voucher') }}
                     </th>
-                    <th class="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
-                        <span class="material-icons text-sm align-middle mr-0.5">settings</span> {{ _('Action') }}
+                    <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)] w-24">
+                        <span class="material-icons text-sm align-middle mr-0.5">settings</span> {{ _('Actions') }}
                     </th>
                 </tr>
             </thead>
@@ -92,6 +85,10 @@
                         {{ p.supplier_name or '-' }}
                         {% endif %}
                     </td>
+                    <td class="px-3 py-2.5 text-center text-xs font-mono whitespace-nowrap" data-label="ID">
+                        <a href="{{ url_for('purchases.purchase_detail', purchase_id=p.id) }}"
+                           class="text-[var(--color-primary)] no-underline hover:underline">{{ (p.display_id or p.id)|lower }}</a>
+                    </td>
                     <td class="px-3 py-2.5 text-center font-mono text-[var(--color-text)]" data-label="{{ _('Voucher No') }}">{{ p.voucher_no or '-' }}</td>
                     <td class="px-3 py-2.5 text-right font-bold text-[var(--color-text)]" data-label="{{ _('Total') }}">৳ {{ p.total_amount or 0 }}</td>
                     <td class="px-3 py-2.5 text-center" data-label="{{ _('Payment') }}">{{ _(p.payment_status or '-') }}</td>
@@ -105,8 +102,8 @@
                         </a>
                         {% else %}-{% endif %}
                     </td>
-                    <td class="px-3 py-2.5" data-label="{{ _('Action') }}">
-                        <div class="flex gap-1.5 justify-center flex-nowrap">
+                    <td class="px-4 py-3 text-right" data-label="{{ _('Actions') }}">
+                        <div class="flex gap-1.5 justify-end flex-nowrap">
                             {{ btn(icon='visibility', variant='secondary', size='sm', href=url_for('purchases.purchase_detail', purchase_id=p.id)) }}
                             {{ btn(icon='edit', variant='primary', size='sm', href=url_for('purchases.edit_purchase', purchase_id=p.id)) }}
                             <form action="{{ url_for('purchases.delete_purchase', purchase_id=p.id) }}" method="POST"
@@ -120,6 +117,8 @@
                 {% endfor %}
             </tbody>
         </table>
+
+            {{ render_pagination(meta, 'purchases.purchase_list', search_query) }}
     </div>
     {% else %}
     <div class="text-center py-12 text-[var(--color-text-muted)]">
