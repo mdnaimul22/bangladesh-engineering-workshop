@@ -1,76 +1,141 @@
 {% extends 'base.html' %}
+{% from 'components/_navigation.html' import page_header, breadcrumb with context %}
+{% from 'components/_buttons.html' import btn with context %}
+{% from 'components/_seo.html' import og_tags, breadcrumb_schema with context %}
 
-{% block title %}{% if action == 'add' %}{{ _('Add New Shop') }}{% else %}{{ _('Edit Shop') }}{% endif %} - {{
-_('Bangladesh Engineering Workshop') }}{% endblock %}
+{% block title %}
+{{ _('Add New Shop') if action == 'add' else _('Edit Shop') }} - {{ _('Bangladesh Engineering Workshop') }}
+{% endblock %}
+
+{% block extra_head %}
+{{ og_tags(
+    title=_('Add New Shop') if action == 'add' else _('Edit Shop'),
+    description=_('Manage shop entries for Bangladesh Engineering Workshop.'),
+    url=request.url
+) }}
+{% endblock %}
 
 {% block content %}
-<section class="page-header">
-    <h1>
-        <span class="material-icons v-middle">{% if action == 'add' %}add_circle{% else %}edit{% endif %}</span>
-        {{ _('Add New Shop') if action == 'add' else _('Edit Shop') }}
-    </h1>
-    <div class="header-actions">
-        <a href="{{ url_for('shops.shop_list') }}" class="btn btn-secondary">
-            <span class="material-icons">arrow_back</span> {{ _('Back') }}
-        </a>
-    </div>
-</section>
+{# ── Breadcrumb ──────────────────────────────────────────── #}
+{% set crumbs = [
+    {'label': _('Home'), 'url': url_for('shops.index')},
+    {'label': _('All Shops'), 'url': url_for('shops.shop_list')},
+    {'label': _('Add New Shop') if action == 'add' else _('Edit Shop'), 'url': ''}
+] %}
+{{ breadcrumb(crumbs) }}
+{{ breadcrumb_schema(crumbs) }}
 
-<section class="shop-form-section">
+{# ── Page Header ─────────────────────────────────────────── #}
+{% set header_actions %}
+{{ btn(text=_('Back'), icon='arrow_back', variant='secondary', href=url_for('shops.shop_list')) }}
+{% endset %}
 
-    <form method="POST" class="shop-form" enctype="multipart/form-data">
+{{ page_header(
+    title=_('Add New Shop') if action == 'add' else _('Edit Shop'),
+    icon='add_circle' if action == 'add' else 'edit',
+    actions=[header_actions]
+) }}
 
-        <!-- Row 1: Shop Name & Visiting Card Section (grid-3) -->
-        <div class="grid-3 mb-3">
-            <!-- Left: Shop Name -->
-            <div class="form-group mb-0">
-                <label for="name" class="header-label"><span class="material-icons v-middle">storefront</span> {{
-                    _('Shop Name') }}</label>
-                <input type="text" name="name" id="name" class="form-control" required value="{{ shop.name or '' }}"
-                    placeholder="{{ _('Enter shop name') }}">
-            </div>
+{# ── Form ────────────────────────────────────────────────── #}
+<section class="mt-4">
+    <form method="POST" enctype="multipart/form-data"
+          class="bg-[var(--color-surface)] p-5 md:p-6 rounded-[var(--radius-lg)]
+                 shadow-[var(--shadow)] border border-[var(--color-border)]">
 
-            <!-- Middle: Visiting Card (Aligns with Address below) -->
-            <div class="form-group mb-0">
-                <label for="visiting_card" class="header-label">
-                    <span class="material-icons v-middle">image</span> Visiting Card
+        {# ── Row 1: Shop Name, Visiting Card, Preview ──── #}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+            {# Shop Name #}
+            <div>
+                <label for="name"
+                       class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+                    <span class="material-icons text-sm">storefront</span>
+                    {{ _('Shop Name') }}
                 </label>
-                <input type="file" name="visiting_card" id="visiting_card" class="form-control" accept="image/*"
-                    onchange="previewImage(this)">
+                <input type="text" name="name" id="name" required
+                       value="{{ shop.name or '' }}"
+                       placeholder="{{ _('Enter shop name') }}"
+                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
+                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
+                              focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
+                              outline-none transition-all h-[33px]">
             </div>
 
-            <!-- Right: Preview Box (Aligns with Category below) -->
-            <div class="form-group mb-0">
-                <div id="imagePreview" class="image-preview-box">
+            {# Visiting Card Upload #}
+            <div>
+                <label for="visiting_card"
+                       class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+                    <span class="material-icons text-sm">image</span>
+                    {{ _('Visiting Card') }}
+                </label>
+                <input type="file" name="visiting_card" id="visiting_card" accept="image/*"
+                       onchange="previewImage(this)"
+                       class="form-control w-full text-sm border border-[var(--color-border)] rounded-md
+                              bg-[var(--color-input)] file:mr-3 file:py-1 file:px-3 file:rounded-md
+                              file:border file:border-[var(--color-border)] file:bg-[var(--color-bg)]
+                              file:text-[var(--color-text)] file:text-xs file:font-semibold
+                              file:cursor-pointer h-[33px]">
+            </div>
+
+            {# Preview Box #}
+            <div class="flex justify-center md:justify-end">
+                <div id="imagePreview"
+                     class="w-[265px] h-[120px] bg-[var(--color-bg)]/50 backdrop-blur-sm
+                            border border-[var(--color-border)] rounded-[var(--radius)]
+                            flex items-center justify-center overflow-hidden
+                            shadow-md relative z-10">
                     {% if shop.visiting_card %}
-                    <img src="/shop_img/{{ shop.visiting_card }}" alt="Current Card" class="preview-img">
+                    <img src="/shop_img/{{ shop.visiting_card }}" alt="{{ _('Current Card') }}"
+                         class="w-full h-full object-cover rounded">
                     {% else %}
-                    <span style="color: #999; font-size: 10px;">{{ _('Preview') }}</span>
+                    <span class="text-[var(--color-text-muted)] text-xs">{{ _('Preview') }}</span>
                     {% endif %}
                 </div>
             </div>
         </div>
 
-        <!-- Row 2: Proprietor, Address, Category (grid-3) -->
-        <div class="grid-3 mb-3">
-            <div class="form-group mb-0">
-                <label for="proprietor" class="header-label"><span class="material-icons v-middle">person</span> {{
-                    _('Proprietor') }}</label>
-                <input type="text" name="proprietor" id="proprietor" class="form-control"
-                    value="{{ shop.proprietor or '' }}" placeholder="{{ _('Proprietor Name') }}">
+        {# ── Row 2: Proprietor, Address, Category ──────── #}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+            <div>
+                <label for="proprietor"
+                       class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+                    <span class="material-icons text-sm">person</span>
+                    {{ _('Proprietor') }}
+                </label>
+                <input type="text" name="proprietor" id="proprietor"
+                       value="{{ shop.proprietor or '' }}"
+                       placeholder="{{ _('Proprietor Name') }}"
+                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
+                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
+                              focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
+                              outline-none transition-all">
             </div>
 
-            <div class="form-group mb-0">
-                <label for="address" class="header-label"><span class="material-icons v-middle">place</span> {{
-                    _('Address') }}</label>
-                <input type="text" name="address" id="address" class="form-control" value="{{ shop.address or '' }}"
-                    placeholder="{{ _('Shop Address') }}">
+            <div>
+                <label for="address"
+                       class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+                    <span class="material-icons text-sm">place</span>
+                    {{ _('Address') }}
+                </label>
+                <input type="text" name="address" id="address"
+                       value="{{ shop.address or '' }}"
+                       placeholder="{{ _('Shop Address') }}"
+                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
+                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
+                              focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
+                              outline-none transition-all">
             </div>
 
-            <div class="form-group mb-0">
-                <label for="category_id" class="header-label"><span class="material-icons v-middle">category</span> {{
-                    _('Category') }}</label>
-                <select name="category_id" id="category_id" class="form-control">
+            <div>
+                <label for="category_id"
+                       class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+                    <span class="material-icons text-sm">category</span>
+                    {{ _('Category') }}
+                </label>
+                <select name="category_id" id="category_id"
+                        class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
+                               bg-[var(--color-input)] text-[var(--color-text)] text-sm
+                               focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
+                               outline-none transition-all">
                     <option value="">-- {{ _('Select Category') }} --</option>
                     {% for cat in categories %}
                     <option value="{{ cat.id }}" {% if shop.category_id==cat.id %}selected{% endif %}>
@@ -79,122 +144,162 @@ _('Bangladesh Engineering Workshop') }}{% endblock %}
                     {% endfor %}
                     <option value="new">+ {{ _('Add New Category') }}</option>
                 </select>
-                <input type="text" name="new_category_name" id="new_category_name" class="form-control"
-                    placeholder="{{ _('Enter new category name') }}" style="display: none; margin-top: 0.5rem;">
+                <input type="text" name="new_category_name" id="new_category_name"
+                       placeholder="{{ _('Enter new category name') }}"
+                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
+                              bg-[var(--color-input)] text-[var(--color-text)] text-sm mt-2
+                              focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
+                              outline-none transition-all hidden">
             </div>
         </div>
 
-        <!-- Row 3: Mobile, WhatsApp, Online Transaction (grid-3) -->
-        <div class="grid-3 mb-3">
-            <div class="form-group mb-0">
-                <label for="mobile" class="header-label"><span class="material-icons v-middle">phone_android</span> {{
-                    _('Mobile') }}</label>
-                <input type="text" name="mobile" id="mobile" class="form-control" value="{{ shop.mobile or '' }}"
-                    placeholder="{{ _('e.g. 017XX-XXXXXX') }}">
+        {# ── Row 3: Mobile, WhatsApp, Online Transaction ── #}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+            <div>
+                <label for="mobile"
+                       class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+                    <span class="material-icons text-sm">phone_android</span>
+                    {{ _('Mobile') }}
+                </label>
+                <input type="text" name="mobile" id="mobile"
+                       value="{{ shop.mobile or '' }}"
+                       placeholder="{{ _('e.g. 017XX-XXXXXX') }}"
+                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
+                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
+                              focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
+                              outline-none transition-all">
             </div>
 
-            <div class="form-group mb-0">
-                <label for="whatsapp" class="header-label"><span class="material-icons v-middle">chat</span> {{
-                    _('WhatsApp') }}</label>
-                <input type="text" name="whatsapp" id="whatsapp" class="form-control" value="{{ shop.whatsapp or '' }}"
-                    placeholder="{{ _('WhatsApp Number') }}">
+            <div>
+                <label for="whatsapp"
+                       class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+                    <span class="material-icons text-sm">chat</span>
+                    {{ _('WhatsApp') }}
+                </label>
+                <input type="text" name="whatsapp" id="whatsapp"
+                       value="{{ shop.whatsapp or '' }}"
+                       placeholder="{{ _('WhatsApp Number') }}"
+                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
+                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
+                              focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
+                              outline-none transition-all">
             </div>
 
-            <div class="form-group mb-0">
-                <label for="transaction_status" class="header-label"><span
-                        class="material-icons v-middle">payments</span> {{ _('Online Transaction') }}</label>
-                <input type="text" name="transaction_status" id="transaction_status" class="form-control"
-                    value="{{ shop.transaction_status or '' }}" placeholder="{{ _('e.g. Bkash 018XX-XXXXXX') }}">
+            <div>
+                <label for="transaction_status"
+                       class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+                    <span class="material-icons text-sm">payments</span>
+                    {{ _('Online Transaction') }}
+                </label>
+                <input type="text" name="transaction_status" id="transaction_status"
+                       value="{{ shop.transaction_status or '' }}"
+                       placeholder="{{ _('e.g. Bkash 018XX-XXXXXX') }}"
+                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
+                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
+                              focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
+                              outline-none transition-all">
             </div>
         </div>
 
-        <!-- Row 4: Email/Web, Tags, Products List (grid-3) -->
-        <div class="grid-3 mb-3">
-            <!-- Left: Email/Web -->
-            <div class="form-group mb-0">
-                <label for="email_web" class="header-label"><span class="material-icons v-middle">language</span> {{
-                    _('Email/Web') }}</label>
-                <input type="text" name="email_web" id="email_web" class="form-control"
-                    value="{{ shop.email_web or '' }}" placeholder="{{ _('Email or Website') }}">
+        {# ── Row 4: Email/Web, Tags, Products ──────────── #}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+            {# Email/Web #}
+            <div>
+                <label for="email_web"
+                       class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+                    <span class="material-icons text-sm">language</span>
+                    {{ _('Email/Web') }}
+                </label>
+                <input type="text" name="email_web" id="email_web"
+                       value="{{ shop.email_web or '' }}"
+                       placeholder="{{ _('Email or Website') }}"
+                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
+                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
+                              focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
+                              outline-none transition-all">
             </div>
 
-            <!-- Middle: Tags Section -->
-            <div class="form-group mb-0">
-                <label class="header-label"><span class="material-icons v-middle">local_offer</span> {{ _('Tags') }}
-                    <span style="font-size: 0.725rem; color: #666; font-weight: normal; margin-left: 4px;">({{
-                        _('comma separated') }})</span></label>
+            {# Tags #}
+            <div>
+                <label class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+                    <span class="material-icons text-sm">local_offer</span>
+                    {{ _('Tags') }}
+                    <span class="text-[var(--color-text-muted)] font-normal text-[0.65rem] ml-1">({{ _('comma separated') }})</span>
+                </label>
 
-                <!-- Add Tag Input -->
-                <div class="tag-input-group mb-2" style="display: flex; gap: 4px;">
-                    <input type="text" id="new-tag-input" class="form-control" placeholder="{{ _('e.g. Lathe') }}"
-                        style="flex: 1; height: 32px; font-size: 0.85rem;">
-                    <button type="button" id="btn-add-tag" class="btn btn-navy"
-                        style="width: 38px; height: 32px; min-width: 38px; padding: 0;">
-                        <span class="material-icons" style="font-size: 18px;">add</span>
+                {# Tag Input Row #}
+                <div class="flex gap-1 mb-2">
+                    <input type="text" id="new-tag-input"
+                           placeholder="{{ _('e.g. Lathe') }}"
+                           class="form-control flex-1 px-3 py-1 border border-[var(--color-border)] rounded-md
+                                  bg-[var(--color-input)] text-[var(--color-text)] text-sm h-8
+                                  focus:border-[var(--color-primary)] outline-none transition-all">
+                    <button type="button" id="btn-add-tag"
+                            class="w-9 h-8 min-w-[36px] flex items-center justify-center
+                                   bg-[var(--color-btn-primary)] text-white rounded-md
+                                   hover:opacity-90 hover:scale-105 transition-all shrink-0">
+                        <span class="material-icons text-lg">add</span>
                     </button>
                 </div>
 
-                <!-- Hidden input for Create Mode -->
                 <input type="hidden" name="tags" id="hidden_tags">
 
-                <!-- Tags Container (Added tags will appear below the input) -->
+                {# Tags Container #}
                 <div id="tags-container"
-                    style="max-height: 100px; overflow-y: auto; display: flex; flex-wrap: wrap; gap: 5px;">
+                     class="max-h-[100px] overflow-y-auto flex flex-wrap gap-1.5">
                     {% if action == 'edit' and shop.tags %}
                     {% for tag in shop.tags %}
-                    <div class="tag-item" data-tag-id="{{ tag.id }}">
-                        <span class="tag-label">
-                            <span class="material-icons v-middle" style="font-size: 14px;">local_offer</span>
+                    <div class="tag-item flex items-center gap-1.5 px-3 py-1.5
+                                bg-gradient-to-br from-sky-100 to-sky-200 rounded-lg max-w-[400px]"
+                         data-tag-id="{{ tag.id }}">
+                        <span class="tag-label flex-1 text-sky-600 font-medium text-sm flex items-center gap-1">
+                            <span class="material-icons text-sm">local_offer</span>
                             <span class="tag-text">{{ tag.name }}</span>
                         </span>
-                        <button type="button" class="btn-remove-tag" data-tag-id="{{ tag.id }}"
-                            title="ট্যাগ সরান">×</button>
+                        <button type="button"
+                                class="btn-remove-tag w-5 h-5 flex items-center justify-center
+                                       bg-red-100 text-red-600 border-none rounded-full text-xs
+                                       cursor-pointer hover:bg-red-200 hover:scale-110 transition-all"
+                                data-tag-id="{{ tag.id }}" title="{{ _('Remove tag') }}">×</button>
                     </div>
                     {% endfor %}
                     {% endif %}
                 </div>
             </div>
 
-            <!-- Right: Products List -->
-            <div class="form-group mb-0">
-                <label for="products" class="header-label"><span class="material-icons v-middle">inventory_2</span> {{
-                    _('Products List') }}</label>
-                <textarea name="products" id="products" class="form-control" rows="4"
-                    placeholder="{{ _('List products...') }}"
-                    style="font-size: 0.85rem; line-height: 1.4; height: 80px;">{{ shop.products or '' }}</textarea>
+            {# Products List #}
+            <div>
+                <label for="products"
+                       class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+                    <span class="material-icons text-sm">inventory_2</span>
+                    {{ _('Products List') }}
+                </label>
+                <textarea name="products" id="products" rows="4"
+                          placeholder="{{ _('List products...') }}"
+                          class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
+                                 bg-[var(--color-input)] text-[var(--color-text)] text-sm leading-snug
+                                 focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
+                                 outline-none transition-all h-20 resize-y">{{ shop.products or '' }}</textarea>
             </div>
         </div>
 
-        <div class="form-actions mt-1">
-            <button type="submit" class="btn btn-navy">
-                {% if action == 'add' %}
-                <span class="material-icons">add_circle</span> {{ _('Add Shop') }}
-                {% else %}
-                <span class="material-icons">save</span> {{ _('Save') }}
-                {% endif %}
-            </button>
-            <a href="{{ url_for('shops.shop_list') }}" class="btn btn-secondary">
-                <span class="material-icons">close</span> {{ _('Cancel') }}
-            </a>
+        {# ── Submit Actions ────────────────────────────── #}
+        <div class="flex flex-wrap items-center gap-3 pt-4 border-t border-[var(--color-border)]">
+            {% if action == 'add' %}
+            {{ btn(text=_('Add Shop'), icon='add_circle', variant='primary', type='submit') }}
+            {% else %}
+            {{ btn(text=_('Save'), icon='save', variant='primary', type='submit') }}
+            {% endif %}
+            {{ btn(text=_('Cancel'), icon='close', variant='secondary', href=url_for('shops.shop_list')) }}
         </div>
     </form>
 </section>
+{% endblock %}
 
-<style>
-    .header-label {
-        margin-bottom: 2px !important;
-        font-size: 0.725rem !important;
-        color: #166534 !important;
-        font-weight: bold !important;
-        display: flex !important;
-        align-items: center;
-        min-height: 24px;
-    }
-</style>
-
+{% block extra_js %}
 <script>
     // Shop ID for edit mode (null for add mode)
-    const SHOP_ID = {% if action == 'edit' and shop_id %}{ { shop_id } } {% else %} null{% endif %};
+    const SHOP_ID = {% if action == 'edit' and shop_id %}{{ shop_id }}{% else %}null{% endif %};
     const IS_EDIT_MODE = SHOP_ID !== null;
 
     function previewImage(input) {
@@ -202,7 +307,7 @@ _('Bangladesh Engineering Workshop') }}{% endblock %}
         if (input.files && input.files[0]) {
             const reader = new FileReader();
             reader.onload = function (e) {
-                preview.innerHTML = '<img src="' + e.target.result + '" alt="Preview" class="preview-img">';
+                preview.innerHTML = '<img src="' + e.target.result + '" alt="Preview" class="w-full h-full object-cover rounded">';
             }
             reader.readAsDataURL(input.files[0]);
         }
@@ -212,52 +317,42 @@ _('Bangladesh Engineering Workshop') }}{% endblock %}
     document.getElementById('category_id').addEventListener('change', function () {
         var newCatInput = document.getElementById('new_category_name');
         if (this.value === 'new') {
-            newCatInput.style.display = 'block';
+            newCatInput.classList.remove('hidden');
             newCatInput.focus();
         } else {
-            newCatInput.style.display = 'none';
+            newCatInput.classList.add('hidden');
         }
     });
 
-    // ==================== SIMPLE TAG MANAGEMENT ====================
+    // ==================== TAG MANAGEMENT ====================
 
-    // Add a tag item to the container (visual only if not in edit mode)
     function addTagToContainer(tagId, tagName) {
         const container = document.getElementById('tags-container');
-
         const tagItem = document.createElement('div');
-        tagItem.className = 'tag-item';
+        tagItem.className = 'tag-item flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-br from-sky-100 to-sky-200 rounded-lg max-w-[400px]';
         tagItem.dataset.tagId = tagId;
         tagItem.innerHTML = `
-            <span class="tag-label">
-                <span class="material-icons v-middle" style="font-size: 16px;">local_offer</span> 
+            <span class="tag-label flex-1 text-sky-600 font-medium text-sm flex items-center gap-1">
+                <span class="material-icons text-sm">local_offer</span>
                 <span class="tag-text">${tagName}</span>
             </span>
-            <button type="button" class="btn-remove-tag" data-tag-id="${tagId}" title="ট্যাগ সরান">×</button>
+            <button type="button"
+                    class="btn-remove-tag w-5 h-5 flex items-center justify-center bg-red-100 text-red-600 border-none rounded-full text-xs cursor-pointer hover:bg-red-200 hover:scale-110 transition-all"
+                    data-tag-id="${tagId}" title="ট্যাগ সরান">×</button>
         `;
-
         container.appendChild(tagItem);
-
-        // Add remove handler
         tagItem.querySelector('.btn-remove-tag').addEventListener('click', handleRemoveTag);
     }
 
-    // Handle add tag button click
     document.getElementById('btn-add-tag').addEventListener('click', async function () {
         const input = document.getElementById('new-tag-input');
         const rawInput = input.value.trim();
-
-        if (!rawInput) {
-            alert('ট্যাগের নাম লিখুন');
-            return;
-        }
+        if (!rawInput) { alert('ট্যাগের নাম লিখুন'); return; }
 
         const tags = rawInput.split(',').map(t => t.trim()).filter(t => t);
 
         if (!IS_EDIT_MODE) {
-            // Client-side only for Create Mode
             tags.forEach(tagName => {
-                // Generate a temp random ID for removal handling
                 const tempId = 'temp_' + Math.random().toString(36).substr(2, 9);
                 addTagToContainer(tempId, tagName);
             });
@@ -267,80 +362,49 @@ _('Bangladesh Engineering Workshop') }}{% endblock %}
             return;
         }
 
-        // Edit Mode: Immediate API call
+        // Edit Mode: API calls
         for (const tagName of tags) {
             try {
-                // First create the tag (or get existing)
                 const createResponse = await fetch('/api/tag/add', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name: tagName, name_bn: '' })
                 });
-
-                if (!createResponse.ok) {
-                    console.error('Failed to create tag: ' + tagName);
-                    continue;
-                }
-
+                if (!createResponse.ok) { console.error('Failed to create tag: ' + tagName); continue; }
                 const tagData = await createResponse.json();
 
-                // Then add it to the shop
                 const addResponse = await fetch(`/api/shop/${SHOP_ID}/tag/add`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ tag_id: tagData.id })
                 });
-
                 if (addResponse.ok) {
-                    // Check if already in UI to avoid duplicates
                     const existing = document.querySelector(`.tag-item[data-tag-id="${tagData.id}"]`);
-                    if (!existing) {
-                        addTagToContainer(tagData.id, tagName);
-                    }
+                    if (!existing) { addTagToContainer(tagData.id, tagName); }
                 }
-            } catch (err) {
-                console.error('Error adding tag: ' + tagName, err);
-            }
+            } catch (err) { console.error('Error adding tag: ' + tagName, err); }
         }
-
         input.value = '';
         input.focus();
     });
 
-    // Allow Enter key to add tag
     document.getElementById('new-tag-input').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            document.getElementById('btn-add-tag').click();
-        }
+        if (e.key === 'Enter') { e.preventDefault(); document.getElementById('btn-add-tag').click(); }
     });
 
-    // Handle remove tag
     async function handleRemoveTag(e) {
-        const tagId = e.target.dataset.tagId;
+        const tagId = e.target.dataset.tagId || e.target.closest('.btn-remove-tag').dataset.tagId;
         const tagItem = e.target.closest('.tag-item');
-
-        if (!IS_EDIT_MODE) {
-            tagItem.remove();
-            updateHiddenTags();
-            return;
-        }
-
+        if (!IS_EDIT_MODE) { tagItem.remove(); updateHiddenTags(); return; }
         try {
             const response = await fetch(`/api/shop/${SHOP_ID}/tag/remove`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ tag_id: tagId })
             });
-
-            if (response.ok) {
-                tagItem.remove();
-            } else {
-                alert('ট্যাগ সরাতে সমস্যা হয়েছে');
-            }
-        } catch (err) {
-            alert('ট্যাগ সরাতে সমস্যা হয়েছে');
-        }
+            if (response.ok) { tagItem.remove(); }
+            else { alert('ট্যাগ সরাতে সমস্যা হয়েছে'); }
+        } catch (err) { alert('ট্যাগ সরাতে সমস্যা হয়েছে'); }
     }
 
     function updateHiddenTags() {
@@ -349,9 +413,13 @@ _('Bangladesh Engineering Workshop') }}{% endblock %}
         document.getElementById('hidden_tags').value = tags.join(',');
     }
 
-    // Attach remove handlers to existing tags
     document.querySelectorAll('.btn-remove-tag').forEach(btn => {
         btn.addEventListener('click', handleRemoveTag);
     });
+
+    // Run on load for edit mode
+    if (document.getElementById('category_id').value === 'new') {
+        document.getElementById('new_category_name').classList.remove('hidden');
+    }
 </script>
 {% endblock %}

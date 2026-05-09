@@ -12,7 +12,6 @@
 /* 4. Shop Components and Forms */
 @import url('shop_list.css');
 @import url('shop_form.css');
-@import url('shop_detail.css');
 
 /* 5. Responsive Table → Card Layout (Mobile) */
 @import url('responsive-table.css');

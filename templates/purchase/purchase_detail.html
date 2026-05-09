@@ -1,85 +1,106 @@
 {% extends 'base.html' %}
+{% from 'components/_navigation.html' import page_header, breadcrumb with context %}
+{% from 'components/_buttons.html' import btn with context %}
+{% from 'components/_seo.html' import og_tags, breadcrumb_schema with context %}
 
-{% block title %}Purchase Detail - {{ purchase.id }}{% endblock %}
+{% block title %}{{ _('Purchase') }} #{{ purchase.id }} - {{ _('Bangladesh Engineering Workshop') }}{% endblock %}
+
+{% block extra_head %}
+{{ og_tags(
+    title=_('Purchase') ~ ' #' ~ purchase.id,
+    description=_('Purchase voucher details for') ~ ' ' ~ purchase.supplier_name,
+    url=request.url
+) }}
+{% endblock %}
 
 {% block content %}
-<section class="page-header">
+{# ── Breadcrumb ──────────────────────────────────────────── #}
+{% set crumbs = [
+    {'label': _('Home'), 'url': url_for('shops.index')},
+    {'label': _('Purchases'), 'url': url_for('purchases.purchase_list')},
+    {'label': '#' ~ purchase.id, 'url': ''}
+] %}
+{{ breadcrumb(crumbs) }}
+{{ breadcrumb_schema(crumbs) }}
+
+{# ── Page Header ─────────────────────────────────────────── #}
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4
+            bg-[var(--color-surface)] p-4 rounded-[var(--radius)] shadow-[var(--shadow)] border border-[var(--color-border)]">
     <div>
-        <h1><span class="material-icons v-middle">receipt_long</span> {{ _('Purchase') }} #{{ purchase.id }}</h1>
-        <div class="subtitle">
-            <span class="material-icons v-middle" style="font-size: 16px;">storefront</span> {{ _('Supplier') }}:
-            <a class="shop-link" href="{{ url_for('shops.shop_detail', shop_id=purchase.supplier_id) }}">{{
-                purchase.supplier_name }}</a>
-            | <span class="material-icons v-middle" style="font-size: 16px;">calendar_today</span> {{ _('Date') }}: {{
-            purchase.purchase_date_display or '-' }}
+        <h1 class="m-0 text-xl font-bold text-[var(--color-text)] flex items-center gap-2">
+            <span class="material-icons text-[var(--color-primary)]">receipt_long</span>
+            {{ _('Purchase') }} #{{ purchase.id }}
+        </h1>
+        <div class="text-sm text-[var(--color-text-muted)] mt-0.5 flex items-center gap-1 flex-wrap">
+            <span class="material-icons text-sm">storefront</span> {{ _('Supplier') }}:
+            <a href="{{ url_for('shops.shop_detail', shop_id=purchase.supplier_id) }}"
+               class="text-[var(--color-primary)] no-underline font-medium hover:underline">{{ purchase.supplier_name }}</a>
+            <span class="mx-1">|</span>
+            <span class="material-icons text-sm">calendar_today</span> {{ _('Date') }}: {{ purchase.purchase_date_display or '-' }}
         </div>
     </div>
-
-    <div class="header-actions">
-        <a href="{{ url_for('purchases.edit_purchase', purchase_id=purchase.id) }}" class="btn btn-navy">
-            <span class="material-icons">edit</span> {{ _('Edit') }}
-        </a>
-        <a href="{{ url_for('purchases.shop_purchases', shop_id=purchase.supplier_id) }}" class="btn btn-secondary">
-            <span class="material-icons">arrow_back</span> {{ _('Back') }}
-        </a>
+    <div class="flex gap-2 flex-wrap">
+        {{ btn(text=_('Edit'), icon='edit', variant='primary', href=url_for('purchases.edit_purchase', purchase_id=purchase.id)) }}
+        {{ btn(text=_('Back'), icon='arrow_back', variant='secondary', href=url_for('purchases.shop_purchases', shop_id=purchase.supplier_id)) }}
     </div>
-</section>
+</div>
 
-<div class="shop-content-grid" style="grid-template-columns: 2fr 1fr;">
-    <div class="section-card">
-        <div class="grid-4 mb-3">
-            <div class="form-group mb-0">
-                <p class="subtitle" style="font-size: 0.85rem;"><span class="material-icons v-middle"
-                        style="font-size: 14px;">receipt</span> {{ _('Voucher No') }}</p>
-                <h3 style="margin:0;">{{ purchase.voucher_no or '-' }}</h3>
+{# ── Content Grid: Details + Voucher ─────────────────────── #}
+<div class="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-5">
+
+    {# ── LEFT: Purchase Info + Items ─────────────────────── #}
+    <div class="bg-[var(--color-surface)] rounded-[var(--radius)] border border-[var(--color-border)] p-5 shadow-[var(--shadow-sm)]">
+
+        {# Quick Stats #}
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+            {% set stats = [
+                {'icon': 'receipt', 'label': _('Voucher No'), 'value': purchase.voucher_no or '-'},
+                {'icon': 'payments', 'label': _('Payment'), 'value': _(purchase.payment_status or '-')},
+                {'icon': 'paid', 'label': _('Paid Amount'), 'value': '৳ ' ~ (purchase.paid_amount or 0)},
+                {'icon': 'calculate', 'label': _('Total Amount'), 'value': '৳ ' ~ (purchase.total_amount or 0)}
+            ] %}
+            {% for s in stats %}
+            <div class="p-3 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)]">
+                <p class="text-xs text-[var(--color-text-muted)] flex items-center gap-1 m-0 mb-1">
+                    <span class="material-icons text-sm">{{ s.icon }}</span> {{ s.label }}
+                </p>
+                <h3 class="m-0 text-base font-bold text-[var(--color-text)]">{{ s.value }}</h3>
             </div>
-            <div class="form-group mb-0">
-                <p class="subtitle" style="font-size: 0.85rem;"><span class="material-icons v-middle"
-                        style="font-size: 14px;">payments</span> {{ _('Payment') }}</p>
-                <h3 style="margin:0;">{{ _(purchase.payment_status or '-') }}</h3>
-            </div>
-            <div class="form-group mb-0">
-                <p class="subtitle" style="font-size: 0.85rem;"><span class="material-icons v-middle"
-                        style="font-size: 14px;">paid</span> {{ _('Paid Amount') }}</p>
-                <h3 style="margin:0;">৳ {{ purchase.paid_amount or 0 }}</h3>
-            </div>
-            <div class="form-group mb-0">
-                <p class="subtitle" style="font-size: 0.85rem;"><span class="material-icons v-middle"
-                        style="font-size: 14px;">calculate</span> {{ _('Total Amount') }}</p>
-                <h3 style="margin:0;">৳ {{ purchase.total_amount or 0 }}</h3>
-            </div>
+            {% endfor %}
         </div>
 
+        {# Notes #}
         {% if purchase.notes %}
-        <div
-            style="margin-bottom: 1.5rem; padding: 1rem; background:#f8fafc; border:1px solid #e2e8f0; border-radius: 8px;">
-            <strong>{{ _('Notes') }}:</strong>
-            <div style="margin-top: 0.5rem; color:#334155;">{{ purchase.notes }}</div>
+        <div class="mb-4 p-3 bg-[var(--color-bg)]/50 border border-[var(--color-border)] rounded-[var(--radius)]">
+            <strong class="text-[var(--color-text)]">{{ _('Notes') }}:</strong>
+            <div class="mt-1 text-sm text-[var(--color-text-muted)]">{{ purchase.notes }}</div>
         </div>
         {% endif %}
 
-        <div class="shops-table-container">
-            <table class="shops-table">
+        {# Items Table #}
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse text-sm min-w-[500px]">
                 <thead>
-                    <tr>
-                        <th>{{ _('Item') }}</th>
-                        <th>{{ _('Spec') }}</th>
-                        <th style="text-align: center;">{{ _('Qty') }}</th>
-                        <th style="text-align: center;">{{ _('Unit') }}</th>
-                        <th style="text-align: right;">{{ _('Rate') }}</th>
-                        <th style="text-align: right;">{{ _('Total') }}</th>
-                        <th style="text-align: center;">{{ _('Stock') }}</th>
+                    <tr class="bg-[var(--color-bg)] text-[var(--color-text-muted)]">
+                        <th class="px-3 py-2.5 text-left text-xs font-semibold uppercase border-b border-[var(--color-border)]">{{ _('Item') }}</th>
+                        <th class="px-3 py-2.5 text-left text-xs font-semibold uppercase border-b border-[var(--color-border)]">{{ _('Spec') }}</th>
+                        <th class="px-3 py-2.5 text-center text-xs font-semibold uppercase border-b border-[var(--color-border)]">{{ _('Qty') }}</th>
+                        <th class="px-3 py-2.5 text-center text-xs font-semibold uppercase border-b border-[var(--color-border)]">{{ _('Unit') }}</th>
+                        <th class="px-3 py-2.5 text-right text-xs font-semibold uppercase border-b border-[var(--color-border)]">{{ _('Rate') }}</th>
+                        <th class="px-3 py-2.5 text-right text-xs font-semibold uppercase border-b border-[var(--color-border)]">{{ _('Total') }}</th>
+                        <th class="px-3 py-2.5 text-center text-xs font-semibold uppercase border-b border-[var(--color-border)]">{{ _('Stock') }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for item in purchase.get('items', []) %}
-                    <tr>
-                        <td style="padding: 1rem; border-bottom: 1px solid #f1f5f9; text-align: right;">{{
-                            item.rate_per_unit }}</td>
-                        <td style="padding: 1rem; border-bottom: 1px solid #f1f5f9; text-align: right;">{{
-                            item.total_amount }}</td>
-                        <td style="padding: 1rem; border-bottom: 1px solid #f1f5f9; text-align: center;">{{
-                            item.stock_status or '-' }}</td>
+                    <tr class="border-b border-[var(--color-border)] hover:bg-[var(--color-bg)]/30 transition-colors">
+                        <td class="px-3 py-2.5 font-medium text-[var(--color-text)]">{{ item.product_name }}</td>
+                        <td class="px-3 py-2.5 text-[var(--color-text-muted)]">{{ item.specification or '-' }}</td>
+                        <td class="px-3 py-2.5 text-center">{{ item.quantity }}</td>
+                        <td class="px-3 py-2.5 text-center">{{ item.unit or '-' }}</td>
+                        <td class="px-3 py-2.5 text-right">{{ item.rate_per_unit }}</td>
+                        <td class="px-3 py-2.5 text-right font-bold text-[var(--color-text)]">{{ item.total_amount }}</td>
+                        <td class="px-3 py-2.5 text-center">{{ item.stock_status or '-' }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -87,23 +108,23 @@
         </div>
     </div>
 
-    <div class="shop-sidebar">
-        <div class="section-card">
-            <h3 class="mb-2"><span class="material-icons v-middle">attach_file</span> {{ _('Voucher') }}</h3>
-            {% if purchase.voucher_file_path %}
-            <div style="border: 1px solid #ddd; padding: 0.5rem; border-radius: 6px; background: white;">
-                <a href="{{ url_for('shop_img', filename=purchase.voucher_file_path) }}" target="_blank">
-                    <img src="{{ url_for('shop_img', filename=purchase.voucher_file_path) }}" alt="Voucher"
-                        style="width: 100%; border-radius: 4px;">
-                </a>
-            </div>
-            <p style="text-align: center; margin-top: 0.5rem; font-size: 0.8rem; color: #666;">{{ _('Click to view full
-                size') }}</p>
-            {% else %}
-            <p style="color: #999; font-style: italic;">{{ _('No voucher uploaded for this purchase.') }}</p>
-            {% endif %}
+    {# ── RIGHT: Voucher Image ────────────────────────────── #}
+    <div class="bg-[var(--color-surface)] rounded-[var(--radius)] border border-[var(--color-border)] p-4 shadow-[var(--shadow-sm)]">
+        <h3 class="text-base font-semibold m-0 mb-3 flex items-center gap-2 text-[var(--color-text)]">
+            <span class="material-icons text-[var(--color-primary)]">attach_file</span>
+            {{ _('Voucher') }}
+        </h3>
+        {% if purchase.voucher_file_path %}
+        <div class="border border-[var(--color-border)] p-2 rounded-[var(--radius)] bg-[var(--color-bg)]">
+            <a href="{{ url_for('shop_img', filename=purchase.voucher_file_path) }}" target="_blank">
+                <img src="{{ url_for('shop_img', filename=purchase.voucher_file_path) }}" alt="Voucher"
+                     class="w-full rounded">
+            </a>
         </div>
+        <p class="text-center mt-2 text-xs text-[var(--color-text-muted)]">{{ _('Click to view full size') }}</p>
+        {% else %}
+        <p class="text-[var(--color-text-muted)] italic text-sm">{{ _('No voucher uploaded for this purchase.') }}</p>
+        {% endif %}
     </div>
 </div>
-</section>
 {% endblock %}

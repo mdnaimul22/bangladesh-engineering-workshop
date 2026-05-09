@@ -1,0 +1,16 @@
+{# ═══════════════════════════════════════════════════════════════
+   BEW Component Macros — Master Re-export
+   
+   Import this single file in any template to get access to all macros.
+   Usage: {% from 'components/_macros.html' import btn, page_header, ... %}
+   ═══════════════════════════════════════════════════════════════ #}
+
+{% from 'components/_buttons.html' import btn, btn_action with context %}
+{% from 'components/_cards.html' import section_card, stat_card, detail_card with context %}
+{% from 'components/_forms.html' import form_input, form_select, form_textarea, form_file, unit_options with context %}
+{% from 'components/_tables.html' import data_table with context %}
+{% from 'components/_modals.html' import preview_modal, confirm_modal with context %}
+{% from 'components/_navigation.html' import page_header, pagination, breadcrumb with context %}
+{% from 'components/_badges.html' import badge, status_badge with context %}
+{% from 'components/_alerts.html' import flash_messages, alert with context %}
+{% from 'components/_seo.html' import json_ld, og_tags, meta_tags, breadcrumb_schema with context %}

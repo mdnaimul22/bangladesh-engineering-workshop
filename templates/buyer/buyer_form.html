@@ -1,207 +1,227 @@
 {% extends 'base.html' %}
+{% from 'components/_navigation.html' import page_header, breadcrumb with context %}
+{% from 'components/_buttons.html' import btn with context %}
+{% from 'components/_seo.html' import og_tags, breadcrumb_schema with context %}
 
-{% block title %}{% if action == 'add' %}{{ _('Add Buyer') }}{% else %}{{ _('Edit Buyer') }}{% endif %} - {{
-_('Bangladesh Engineering Workshop') }}{% endblock %}
+{% block title %}
+{{ _('Add New Buyer') if action == 'add' else _('Edit Buyer Company') }} - {{ _('Bangladesh Engineering Workshop') }}
+{% endblock %}
+
+{% block extra_head %}
+{{ og_tags(
+    title=_('Add Buyer') if action == 'add' else _('Edit Buyer'),
+    description=_('Manage buyer entries for Bangladesh Engineering Workshop.'),
+    url=request.url
+) }}
+{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/buyer/buyer_form.css') }}">
-<section class="page-header">
-    <h1>
-        <span class="material-icons v-middle">{% if action == 'add' %}person_add{% else %}edit{% endif %}</span>
-        {{ _('Add New Buyer') if action == 'add' else _('Edit Buyer Company') }}
-    </h1>
-    <div class="header-actions">
-        <a href="{{ buyer_id and url_for('buyers.buyer_detail', buyer_id=buyer_id) or url_for('buyers.buyer_list') }}"
-            class="btn btn-secondary">
-            <span class="material-icons">arrow_back</span> {{ _('Back') }}
-        </a>
-    </div>
-</section>
+{# ── Breadcrumb ──────────────────────────────────────────── #}
+{% set crumbs = [
+    {'label': _('Home'), 'url': url_for('shops.index')},
+    {'label': _('Buyers'), 'url': url_for('buyers.buyer_list')},
+    {'label': _('Add New Buyer') if action == 'add' else _('Edit Buyer'), 'url': ''}
+] %}
+{{ breadcrumb(crumbs) }}
+{{ breadcrumb_schema(crumbs) }}
 
-<section class="shop-form-section">
+{# ── Page Header ─────────────────────────────────────────── #}
+{% set back_url = url_for('buyers.buyer_detail', buyer_id=buyer_id) if buyer_id else url_for('buyers.buyer_list') %}
+{% set header_actions %}
+{{ btn(text=_('Back'), icon='arrow_back', variant='secondary', href=back_url) }}
+{% endset %}
 
-    <form method="POST" class="shop-form">
-        <!-- Header Section -->
-        <div class="erp-form-card">
-            <div class="grid-2 mb-0">
-                <div class="form-group mb-0">
-                    <label for="company_name" class="header-label">
-                        <span class="material-icons v-middle">business</span> {{ _('Company Name') }}
-                    </label>
-                    <input type="text" name="company_name" id="company_name" class="form-control" required
-                        value="{{ buyer.company_name or '' }}" placeholder="{{ _('Enter company name') }}">
-                </div>
-                <div class="form-group mb-0">
-                    <label for="address" class="header-label">
-                        <span class="material-icons v-middle">place</span> {{ _('Address') }}
-                    </label>
-                    <input type="text" name="address" id="address" class="form-control"
-                        value="{{ buyer.address or '' }}" placeholder="{{ _('Enter address') }}">
-                </div>
+{{ page_header(
+    title=_('Add New Buyer') if action == 'add' else _('Edit Buyer Company'),
+    icon='person_add' if action == 'add' else 'edit',
+    actions=[header_actions]
+) }}
+
+{# ── Form ────────────────────────────────────────────────── #}
+<section class="mt-4">
+    <form method="POST"
+          class="bg-[var(--color-surface)] p-5 md:p-6 rounded-[var(--radius-lg)]
+                 shadow-[var(--shadow)] border border-[var(--color-border)]">
+
+        {# ── Company Info ────────────────────────────────── #}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5 p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)]">
+            <div>
+                <label for="company_name"
+                       class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+                    <span class="material-icons text-sm">business</span>
+                    {{ _('Company Name') }}
+                </label>
+                <input type="text" name="company_name" id="company_name" required
+                       value="{{ buyer.company_name or '' }}"
+                       placeholder="{{ _('Enter company name') }}"
+                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
+                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
+                              focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
+                              outline-none transition-all">
+            </div>
+            <div>
+                <label for="address"
+                       class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+                    <span class="material-icons text-sm">place</span>
+                    {{ _('Address') }}
+                </label>
+                <input type="text" name="address" id="address"
+                       value="{{ buyer.address or '' }}"
+                       placeholder="{{ _('Enter address') }}"
+                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
+                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
+                              focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
+                              outline-none transition-all">
             </div>
         </div>
 
-        <div class="items-section card">
-            <h3 class="buyer-form-section-header">
-                <span class="material-icons">people</span> {{ _('Contact Persons') }}
+        {# ── Contact Persons Section ─────────────────────── #}
+        <div class="p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)] mb-5">
+            <h3 class="text-base font-semibold m-0 mb-4 pb-2 border-b-2 border-slate-200
+                       flex items-center gap-2 text-[var(--color-text)]">
+                <span class="material-icons text-lg">people</span>
+                {{ _('Contact Persons') }}
             </h3>
 
-            <div id="contacts-container">
-                {% if buyer.contacts %}
-                {% for contact in buyer.contacts %}
-                {% set outer_loop = loop %}
-                <div class="contact-row dynamic-row buyer-dynamic-row">
-                    <div class="contact-grid buyer-contact-grid">
-                        <div class="form-group mb-0">
-                            <label class="header-label buyer-form-label">{{ _('Name') }}</label>
-                            <input type="text" name="contact_name" class="form-control" placeholder="{{ _('Name') }}"
-                                value="{{ contact.name }}">
+            <div id="contacts-container" class="space-y-3">
+                {# Macro for a single contact row #}
+                {% macro contact_row(contact=None, idx=0) %}
+                <div class="contact-row bg-[var(--color-surface)] p-3 rounded-[var(--radius)] border border-[var(--color-border)] shadow-sm">
+                    <div class="grid grid-cols-1 lg:grid-cols-[1fr_1fr_1fr_1fr_1fr_50px_50px] gap-2.5">
+                        {# Name #}
+                        <div>
+                            <label class="flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Name') }}</label>
+                            <input type="text" name="contact_name" placeholder="{{ _('Name') }}"
+                                   value="{{ contact.name if contact else '' }}"
+                                   class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md
+                                          bg-[var(--color-input)] text-[var(--color-text)] text-sm
+                                          focus:border-[var(--color-primary)] outline-none transition-all">
                         </div>
-                        <div class="form-group mb-0">
-                            <label class="header-label buyer-form-label">{{ _('Designation') }}</label>
-                            <input type="text" name="contact_designation" class="form-control"
-                                placeholder="{{ _('Designation') }}" value="{{ contact.designation }}">
+                        {# Designation #}
+                        <div>
+                            <label class="flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Designation') }}</label>
+                            <input type="text" name="contact_designation" placeholder="{{ _('Designation') }}"
+                                   value="{{ contact.designation if contact else '' }}"
+                                   class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md
+                                          bg-[var(--color-input)] text-[var(--color-text)] text-sm
+                                          focus:border-[var(--color-primary)] outline-none transition-all">
                         </div>
-                        <div class="form-group mb-0">
-                            <label
-                                class="header-label buyer-form-label d-flex justify-content-between align-items-center w-100">
-                                <span class="text-nowrap">{{ _('Mobile Numbers') }}</span>
-                                <div class="mobile-controls">
-                                    <button type="button" class="btn btn-navy btn-16 btn-add-mobile">
-                                        <span class="material-icons">add</span>
+                        {# Mobile Numbers #}
+                        <div>
+                            <label class="flex items-center justify-between text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase w-full">
+                                <span>{{ _('Mobile Numbers') }}</span>
+                                <div class="flex gap-1 ml-2">
+                                    <button type="button"
+                                            class="btn-add-mobile w-5 h-5 flex items-center justify-center
+                                                   bg-[var(--color-btn-primary)] text-white rounded text-xs
+                                                   hover:opacity-90 transition-all">
+                                        <span class="material-icons text-sm">add</span>
                                     </button>
-                                    <button type="button" class="btn btn-red btn-16 btn-remove-mobile">
-                                        <span class="material-icons">close</span>
+                                    <button type="button"
+                                            class="btn-remove-mobile w-5 h-5 flex items-center justify-center
+                                                   bg-red-500 text-white rounded text-xs
+                                                   hover:opacity-90 transition-all">
+                                        <span class="material-icons text-sm">close</span>
                                     </button>
                                 </div>
                             </label>
-                            <div class="mobiles-container mobiles-list-container">
-                                {% if contact.mobiles %}
+                            <div class="mobiles-container space-y-1">
+                                {% if contact and contact.mobiles %}
                                 {% for mob in contact.mobiles %}
-                                <div class="mobile-row mobile-input-row">
-                                    <input type="text" name="contact_mobiles_{{ outer_loop.index0 }}[]"
-                                        class="form-control form-control-sm" placeholder="{{ _('No.') }}"
-                                        value="{{ mob }}">
+                                <div class="mobile-row">
+                                    <input type="text" name="contact_mobiles_{{ idx }}[]" placeholder="{{ _('No.') }}"
+                                           value="{{ mob }}"
+                                           class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md
+                                                  bg-[var(--color-input)] text-[var(--color-text)] text-sm
+                                                  focus:border-[var(--color-primary)] outline-none transition-all">
                                 </div>
                                 {% endfor %}
                                 {% else %}
-                                <div class="mobile-row mobile-input-row">
-                                    <input type="text" name="contact_mobiles_{{ outer_loop.index0 }}[]"
-                                        class="form-control form-control-sm" placeholder="{{ _('No.') }}">
+                                <div class="mobile-row">
+                                    <input type="text" name="contact_mobiles_{{ idx }}[]" placeholder="{{ _('No.') }}"
+                                           class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md
+                                                  bg-[var(--color-input)] text-[var(--color-text)] text-sm
+                                                  focus:border-[var(--color-primary)] outline-none transition-all">
                                 </div>
                                 {% endif %}
                             </div>
                         </div>
-                        <div class="form-group mb-0">
-                            <label class="header-label buyer-form-label">{{ _('WhatsApp') }}</label>
-                            <input type="text" name="contact_whatsapp" class="form-control"
-                                placeholder="{{ _('WhatsApp') }}" value="{{ contact.whatsapp }}">
+                        {# WhatsApp #}
+                        <div>
+                            <label class="flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('WhatsApp') }}</label>
+                            <input type="text" name="contact_whatsapp" placeholder="{{ _('WhatsApp') }}"
+                                   value="{{ contact.whatsapp if contact else '' }}"
+                                   class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md
+                                          bg-[var(--color-input)] text-[var(--color-text)] text-sm
+                                          focus:border-[var(--color-primary)] outline-none transition-all">
                         </div>
-                        <div class="form-group mb-0">
-                            <label class="header-label buyer-form-label">{{ _('Email') }}</label>
-                            <input type="email" name="contact_email" class="form-control" placeholder="{{ _('Email') }}"
-                                value="{{ contact.email }}">
+                        {# Email #}
+                        <div>
+                            <label class="flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Email') }}</label>
+                            <input type="email" name="contact_email" placeholder="{{ _('Email') }}"
+                                   value="{{ contact.email if contact else '' }}"
+                                   class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md
+                                          bg-[var(--color-input)] text-[var(--color-text)] text-sm
+                                          focus:border-[var(--color-primary)] outline-none transition-all">
                         </div>
-                        <div class="form-group mb-0 text-center">
-                            <label class="header-label buyer-form-label">{{ _('Primary') }}</label>
-                            <div class="buyer-radio-wrapper">
-                                <input type="radio" name="primary_contact_index" class="buyer-form-radio"
-                                    value="{{ loop.index0 }}" {% if contact.is_primary or (loop.first and not
-                                    buyer.contacts|selectattr('is_primary')|list) %}checked{% endif %}>
+                        {# Primary Radio #}
+                        <div class="flex flex-col items-center">
+                            <label class="text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Primary') }}</label>
+                            <div class="h-[38px] flex items-center justify-center">
+                                <input type="radio" name="primary_contact_index" value="{{ idx }}"
+                                       class="w-5 h-5 cursor-pointer accent-[var(--color-primary)]"
+                                       {% if contact %}
+                                         {% if contact.is_primary %}checked{% endif %}
+                                       {% elif idx == 0 %}checked{% endif %}>
                             </div>
                         </div>
-                        <div class="form-group mb-0 text-center">
-                            <label class="header-label buyer-form-label">{{ _('Action') }}</label>
-                            <button type="button" class="btn btn-red buyer-btn-action btn-remove-contact">
-                                <span class="material-icons">delete</span>
+                        {# Delete #}
+                        <div class="flex flex-col items-center">
+                            <label class="text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Action') }}</label>
+                            <button type="button"
+                                    class="btn-remove-contact w-[38px] h-[38px] flex items-center justify-center
+                                           bg-red-500 text-white rounded-md hover:bg-red-600 transition-all">
+                                <span class="material-icons text-lg">delete</span>
                             </button>
                         </div>
                     </div>
                 </div>
-                {% endfor %}
+                {% endmacro %}
+
+                {# Render existing or default #}
+                {% if buyer.contacts %}
+                    {% for contact in buyer.contacts %}
+                    {{ contact_row(contact, loop.index0) }}
+                    {% endfor %}
                 {% else %}
-                <!-- Default contact -->
-                <div class="contact-row dynamic-row buyer-dynamic-row">
-                    <div class="contact-grid buyer-contact-grid">
-                        <div class="form-group mb-0">
-                            <label class="header-label buyer-form-label">{{ _('Name') }}</label>
-                            <input type="text" name="contact_name" class="form-control" placeholder="{{ _('Name') }}">
-                        </div>
-                        <div class="form-group mb-0">
-                            <label class="header-label buyer-form-label">{{ _('Designation') }}</label>
-                            <input type="text" name="contact_designation" class="form-control"
-                                placeholder="{{ _('Designation') }}">
-                        </div>
-                        <div class="form-group mb-0">
-                            <label
-                                class="header-label buyer-form-label d-flex justify-content-between align-items-center w-100">
-                                <span class="text-nowrap">{{ _('Mobile Numbers') }}</span>
-                                <div class="mobile-controls">
-                                    <button type="button" class="btn btn-navy btn-16 btn-add-mobile">
-                                        <span class="material-icons">add</span>
-                                    </button>
-                                    <button type="button" class="btn btn-red btn-16 btn-remove-mobile">
-                                        <span class="material-icons">close</span>
-                                    </button>
-                                </div>
-                            </label>
-                            <div class="mobiles-container mobiles-list-container">
-                                <div class="mobile-row mobile-input-row">
-                                    <input type="text" name="contact_mobiles_0[]" class="form-control form-control-sm"
-                                        placeholder="{{ _('No.') }}">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group mb-0">
-                            <label class="header-label buyer-form-label">{{ _('WhatsApp') }}</label>
-                            <input type="text" name="contact_whatsapp" class="form-control"
-                                placeholder="{{ _('WhatsApp') }}">
-                        </div>
-                        <div class="form-group mb-0">
-                            <label class="header-label buyer-form-label">{{ _('Email') }}</label>
-                            <input type="email" name="contact_email" class="form-control"
-                                placeholder="{{ _('Email') }}">
-                        </div>
-                        <div class="form-group mb-0 text-center">
-                            <label class="header-label buyer-form-label">{{ _('Primary') }}</label>
-                            <div class="buyer-radio-wrapper">
-                                <input type="radio" name="primary_contact_index" value="0" checked
-                                    class="buyer-form-radio">
-                            </div>
-                        </div>
-                        <div class="form-group mb-0 text-center">
-                            <label class="header-label buyer-form-label">{{ _('Action') }}</label>
-                            <button type="button" class="btn btn-red buyer-btn-action btn-remove-contact">
-                                <span class="material-icons">delete</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                    {{ contact_row(idx=0) }}
                 {% endif %}
             </div>
 
-            <button type="button" id="btn-add-contact" class="btn btn-secondary mt-1">
-                <span class="material-icons btn-add-person-icon">person_add</span> {{ _('Add Person') }}
+            <button type="button" id="btn-add-contact"
+                    class="mt-3 inline-flex items-center gap-1.5 px-4 py-2
+                           bg-[var(--color-bg)] border border-[var(--color-border)] rounded-md
+                           text-[var(--color-text)] text-sm font-medium
+                           hover:bg-[var(--color-surface)] hover:shadow-sm transition-all">
+                <span class="material-icons text-lg">person_add</span>
+                {{ _('Add Person') }}
             </button>
         </div>
 
-        <div class="form-actions mt-4 pt-3 border-top">
-            <button type="submit" class="btn btn-navy">
-                {% if action == 'add' %}
-                <span class="material-icons">person_add</span> {{ _('Add Buyer') }}
-                {% else %}
-                <span class="material-icons">save</span> {{ _('Save Changes') }}
-                {% endif %}
-            </button>
-            <a href="{{ url_for('buyers.buyer_list') }}" class="btn btn-secondary">
-                <span class="material-icons">close</span> {{ _('Cancel') }}
-            </a>
+        {# ── Submit Actions ──────────────────────────────── #}
+        <div class="flex flex-wrap items-center gap-3 pt-4 border-t border-[var(--color-border)]">
+            {% if action == 'add' %}
+            {{ btn(text=_('Add Buyer'), icon='person_add', variant='primary', type='submit') }}
+            {% else %}
+            {{ btn(text=_('Save Changes'), icon='save', variant='primary', type='submit') }}
+            {% endif %}
+            {{ btn(text=_('Cancel'), icon='close', variant='secondary', href=url_for('buyers.buyer_list')) }}
         </div>
     </form>
 </section>
+{% endblock %}
 
-
-
+{% block extra_js %}
 <script>
     function updateIndices() {
         document.querySelectorAll('.contact-row').forEach((block, index) => {
@@ -214,7 +234,6 @@ _('Bangladesh Engineering Workshop') }}{% endblock %}
     }
 
     function attachMobileHandlers(block) {
-        // Find header buttons
         const addBtn = block.querySelector('.btn-add-mobile');
         const removeBtn = block.querySelector('.btn-remove-mobile');
 
@@ -224,12 +243,12 @@ _('Bangladesh Engineering Workshop') }}{% endblock %}
                 const rows = document.querySelectorAll('.contact-row');
                 let index = 0;
                 rows.forEach((r, i) => { if (r === block) index = i; });
-
                 const row = document.createElement('div');
-                row.className = 'mobile-row mobile-input-row';
-                row.innerHTML = `
-                <input type="text" name="contact_mobiles_${index}[]" class="form-control form-control-sm" placeholder="{{ _('No.') }}">
-            `;
+                row.className = 'mobile-row';
+                row.innerHTML = `<input type="text" name="contact_mobiles_${index}[]" placeholder="{{ _('No.') }}"
+                    class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md
+                           bg-[var(--color-input)] text-[var(--color-text)] text-sm
+                           focus:border-[var(--color-primary)] outline-none transition-all">`;
                 container.appendChild(row);
             };
         }
@@ -238,9 +257,6 @@ _('Bangladesh Engineering Workshop') }}{% endblock %}
             removeBtn.onclick = function () {
                 const container = block.querySelector('.mobiles-container');
                 const mobileRows = container.querySelectorAll('.mobile-row');
-                // Only remove if there's more than one row? Or allow removing all?
-                // User said "click x button box will be cut".
-                // Let's allow removing down to 1 (or 0?). Usually keeping 1 is safe.
                 if (mobileRows.length > 1) {
                     mobileRows[mobileRows.length - 1].remove();
                 }
@@ -248,11 +264,7 @@ _('Bangladesh Engineering Workshop') }}{% endblock %}
         }
     }
 
-    // Deprecated helpers not needed if we centralize in attachMobileHandlers
-    // But let's keep it clean
-
     function attachContactHandlers(block) {
-        // Remove Contact logic
         const removeBtn = block.querySelector('.btn-remove-contact');
         if (removeBtn) {
             removeBtn.onclick = function () {
@@ -264,8 +276,6 @@ _('Bangladesh Engineering Workshop') }}{% endblock %}
                 }
             };
         }
-
-        // Attach mobile handlers
         attachMobileHandlers(block);
     }
 
@@ -273,53 +283,58 @@ _('Bangladesh Engineering Workshop') }}{% endblock %}
         const container = document.getElementById('contacts-container');
         const nextIndex = document.querySelectorAll('.contact-row').length;
         const div = document.createElement('div');
-        div.className = 'contact-row dynamic-row buyer-dynamic-row';
+        div.className = 'contact-row bg-[var(--color-surface)] p-3 rounded-[var(--radius)] border border-[var(--color-border)] shadow-sm';
         div.innerHTML = `
-            <div class="contact-grid buyer-contact-grid">
-                <div class="form-group mb-0">
-                    <label class="header-label buyer-form-label">{{ _('Name') }}</label>
-                    <input type="text" name="contact_name" class="form-control" placeholder="{{ _('Name') }}">
+            <div class="grid grid-cols-1 lg:grid-cols-[1fr_1fr_1fr_1fr_1fr_50px_50px] gap-2.5">
+                <div>
+                    <label class="flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Name') }}</label>
+                    <input type="text" name="contact_name" placeholder="{{ _('Name') }}"
+                           class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:border-[var(--color-primary)] outline-none transition-all">
                 </div>
-                <div class="form-group mb-0">
-                    <label class="header-label buyer-form-label">{{ _('Designation') }}</label>
-                    <input type="text" name="contact_designation" class="form-control" placeholder="{{ _('Designation') }}">
+                <div>
+                    <label class="flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Designation') }}</label>
+                    <input type="text" name="contact_designation" placeholder="{{ _('Designation') }}"
+                           class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:border-[var(--color-primary)] outline-none transition-all">
                 </div>
-                <div class="form-group mb-0">
-                    <label class="header-label buyer-form-label d-flex justify-content-between align-items-center w-100">
-                        {{ _('Mobile Numbers') }}
-                        <div class="mobile-controls">
-                            <button type="button" class="btn btn-navy btn-16 btn-add-mobile">
-                                <span class="material-icons">add</span>
+                <div>
+                    <label class="flex items-center justify-between text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase w-full">
+                        <span>{{ _('Mobile Numbers') }}</span>
+                        <div class="flex gap-1 ml-2">
+                            <button type="button" class="btn-add-mobile w-5 h-5 flex items-center justify-center bg-[var(--color-btn-primary)] text-white rounded text-xs hover:opacity-90 transition-all">
+                                <span class="material-icons text-sm">add</span>
                             </button>
-                            <button type="button" class="btn btn-red btn-16 btn-remove-mobile">
-                                <span class="material-icons">close</span>
+                            <button type="button" class="btn-remove-mobile w-5 h-5 flex items-center justify-center bg-red-500 text-white rounded text-xs hover:opacity-90 transition-all">
+                                <span class="material-icons text-sm">close</span>
                             </button>
                         </div>
                     </label>
-                    <div class="mobiles-container mobiles-list-container">
-                        <div class="mobile-row mobile-input-row">
-                            <input type="text" name="contact_mobiles_${nextIndex}[]" class="form-control form-control-sm" placeholder="{{ _('No.') }}">
+                    <div class="mobiles-container space-y-1">
+                        <div class="mobile-row">
+                            <input type="text" name="contact_mobiles_${nextIndex}[]" placeholder="{{ _('No.') }}"
+                                   class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:border-[var(--color-primary)] outline-none transition-all">
                         </div>
                     </div>
                 </div>
-                <div class="form-group mb-0">
-                    <label class="header-label buyer-form-label">{{ _('WhatsApp') }}</label>
-                    <input type="text" name="contact_whatsapp" class="form-control" placeholder="{{ _('WhatsApp') }}">
+                <div>
+                    <label class="flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('WhatsApp') }}</label>
+                    <input type="text" name="contact_whatsapp" placeholder="{{ _('WhatsApp') }}"
+                           class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:border-[var(--color-primary)] outline-none transition-all">
                 </div>
-                <div class="form-group mb-0">
-                    <label class="header-label buyer-form-label">{{ _('Email') }}</label>
-                    <input type="email" name="contact_email" class="form-control" placeholder="{{ _('Email') }}">
+                <div>
+                    <label class="flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Email') }}</label>
+                    <input type="email" name="contact_email" placeholder="{{ _('Email') }}"
+                           class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:border-[var(--color-primary)] outline-none transition-all">
                 </div>
-                <div class="form-group mb-0 text-center">
-                    <label class="header-label buyer-form-label">{{ _('Primary') }}</label>
-                    <div class="buyer-radio-wrapper">
-                        <input type="radio" name="primary_contact_index" value="${nextIndex}" class="buyer-form-radio">
+                <div class="flex flex-col items-center">
+                    <label class="text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Primary') }}</label>
+                    <div class="h-[38px] flex items-center justify-center">
+                        <input type="radio" name="primary_contact_index" value="${nextIndex}" class="w-5 h-5 cursor-pointer accent-[var(--color-primary)]">
                     </div>
                 </div>
-                <div class="form-group mb-0 text-center">
-                    <label class="header-label buyer-form-label">{{ _('Action') }}</label>
-                    <button type="button" class="btn btn-red buyer-btn-action btn-remove-contact">
-                        <span class="material-icons">delete</span>
+                <div class="flex flex-col items-center">
+                    <label class="text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Action') }}</label>
+                    <button type="button" class="btn-remove-contact w-[38px] h-[38px] flex items-center justify-center bg-red-500 text-white rounded-md hover:bg-red-600 transition-all">
+                        <span class="material-icons text-lg">delete</span>
                     </button>
                 </div>
             </div>
@@ -331,5 +346,4 @@ _('Bangladesh Engineering Workshop') }}{% endblock %}
     // Initialize handlers for existing rows
     document.querySelectorAll('.contact-row').forEach(block => attachContactHandlers(block));
 </script>
-
 {% endblock %}

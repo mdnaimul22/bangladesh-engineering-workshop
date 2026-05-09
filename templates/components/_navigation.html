@@ -1,0 +1,67 @@
+{# ── Navigation Macros ──────────────────────────────────────── #}
+
+{% macro page_header(title, subtitle='', icon='', actions=[]) %}
+<section class="bg-[var(--color-surface)] p-4 md:px-8 md:py-6 rounded-[var(--radius)] mb-8 shadow border border-[var(--color-border)] flex flex-col md:flex-row justify-between items-start md:items-center gap-3 md:gap-4"
+        role="banner">
+    <div class="flex items-center gap-3">
+        {% if icon %}
+        <span class="material-icons text-[var(--color-primary)] text-2xl">{{ icon }}</span>
+        {% endif %}
+        <div>
+            <h1 class="text-2xl font-bold text-[var(--color-text)] m-0 leading-tight">{{ title }}</h1>
+            {% if subtitle %}
+            <span class="block text-sm text-[var(--color-text-muted)] font-normal mt-0.5">{{ subtitle }}</span>
+            {% endif %}
+        </div>
+    </div>
+    {% if actions %}
+    <div class="flex items-center gap-3 flex-wrap">
+        {% for action in actions %}{{ action }}{% endfor %}
+    </div>
+    {% endif %}
+</section>
+{% endmacro %}
+
+{% macro pagination(page, total_pages, url_func) %}
+{% if total_pages > 1 %}
+<nav class="flex justify-center items-center gap-4 mt-8 py-4"
+     role="navigation" aria-label="{{ _('Pagination') }}">
+    {% if page > 1 %}
+    <a href="{{ url_func(page=page-1) }}"
+       class="inline-flex items-center gap-1 px-4 py-2 rounded-[var(--radius-sm)] bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-text-muted)] text-sm font-medium no-underline hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition">
+        <span class="material-icons text-lg">chevron_left</span>
+        {{ _('Previous') }}
+    </a>
+    {% endif %}
+    <span class="text-[var(--color-text-muted)] font-medium text-sm">
+        {{ _('Page') }} {{ page }} / {{ total_pages }}
+    </span>
+    {% if page < total_pages %}
+    <a href="{{ url_func(page=page+1) }}"
+       class="inline-flex items-center gap-1 px-4 py-2 rounded-[var(--radius-sm)] bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-text-muted)] text-sm font-medium no-underline hover:border-[var(--color-primary)] hover:text-[var(--color-primary)] transition">
+        {{ _('Next') }}
+        <span class="material-icons text-lg">chevron_right</span>
+    </a>
+    {% endif %}
+</nav>
+{% endif %}
+{% endmacro %}
+
+{% macro breadcrumb(items=[]) %}
+<nav aria-label="{{ _('Breadcrumb') }}" class="mb-4">
+    <ol class="flex items-center gap-1 text-sm text-[var(--color-text-muted)]">
+        {% for item in items %}
+        <li class="flex items-center gap-1">
+            {% if not loop.last %}
+            <a href="{{ item.url }}" class="hover:text-[var(--color-primary)] transition no-underline">
+                {{ item.label }}
+            </a>
+            <span class="material-icons text-xs opacity-50">chevron_right</span>
+            {% else %}
+            <span class="text-[var(--color-text)] font-medium" aria-current="page">{{ item.label }}</span>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ol>
+</nav>
+{% endmacro %}

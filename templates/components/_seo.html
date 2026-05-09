@@ -1,0 +1,32 @@
+{# ── SEO Macros ─── #}
+
+{% macro meta_tags(title, description, canonical='') %}
+<title>{{ title }} | বাংলাদেশ ইঞ্জিনিয়ারিং ওয়ার্কশপ</title>
+<meta name="description" content="{{ description }}">
+{% if canonical %}<link rel="canonical" href="{{ canonical }}">{% endif %}
+{% endmacro %}
+
+{% macro og_tags(title, description, url='', image='', type='website') %}
+<meta property="og:title" content="{{ title }}">
+<meta property="og:description" content="{{ description }}">
+<meta property="og:type" content="{{ type }}">
+{% if url %}<meta property="og:url" content="{{ url }}">{% endif %}
+{% if image %}<meta property="og:image" content="{{ image }}">{% endif %}
+<meta property="og:locale" content="bn_BD">
+<meta property="og:site_name" content="Bangladesh Engineering Workshop">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ title }}">
+<meta name="twitter:description" content="{{ description }}">
+{% endmacro %}
+
+{% macro json_ld(schema_dict) %}
+<script type="application/ld+json">{{ schema_dict|tojson|safe }}</script>
+{% endmacro %}
+
+{% macro breadcrumb_schema(items=[]) %}
+{% set ns = namespace(elements=[]) %}
+{% for item in items %}
+{% set _void = ns.elements.append({"@type": "ListItem", "position": loop.index, "name": item.label, "item": item.url}) %}
+{% endfor %}
+{{ json_ld({"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": ns.elements}) }}
+{% endmacro %}

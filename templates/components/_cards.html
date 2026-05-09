@@ -1,0 +1,29 @@
+{# ── Card Macros ────────────────────────────────────────────── #}
+
+{% macro section_card(class_extra='') %}
+<div class="bg-[var(--color-surface)] p-6 rounded-[var(--radius)] border border-[var(--color-border)] shadow-sm mb-[var(--gap-md)] {{ class_extra }}">
+    {{ caller() }}
+</div>
+{% endmacro %}
+
+{% macro stat_card(label, value, icon='', color='primary', class_extra='') %}
+<div class="bg-[var(--color-surface)] p-4 rounded-[var(--radius)] border border-[var(--color-border)] shadow-sm {{ class_extra }}">
+    <div class="text-xs font-bold uppercase tracking-wide text-[var(--color-primary)] mb-1 flex items-center gap-1">
+        {% if icon %}<span class="material-icons text-sm">{{ icon }}</span>{% endif %}
+        {{ label }}
+    </div>
+    <div class="text-xl font-black text-[var(--color-text)]">{{ value }}</div>
+</div>
+{% endmacro %}
+
+{% macro detail_card(title='', icon='', full_width=false) %}
+<div class="bg-[var(--color-surface)] p-6 rounded-[var(--radius)] border border-[var(--color-border)] shadow-sm {% if full_width %}col-span-full{% endif %}">
+    {% if title %}
+    <h4 class="text-sm font-semibold text-[var(--color-text)] mb-3 pb-2 border-b border-[var(--color-border)] flex items-center gap-2">
+        {% if icon %}<span class="material-icons text-base text-[var(--color-primary)]">{{ icon }}</span>{% endif %}
+        {{ title }}
+    </h4>
+    {% endif %}
+    {{ caller() }}
+</div>
+{% endmacro %}

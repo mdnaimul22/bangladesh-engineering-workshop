@@ -1,27 +1,46 @@
 {% extends 'base.html' %}
+{% from 'components/_navigation.html' import page_header, breadcrumb with context %}
+{% from 'components/_buttons.html' import btn with context %}
+{% from 'components/_seo.html' import og_tags, breadcrumb_schema with context %}
 
-{% block title %}{% if action == 'add' %}{{ _('New Purchase') }}{% else %}{{ _('Edit Purchase') }}{% endif %} - {{
-_('Bangladesh Engineering Workshop') }}{% endblock %}
+{% block title %}
+{{ _('New Purchase') if action == 'add' else _('Edit Purchase') }} - {{ _('Bangladesh Engineering Workshop') }}
+{% endblock %}
+
+{% block extra_head %}
+{{ og_tags(
+    title=_('New Purchase') if action == 'add' else _('Edit Purchase'),
+    description=_('Manage purchase entries for Bangladesh Engineering Workshop.'),
+    url=request.url
+) }}
+{% endblock %}
 
 {% block content %}
-<section class="page-header">
-    <h1>
-        <span class="material-icons v-middle">{% if action == 'add' %}add_shopping_cart{% else %}edit_note{% endif
-            %}</span>
-        {{ _('New Purchase') if action == 'add' else _('Edit Purchase') }}
-    </h1>
-    <div class="header-actions">
-        <a href="{{ url_for('purchases.purchase_list') }}" class="btn btn-secondary">
-            <span class="material-icons">arrow_back</span> {{ _('Back') }}
-        </a>
-    </div>
-</section>
+{# ── Breadcrumb ──────────────────────────────────────────── #}
+{% set crumbs = [
+    {'label': _('Home'), 'url': url_for('shops.index')},
+    {'label': _('Purchases'), 'url': url_for('purchases.purchase_list')},
+    {'label': _('New Purchase') if action == 'add' else _('Edit Purchase'), 'url': ''}
+] %}
+{{ breadcrumb(crumbs) }}
+{{ breadcrumb_schema(crumbs) }}
 
+{# ── Page Header ─────────────────────────────────────────── #}
+{% set header_actions %}
+{{ btn(text=_('Back'), icon='arrow_back', variant='secondary', href=url_for('purchases.purchase_list')) }}
+{% endset %}
+
+{{ page_header(
+    title=_('New Purchase') if action == 'add' else _('Edit Purchase'),
+    icon='add_shopping_cart' if action == 'add' else 'edit_note',
+    actions=[header_actions]
+) }}
+
+{# ── Unit Options Macro ──────────────────────────────────── #}
 {% macro unit_options(selected_value='') %}
 <option value="Kg" {% if selected_value=='Kg' or selected_value=='kg' %}selected{% endif %}>{{ _('Kg') }}</option>
 <option value="Pcs" {% if selected_value=='Pcs' or selected_value=='pcs' %}selected{% endif %}>{{ _('Pcs') }}</option>
-<option value="Meter" {% if selected_value=='Meter' or selected_value=='m' %}selected{% endif %}>{{ _('Meter') }}
-</option>
+<option value="Meter" {% if selected_value=='Meter' or selected_value=='m' %}selected{% endif %}>{{ _('Meter') }}</option>
 <option value="Ton" {% if selected_value=='Ton' %}selected{% endif %}>{{ _('Ton') }}</option>
 <option value="Feet" {% if selected_value=='Feet' %}selected{% endif %}>{{ _('Feet') }}</option>
 <option value="Inch" {% if selected_value=='Inch' %}selected{% endif %}>{{ _('Inch') }}</option>
@@ -29,200 +48,195 @@ _('Bangladesh Engineering Workshop') }}{% endblock %}
 <option value="Set" {% if selected_value=='Set' or selected_value=='set' %}selected{% endif %}>{{ _('Set') }}</option>
 <option value="Nos" {% if selected_value=='Nos' %}selected{% endif %}>{{ _('Nos') }}</option>
 <option value="Box" {% if selected_value=='Box' or selected_value=='box' %}selected{% endif %}>{{ _('Box') }}</option>
-<option value="Roll" {% if selected_value=='Roll' or selected_value=='roll' %}selected{% endif %}>{{ _('Roll') }}
-</option>
-<option value="Sheet" {% if selected_value=='Sheet' or selected_value=='sheet' %}selected{% endif %}>{{ _('Sheet') }}
-</option>
+<option value="Roll" {% if selected_value=='Roll' or selected_value=='roll' %}selected{% endif %}>{{ _('Roll') }}</option>
+<option value="Sheet" {% if selected_value=='Sheet' or selected_value=='sheet' %}selected{% endif %}>{{ _('Sheet') }}</option>
 <option value="Coil" {% if selected_value=='Coil' %}selected{% endif %}>{{ _('Coil') }}</option>
 {% endmacro %}
 
-<section class="shop-form-section">
+{# ── Form Label Helper ───────────────────────────────────── #}
+{% set label_cls = "flex items-center gap-0.5 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase tracking-wide min-h-[24px]" %}
+{% set input_cls = "form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:border-[var(--color-primary)] outline-none transition-all" %}
 
-    <form method="POST" class="shop-form" enctype="multipart/form-data">
+{# ── Form ────────────────────────────────────────────────── #}
+<section class="mt-4">
+    <form method="POST" enctype="multipart/form-data"
+          class="bg-[var(--color-surface)] p-5 md:p-6 rounded-[var(--radius-lg)]
+                 shadow-[var(--shadow)] border border-[var(--color-border)]">
 
-        <div class="erp-form-card">
-            <div class="grid-3 mb-3">
-                <div class="form-group mb-0">
-                    <label for="supplier_id" class="header-label"><span
-                            class="material-icons v-middle">storefront</span> {{ _('Supplier') }}</label>
-                    <select name="supplier_id" id="supplier_id" class="form-control" required>
-                        <option value="">-- {{ _('Select Supplier') }} --</option>
-                        {% for s in shops %}
-                        <option value="{{ s.id }}" {% if (purchase.supplier_id and s.id==purchase.supplier_id) or
-                            (preselected_supplier_id and s.id==preselected_supplier_id) %}selected{% endif %}>
-                            {{ s.name }}{% if s.proprietor %} ({{ s.proprietor }}){% endif %}
-                        </option>
-                        {% endfor %}
-                    </select>
-                </div>
-
-                <div class="form-group mb-0">
-                    <label for="purchase_date" class="header-label"><span
-                            class="material-icons v-middle">calendar_month</span> {{ _('Purchase Date') }}</label>
-                    <input type="date" name="purchase_date" id="purchase_date" class="form-control"
-                        value="{{ purchase.purchase_date or '' }}">
-                </div>
-
-                <div class="form-group mb-0">
-                    <label for="payment_status" class="header-label"><span
-                            class="material-icons v-middle">payments</span> {{ _('Payment Status') }}</label>
-                    <select name="payment_status" id="payment_status" class="form-control">
-                        <option value="pending" {% if (purchase.payment_status or 'pending' )=='pending' %}selected{%
-                            endif %}>{{ _('Pending') }}</option>
-                        <option value="done" {% if (purchase.payment_status or '' )=='done' or (purchase.payment_status
-                            or '' )=='Done' %}selected{% endif %}>{{ _('Done') }}</option>
-                    </select>
-                </div>
+        {# ── Row 1: Supplier, Date, Payment Status ──────── #}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5 p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)]">
+            <div>
+                <label for="supplier_id" class="{{ label_cls }}">
+                    <span class="material-icons text-sm">storefront</span> {{ _('Supplier') }}
+                </label>
+                <select name="supplier_id" id="supplier_id" class="{{ input_cls }}" required>
+                    <option value="">-- {{ _('Select Supplier') }} --</option>
+                    {% for s in shops %}
+                    <option value="{{ s.id }}" {% if (purchase.supplier_id and s.id==purchase.supplier_id) or
+                        (preselected_supplier_id and s.id==preselected_supplier_id) %}selected{% endif %}>
+                        {{ s.name }}{% if s.proprietor %} ({{ s.proprietor }}){% endif %}
+                    </option>
+                    {% endfor %}
+                </select>
             </div>
-
-            <div class="grid-3 mb-3">
-                <div class="form-group mb-0">
-                    <label for="paid_amount" class="header-label"><span class="material-icons v-middle">paid</span> {{
-                        _('Paid Amount') }}</label>
-                    <input type="number" step="0.01" name="paid_amount" id="paid_amount" class="form-control"
-                        value="{{ purchase.paid_amount or 0 }}">
-                </div>
-
-                <div class="form-group mb-0">
-                    <label for="voucher_file" class="header-label"><span
-                            class="material-icons v-middle">attach_file</span> {{ _('Voucher File') }}</label>
-                    <input type="file" name="voucher_file" id="voucher_file" class="form-control" accept="image/*">
-                    {% if purchase.voucher_file_path %}
-                    <div style="margin-top: 0.25rem;">
-                        <a class="shop-link" href="{{ url_for('shop_img', filename=purchase.voucher_file_path) }}"
-                            target="_blank" style="font-size: 0.75rem;">{{ _('View Current') }}</a>
-                    </div>
-                    {% endif %}
-                </div>
-
-                <div class="form-group mb-0">
-                    <label for="notes" class="header-label"><span class="material-icons v-middle">note</span> {{
-                        _('Notes')
-                        }}</label>
-                    <textarea name="notes" id="notes" class="form-control" rows="1" style="height: 38px;"
-                        placeholder="{{ _('Optional remarks...') }}">{{ purchase.notes or '' }}</textarea>
-                </div>
+            <div>
+                <label for="purchase_date" class="{{ label_cls }}">
+                    <span class="material-icons text-sm">calendar_month</span> {{ _('Purchase Date') }}
+                </label>
+                <input type="date" name="purchase_date" id="purchase_date" class="{{ input_cls }}"
+                       value="{{ purchase.purchase_date or '' }}">
+            </div>
+            <div>
+                <label for="payment_status" class="{{ label_cls }}">
+                    <span class="material-icons text-sm">payments</span> {{ _('Payment Status') }}
+                </label>
+                <select name="payment_status" id="payment_status" class="{{ input_cls }}">
+                    <option value="pending" {% if (purchase.payment_status or 'pending')=='pending' %}selected{% endif %}>{{ _('Pending') }}</option>
+                    <option value="done" {% if (purchase.payment_status or '')=='done' or (purchase.payment_status or '')=='Done' %}selected{% endif %}>{{ _('Done') }}</option>
+                </select>
             </div>
         </div>
 
-        <div class="items-section card" x-data="purchaseItems()">
-            <h3 class="mb-3" style="border-bottom: 2px solid #eee; padding-bottom: 0.5rem;">
-                <span class="material-icons v-middle">list</span> {{ _('Items') }}
+        {# ── Row 2: Paid, Voucher, Notes ────────────────── #}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5 p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)]">
+            <div>
+                <label for="paid_amount" class="{{ label_cls }}">
+                    <span class="material-icons text-sm">paid</span> {{ _('Paid Amount') }}
+                </label>
+                <input type="number" step="0.01" name="paid_amount" id="paid_amount" class="{{ input_cls }}"
+                       value="{{ purchase.paid_amount or 0 }}">
+            </div>
+            <div>
+                <label for="voucher_file" class="{{ label_cls }}">
+                    <span class="material-icons text-sm">attach_file</span> {{ _('Voucher File') }}
+                </label>
+                <input type="file" name="voucher_file" id="voucher_file" accept="image/*"
+                       class="{{ input_cls }} file:mr-3 file:py-1 file:px-2 file:rounded file:border
+                              file:border-[var(--color-border)] file:bg-[var(--color-bg)] file:text-xs file:font-semibold">
+                {% if purchase.voucher_file_path %}
+                <a href="{{ url_for('shop_img', filename=purchase.voucher_file_path) }}" target="_blank"
+                   class="text-[var(--color-primary)] text-xs mt-1 inline-block hover:underline">{{ _('View Current') }}</a>
+                {% endif %}
+            </div>
+            <div>
+                <label for="notes" class="{{ label_cls }}">
+                    <span class="material-icons text-sm">note</span> {{ _('Notes') }}
+                </label>
+                <textarea name="notes" id="notes" rows="1" placeholder="{{ _('Optional remarks...') }}"
+                          class="{{ input_cls }} h-[38px] resize-y">{{ purchase.notes or '' }}</textarea>
+            </div>
+        </div>
+
+        {# ── Items Section (Alpine.js) ──────────────────── #}
+        <div class="p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)] mb-5"
+             x-data="purchaseItems()">
+
+            <h3 class="text-base font-semibold m-0 mb-4 pb-2 border-b-2 border-[var(--color-border)]
+                       flex items-center gap-2 text-[var(--color-text)]">
+                <span class="material-icons text-lg">list</span> {{ _('Items') }}
             </h3>
 
             <template x-for="(item, index) in items" :key="index">
-                <div class="purchase-item-row dynamic-row mb-3"
-                    style="border-bottom: 1px solid #eee; padding-bottom: 1rem;">
-                    <div class="purchase-item-grid">
-                        <div class="form-group mb-0">
-                            <label class="header-label"><span class="material-icons v-middle"
-                                    style="font-size: 14px;">label</span> {{ _('Product') }}</label>
-                            <input type="text" name="product_name" class="form-control" required
-                                x-model="item.product_name">
+                <div class="mb-3 pb-3 border-b border-[var(--color-border)]">
+                    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-[2fr_1.8fr_1fr_1fr_1fr_1fr_1.2fr_45px] gap-2.5">
+                        {# Product #}
+                        <div>
+                            <label class="{{ label_cls }}">
+                                <span class="material-icons text-sm">label</span> {{ _('Product') }}
+                            </label>
+                            <input type="text" name="product_name" class="{{ input_cls }}" required
+                                   x-model="item.product_name">
                         </div>
-                        <div class="form-group mb-0">
-                            <label class="header-label"><span class="material-icons v-middle"
-                                    style="font-size: 14px;">info</span> {{ _('Measurement') }}</label>
-                            <input type="text" name="specification" class="form-control" placeholder="e.g. 10x20"
-                                x-model="item.specification">
+                        {# Measurement #}
+                        <div>
+                            <label class="{{ label_cls }}">
+                                <span class="material-icons text-sm">info</span> {{ _('Measurement') }}
+                            </label>
+                            <input type="text" name="specification" class="{{ input_cls }}" placeholder="e.g. 10x20"
+                                   x-model="item.specification">
                         </div>
-                        <div class="form-group mb-0">
-                            <label class="header-label"><span class="material-icons v-middle"
-                                    style="font-size: 14px;">balance</span> {{ _('Qty') }}</label>
-                            <input type="number" step="0.01" name="quantity" class="form-control" placeholder="0"
-                                x-model.number="item.quantity">
+                        {# Qty #}
+                        <div>
+                            <label class="{{ label_cls }}">
+                                <span class="material-icons text-sm">balance</span> {{ _('Qty') }}
+                            </label>
+                            <input type="number" step="0.01" name="quantity" class="{{ input_cls }}" placeholder="0"
+                                   x-model.number="item.quantity">
                         </div>
-                        <div class="form-group mb-0">
-                            <label class="header-label"><span class="material-icons v-middle"
-                                    style="font-size: 14px;">sell</span> {{ _('Rate') }}</label>
-                            <input type="number" step="0.01" name="rate_per_unit" class="form-control" placeholder="0"
-                                x-model.number="item.rate_per_unit">
+                        {# Rate #}
+                        <div>
+                            <label class="{{ label_cls }}">
+                                <span class="material-icons text-sm">sell</span> {{ _('Rate') }}
+                            </label>
+                            <input type="number" step="0.01" name="rate_per_unit" class="{{ input_cls }}" placeholder="0"
+                                   x-model.number="item.rate_per_unit">
                         </div>
-                        <div class="form-group mb-0">
-                            <label class="header-label"><span class="material-icons v-middle"
-                                    style="font-size: 14px;">fitness_center</span> {{ _('Weight') }}</label>
-                            <input type="number" step="0.01" name="weight" class="form-control" placeholder="0"
-                                x-model.number="item.weight">
+                        {# Weight #}
+                        <div>
+                            <label class="{{ label_cls }}">
+                                <span class="material-icons text-sm">fitness_center</span> {{ _('Weight') }}
+                            </label>
+                            <input type="number" step="0.01" name="weight" class="{{ input_cls }}" placeholder="0"
+                                   x-model.number="item.weight">
                         </div>
-                        <div class="form-group mb-0">
-                            <label class="header-label"><span class="material-icons v-middle"
-                                    style="font-size: 14px;">straighten</span> {{ _('Unit') }}</label>
-                            <select name="unit" class="form-control" x-model="item.unit">
+                        {# Unit #}
+                        <div>
+                            <label class="{{ label_cls }}">
+                                <span class="material-icons text-sm">straighten</span> {{ _('Unit') }}
+                            </label>
+                            <select name="unit" class="{{ input_cls }}" x-model="item.unit">
                                 <option value="">-- {{ _('Unit') }} --</option>
                                 {{ unit_options() }}
                             </select>
                         </div>
-                        <div class="form-group mb-0">
-                            <label class="header-label"><span class="material-icons v-middle"
-                                    style="font-size: 14px;">payments</span> {{ _('Total') }}</label>
-                            <div style="height: 38px; display: flex; align-items: center; color: #166534; background: rgba(22, 101, 52, 0.05); border: 1px solid rgba(22, 101, 52, 0.1); border-radius: 8px; padding: 0 10px;">
-                                <span style="font-weight: bold; font-size: 0.95rem;"
-                                    x-text="((item.quantity || 0) * (item.rate_per_unit || 0)).toFixed(2)">0.00</span>
+                        {# Total (computed) #}
+                        <div>
+                            <label class="{{ label_cls }}">
+                                <span class="material-icons text-sm">payments</span> {{ _('Total') }}
+                            </label>
+                            <div class="h-[38px] flex items-center text-[var(--color-primary)] font-bold text-sm
+                                        bg-[var(--color-primary)]/5 border border-[var(--color-primary)]/10 rounded-lg px-2.5">
+                                <span x-text="((item.quantity || 0) * (item.rate_per_unit || 0)).toFixed(2)">0.00</span>
                             </div>
                         </div>
-                        <div class="form-group mb-0 text-center">
-                            <label class="header-label">{{ _('Action') }}</label>
-                            <button type="button" class="btn btn-red btn-action" @click="removeItem(index)"
-                                title="{{ _('Remove Item') }}" style="width: 38px; height: 38px; padding: 0;">
-                                <span class="material-icons" style="font-size: 18px;">delete</span>
+                        {# Delete #}
+                        <div class="flex items-end">
+                            <button type="button" @click="removeItem(index)"
+                                    title="{{ _('Remove Item') }}"
+                                    class="w-[38px] h-[38px] flex items-center justify-center
+                                           bg-red-500 text-white rounded-md hover:bg-red-600 transition-all">
+                                <span class="material-icons text-lg">delete</span>
                             </button>
                         </div>
                     </div>
                 </div>
             </template>
 
-            <button type="button" class="btn btn-secondary" @click="addItem()" style="margin-top: 0.2rem;">
-                <span class="material-icons">add</span> {{ _('Add Item') }}
+            <button type="button" @click="addItem()"
+                    class="mt-1 inline-flex items-center gap-1.5 px-4 py-2
+                           bg-[var(--color-bg)] border border-[var(--color-border)] rounded-md
+                           text-[var(--color-text)] text-sm font-medium
+                           hover:bg-[var(--color-surface)] hover:shadow-sm transition-all">
+                <span class="material-icons text-lg">add</span> {{ _('Add Item') }}
             </button>
         </div>
 
-        <div class="form-actions mt-4">
-            <button type="submit" class="btn btn-navy">
-                <span class="material-icons">save</span>
-                {% if action == 'add' %}
-                {{ _('Save Purchase') }}
-                {% else %}
-                {{ _('Save Changes') }}
-                {% endif %}
-            </button>
-            <a href="{{ url_for('purchases.purchase_list') }}" class="btn btn-secondary">
-                <span class="material-icons">close</span> {{ _('Cancel') }}
-            </a>
+        {# ── Submit Actions ──────────────────────────────── #}
+        <div class="flex flex-wrap items-center gap-3 pt-4 border-t border-[var(--color-border)]">
+            {% if action == 'add' %}
+            {{ btn(text=_('Save Purchase'), icon='save', variant='primary', type='submit') }}
+            {% else %}
+            {{ btn(text=_('Save Changes'), icon='save', variant='primary', type='submit') }}
+            {% endif %}
+            {{ btn(text=_('Cancel'), icon='close', variant='secondary', href=url_for('purchases.purchase_list')) }}
         </div>
     </form>
-
-    <datalist id="unit-list-old" style="display:none;"></datalist>
 </section>
+{% endblock %}
 
-<style>
-    .header-label {
-        margin-bottom: 2px !important;
-        font-size: 0.725rem !important;
-        color: #166534 !important;
-        font-weight: bold !important;
-        display: flex !important;
-        align-items: center;
-        min-height: 24px;
-    }
-
-    .purchase-item-grid {
-        display: grid;
-        grid-template-columns: 2fr 1.8fr 1fr 1fr 1fr 1fr 1.2fr 45px;
-        gap: 10px;
-        align-items: flex-start;
-    }
-
-    @media (max-width: 992px) {
-        .purchase-item-grid {
-            grid-template-columns: 1fr;
-            gap: 15px;
-        }
-    }
-</style>
-
+{% block extra_js %}
 <script>
     function purchaseItems() {
-        // Pre-populate from server-rendered data (edit mode)
         const serverItems = {{ purchase.get('items', []) | tojson if purchase.get('items') else '[]' }};
         return {
             items: serverItems.length
@@ -249,7 +263,6 @@ _('Bangladesh Engineering Workshop') }}{% endblock %}
             },
 
             init() {
-                // Set purchase date to today if empty
                 const dateEl = document.getElementById('purchase_date');
                 if (dateEl && !dateEl.value) {
                     dateEl.valueAsDate = new Date();

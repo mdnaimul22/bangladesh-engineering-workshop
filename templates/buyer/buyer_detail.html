@@ -1,199 +1,222 @@
 {% extends 'base.html' %}
+{% from 'components/_navigation.html' import page_header, breadcrumb with context %}
+{% from 'components/_buttons.html' import btn with context %}
+{% from 'components/_badges.html' import badge, status_badge with context %}
+{% from 'components/_seo.html' import og_tags, json_ld, breadcrumb_schema with context %}
 
-{% block title %}Buyer Profile - {{ buyer.company_name }}{% endblock %}
+{% block title %}{{ _('Buyer Profile') }} - {{ buyer.company_name }}{% endblock %}
+
+{% block extra_head %}
+{{ og_tags(
+    title=buyer.company_name,
+    description=_('Buyer profile for') ~ ' ' ~ buyer.company_name,
+    url=request.url,
+    type='profile'
+) }}
+{{ json_ld({
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": buyer.company_name,
+    "address": {"@type": "PostalAddress", "streetAddress": buyer.address or ''}
+}) }}
+{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/buyer/buyer_detail.css') }}">
-<section class="page-header">
-    <div class="buyer-header-info">
-        <div class="buyer-header-icon-box">
-            <span class="material-icons">business</span>
+{# ── Breadcrumb ──────────────────────────────────────────── #}
+{% set crumbs = [
+    {'label': _('Home'), 'url': url_for('shops.index')},
+    {'label': _('Buyers'), 'url': url_for('buyers.buyer_list')},
+    {'label': buyer.company_name, 'url': ''}
+] %}
+{{ breadcrumb(crumbs) }}
+{{ breadcrumb_schema(crumbs) }}
+
+{# ── Page Header ─────────────────────────────────────────── #}
+{% set header_actions %}
+{{ btn(text=_('Edit'), icon='edit', variant='primary', href=url_for('buyers.edit_buyer', buyer_id=buyer.id)) }}
+{{ btn(text=_('Back'), icon='arrow_back', variant='secondary', href=url_for('buyers.buyer_list')) }}
+{% endset %}
+
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4
+            bg-[var(--color-surface)] p-4 rounded-[var(--radius)] shadow-[var(--shadow)] border border-[var(--color-border)]">
+    <div class="flex items-center gap-3">
+        <div class="w-11 h-11 bg-[var(--color-btn-primary)] text-white rounded-lg flex items-center justify-center shadow-sm">
+            <span class="material-icons text-2xl">business</span>
         </div>
         <div>
-            <h1 class="buyer-header-title">{{ buyer.company_name }}</h1>
-            <div class="subtitle">
+            <h1 class="m-0 text-xl md:text-2xl font-bold text-[var(--color-text)] leading-tight">{{ buyer.company_name }}</h1>
+            <div class="text-sm text-[var(--color-text-muted)]">
                 {{ _('Buyer Profile') }} #B{{ buyer.id }}
                 {% if buyer.address %} | {{ buyer.address }}{% endif %}
             </div>
         </div>
     </div>
-    <div class="header-actions">
-        <a href="{{ url_for('buyers.edit_buyer', buyer_id=buyer.id) }}" class="btn btn-navy">
-            <span class="material-icons">edit</span> {{ _('Edit') }}
-        </a>
-        <a href="{{ url_for('buyers.buyer_list') }}" class="btn btn-secondary">
-            <span class="material-icons">arrow_back</span> {{ _('Back') }}
-        </a>
-    </div>
-</section>
-
-<!-- Quick Stats Row -->
-<div class="grid-4 mb-2 buyer-stats-grid">
-    <div class="section-card buyer-stat-card sales">
-        <div class="header-label buyer-stat-label">{{ _('TOTAL SALES') }}</div>
-        <div class="buyer-stat-value">৳ {{ "%.0f"|format(buyer.total_sales_amount or 0) }}</div>
-    </div>
-    <div class="section-card buyer-stat-card orders">
-        <div class="header-label buyer-stat-label">{{ _('ACTIVE ORDERS') }}</div>
-        <div class="buyer-stat-value">{{ buyer.work_orders_count }}</div>
-    </div>
-    <div class="section-card buyer-stat-card count">
-        <div class="header-label buyer-stat-label">{{ _('SALES COUNT') }}</div>
-        <div class="buyer-stat-value">{{ buyer.sales_count }}</div>
-    </div>
-    <div class="section-card buyer-stat-card since">
-        <div class="header-label buyer-stat-label">{{ _('SINCE') }}</div>
-        <div class="buyer-stat-value-sm">{{ buyer.created_at or _('N/A') }}</div>
+    <div class="flex gap-2 flex-wrap">
+        {{ btn(text=_('Edit'), icon='edit', variant='primary', href=url_for('buyers.edit_buyer', buyer_id=buyer.id)) }}
+        {{ btn(text=_('Back'), icon='arrow_back', variant='secondary', href=url_for('buyers.buyer_list')) }}
     </div>
 </div>
 
-<div class="shop-content-grid buyer-content-grid">
+{# ── Quick Stats ─────────────────────────────────────────── #}
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+    {% set stats = [
+        {'label': _('TOTAL SALES'), 'value': '৳ ' ~ "%.0f"|format(buyer.total_sales_amount or 0), 'color': 'emerald', 'border': 'border-l-emerald-500'},
+        {'label': _('ACTIVE ORDERS'), 'value': buyer.work_orders_count, 'color': 'amber', 'border': 'border-l-amber-500'},
+        {'label': _('SALES COUNT'), 'value': buyer.sales_count, 'color': 'blue', 'border': 'border-l-blue-500'},
+        {'label': _('SINCE'), 'value': buyer.created_at or _('N/A'), 'color': 'slate', 'border': 'border-l-slate-500'}
+    ] %}
+    {% for s in stats %}
+    <div class="bg-[var(--color-surface)] border border-[var(--color-border)] {{ s.border }} border-l-4
+                rounded-[var(--radius)] p-3 shadow-[var(--shadow-sm)]">
+        <div class="text-[0.7rem] font-bold text-[var(--color-primary)] uppercase tracking-wider">{{ s.label }}</div>
+        <div class="text-lg font-bold text-[var(--color-text)] mt-0.5 {% if loop.last %}text-base{% endif %}">{{ s.value }}</div>
+    </div>
+    {% endfor %}
+</div>
 
-    <!-- LEFT COLUMN: Contacts -->
-    <div class="section-card">
-        <h3 class="buyer-sidebar-header">
-            <span class="material-icons">groups</span>
+{# ── Content Grid: Contacts + History ────────────────────── #}
+<div class="grid grid-cols-1 lg:grid-cols-[26%_1fr] gap-5">
+
+    {# ── LEFT: Contact Persons ───────────────────────────── #}
+    <div class="bg-[var(--color-surface)] rounded-[var(--radius)] border border-[var(--color-border)] p-4 shadow-[var(--shadow-sm)]">
+        <h3 class="text-base font-semibold m-0 mb-3 pb-2 border-b border-[var(--color-border)]
+                   flex items-center gap-2 text-[var(--color-text)]">
+            <span class="material-icons text-xl text-[var(--color-primary)]">groups</span>
             {{ _('Contact Persons') }}
         </h3>
 
         {% if buyer.contacts %}
-        <div class="contact-list-container">
-            <!-- Decorative Blob for Glass Effect -->
-            <div class="glass-effect-blob"></div>
+        <div class="flex flex-col gap-3 relative">
+            {# Decorative Blob #}
+            <div class="absolute top-5 -left-2.5 w-24 h-24 rounded-full opacity-30 z-0 blur-[40px]
+                        bg-gradient-to-br from-cyan-200 to-blue-500"></div>
 
             {% for contact in buyer.contacts %}
-            <div class="glass-contact-card">
-                <div class="info-grid">
-
-                    <!-- Header Row: Avatar + Name/Desig -->
-                    <div class="contact-row align-top">
-                        <div class="fixed-icon-col">
-                            <div class="glass-avatar">
-                                <span class="material-icons">person</span>
-                            </div>
+            <div class="relative z-[1] bg-[var(--color-primary)]/10 backdrop-blur-sm rounded-xl
+                        border border-white/40 p-4 shadow-[0_8px_32px_rgba(31,38,135,0.1)]
+                        hover:-translate-y-0.5 hover:shadow-[0_10px_40px_rgba(31,38,135,0.15)]
+                        hover:bg-[var(--color-primary)]/20 transition-all duration-200">
+                <div class="flex flex-col gap-2">
+                    {# Name + Avatar #}
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-full bg-white/50 flex items-center justify-center
+                                    shadow-sm shrink-0">
+                            <span class="material-icons text-[var(--color-text)]">person</span>
                         </div>
                         <div>
-                            <div class="contact-name">
-                                {{ contact.name }}
-                            </div>
+                            <div class="font-bold text-[var(--color-text)] text-[0.95rem] leading-tight">{{ contact.name }}</div>
                             {% if contact.designation %}
-                            <div class="contact-designation">{{ contact.designation|expand_designation }}</div>
+                            <div class="text-xs text-[var(--color-text-muted)] mt-0.5">{{ contact.designation|expand_designation }}</div>
                             {% endif %}
                         </div>
                     </div>
 
-                    <!-- Mobiles -->
+                    {# Mobile Numbers #}
                     {% for mob in contact.mobiles %}
-                    <div class="contact-row">
-                        <div class="fixed-icon-col">
-                            <span class="material-icons" style="color: #166534;">call</span>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 flex justify-center shrink-0">
+                            <span class="material-icons text-[var(--color-primary)] text-lg">call</span>
                         </div>
-                        <a href="tel:{{ mob }}" class="contact-link">
-                            {{ mob }}
-                        </a>
+                        <a href="tel:{{ mob }}" class="text-sm text-[var(--color-text)] no-underline font-medium
+                                                       hover:text-[var(--color-primary)] transition-colors" dir="ltr">{{ mob }}</a>
                     </div>
                     {% endfor %}
 
-                    <!-- Whatsapp -->
+                    {# WhatsApp #}
                     {% if contact.whatsapp %}
-                    <div class="contact-row">
-                        <div class="fixed-icon-col">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#166534"
-                                viewBox="0 0 16 16">
-                                <path
-                                    d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z" />
-                            </svg>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 flex justify-center shrink-0">
+                            <span class="material-icons text-[var(--color-primary)] text-lg">chat</span>
                         </div>
-                        <a href="https://wa.me/{{ contact.whatsapp }}" target="_blank" class="contact-link">
-                            {{ contact.whatsapp }}
-                        </a>
+                        <a href="https://wa.me/{{ contact.whatsapp }}" target="_blank"
+                           class="text-sm text-[var(--color-text)] no-underline font-medium
+                                  hover:text-[var(--color-primary)] transition-colors" dir="ltr">{{ contact.whatsapp }}</a>
                     </div>
                     {% endif %}
 
-                    <!-- Email -->
+                    {# Email #}
                     {% if contact.email %}
-                    <div class="contact-row">
-                        <div class="fixed-icon-col">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#166534"
-                                viewBox="0 0 16 16">
-                                <path
-                                    d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z" />
-                            </svg>
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 flex justify-center shrink-0">
+                            <span class="material-icons text-[var(--color-primary)] text-lg">email</span>
                         </div>
-                        <a href="mailto:{{ contact.email }}" class="contact-link">
-                            {{ contact.email }}
-                        </a>
+                        <a href="mailto:{{ contact.email }}"
+                           class="text-sm text-[var(--color-text)] no-underline font-medium
+                                  hover:text-[var(--color-primary)] transition-colors">{{ contact.email }}</a>
                     </div>
                     {% endif %}
-
                 </div>
             </div>
             {% endfor %}
         </div>
         {% else %}
-        <div class="no-contacts-placeholder">
+        <div class="text-center py-5 text-[var(--color-text-muted)] italic text-sm">
             {{ _('No contact persons recorded') }}
         </div>
         {% endif %}
     </div>
 
-    <div class="section-card" style="padding: 1.5rem;">
-        <div class="history-section-header">
-            <h3 class="history-title">
-                <span class="material-icons">history</span>
+    {# ── RIGHT: Transaction History ──────────────────────── #}
+    <div class="bg-[var(--color-surface)] rounded-[var(--radius)] border border-[var(--color-border)] p-5 shadow-[var(--shadow-sm)]">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold m-0 flex items-center gap-2 text-[var(--color-text)]">
+                <span class="material-icons text-[var(--color-primary)]">history</span>
                 {{ _('Transaction History') }}
             </h3>
-            <div class="history-actions">
-                <a href="{{ url_for('work_orders.new_work_order', buyer_id=buyer.id) }}"
-                    class="btn btn-secondary btn-action-sm" title="{{ _('New Work Order') }}">
-                    <span class="material-icons">add_task</span> {{ _('Add Order') }}
-                </a>
-                <a href="{{ url_for('sales.new_sale', buyer_id=buyer.id) }}" class="btn btn-navy btn-action-sm">
-                    <span class="material-icons">local_mall</span> {{ _('New Sale') }}
-                </a>
+            <div class="flex gap-2 flex-wrap">
+                {{ btn(text=_('Add Order'), icon='add_task', variant='secondary', size='sm', href=url_for('work_orders.new_work_order', buyer_id=buyer.id)) }}
+                {{ btn(text=_('New Sale'), icon='local_mall', variant='primary', size='sm', href=url_for('sales.new_sale', buyer_id=buyer.id)) }}
             </div>
         </div>
 
-        <div class="shops-table-container">
-            <table class="shops-table">
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse text-sm">
                 <thead>
-                    <tr class="table-header-muted">
-                        <th>{{ _('Date') }}</th>
-                        <th>{{ _('ID') }}</th>
-                        <th>{{ _('Transaction Details') }}</th>
-                        <th style="text-align: right;">{{ _('Amount') }}</th>
-                        <th style="text-align: center;">{{ _('Status') }}</th>
+                    <tr class="bg-[var(--color-bg)] text-[var(--color-text-muted)]">
+                        <th class="px-3 py-2.5 text-left text-xs font-semibold uppercase border-b border-[var(--color-border)]">{{ _('Date') }}</th>
+                        <th class="px-3 py-2.5 text-left text-xs font-semibold uppercase border-b border-[var(--color-border)]">{{ _('ID') }}</th>
+                        <th class="px-3 py-2.5 text-left text-xs font-semibold uppercase border-b border-[var(--color-border)]">{{ _('Transaction Details') }}</th>
+                        <th class="px-3 py-2.5 text-right text-xs font-semibold uppercase border-b border-[var(--color-border)]">{{ _('Amount') }}</th>
+                        <th class="px-3 py-2.5 text-center text-xs font-semibold uppercase border-b border-[var(--color-border)]">{{ _('Status') }}</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for row in buyer.history %}
-                    <tr onclick="window.location='{{ row.url }}'" style="cursor: pointer;">
-                        <td class="table-date-text">{{ row.date }}</td>
-                        <td class="table-id-text">{{ row.id }}</td>
-                        <td>
-                            <div class="transaction-type-box">
-                                <span
-                                    class="material-icons transaction-type-icon {% if 'Work' in row.type %}work-order{% else %}sale{% endif %}">
+                    <tr onclick="window.location='{{ row.url }}'"
+                        class="border-b border-[var(--color-border)] cursor-pointer
+                               hover:bg-[var(--color-bg)]/50 transition-colors">
+                        <td class="px-3 py-2.5 text-[var(--color-text-muted)]" data-label="{{ _('Date') }}">{{ row.date }}</td>
+                        <td class="px-3 py-2.5 font-bold text-[var(--color-text)]" data-label="{{ _('ID') }}">{{ row.id }}</td>
+                        <td class="px-3 py-2.5" data-label="{{ _('Details') }}">
+                            <div class="flex items-center gap-2">
+                                <span class="material-icons text-lg {% if 'Work' in row.type %}text-amber-500{% else %}text-emerald-500{% endif %}">
                                     {% if 'Work' in row.type %}engineering{% else %}local_mall{% endif %}
                                 </span>
-                                <span class="transaction-type-label">{{ row.type }}</span>
+                                <span class="font-semibold">{{ row.type }}</span>
                             </div>
-                            <div class="transaction-desc-text">{{ row.description }}</div>
+                            <div class="text-xs text-[var(--color-text-muted)] mt-0.5">{{ row.description }}</div>
                         </td>
-                        <td class="table-amount-text">৳ {{ "%.2f"|format(row.amount|float or 0) }}</td>
-                        <td style="text-align: center;">
-                            {% set status_class = 'status-paid' if row.status in ['Paid', 'Completed'] else
-                            'status-pending' if row.status == 'Pending' else 'status-draft' %}
-                            <span class="status-pill {{ status_class }}">
-                                {{ row.status }}
-                            </span>
+                        <td class="px-3 py-2.5 text-right font-bold text-[var(--color-text)]" data-label="{{ _('Amount') }}">
+                            ৳ {{ "%.2f"|format(row.amount|float or 0) }}
+                        </td>
+                        <td class="px-3 py-2.5 text-center" data-label="{{ _('Status') }}">
+                            {% if row.status in ['Paid', 'Completed'] %}
+                            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide min-w-[90px]
+                                         bg-emerald-100 text-[var(--color-primary)]">{{ row.status }}</span>
+                            {% elif row.status == 'Pending' %}
+                            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide min-w-[90px]
+                                         bg-orange-100 text-orange-800">{{ row.status }}</span>
+                            {% else %}
+                            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide min-w-[90px]
+                                         bg-slate-100 text-[var(--color-text-muted)]">{{ row.status }}</span>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
                     {% if not buyer.history %}
                     <tr>
-                        <td colspan="5" class="no-history-placeholder">
-                            <span class="material-icons">history_toggle_off</span>
+                        <td colspan="5" class="text-center py-12 text-[var(--color-text-muted)]">
+                            <span class="material-icons text-5xl opacity-20 block mb-2">history_toggle_off</span>
                             {{ _('No transaction records found') }}
                         </td>
                     </tr>
@@ -203,6 +226,4 @@
         </div>
     </div>
 </div>
-
-
 {% endblock %}

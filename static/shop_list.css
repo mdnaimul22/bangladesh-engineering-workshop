@@ -1,88 +1,8 @@
-/* Shop List & Directory Views */
+/* Shop List & Directory — Shared Styles
+   Classes used across multiple templates (shop, buyer, purchase, inventory, work order lists).
+   DO NOT REMOVE without checking all template references. */
 
-/* Categories */
-.categories-section {
-    margin: 2rem 0;
-}
-
-.categories-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
-}
-
-.category-card {
-    background: var(--surface);
-    padding: 1.25rem;
-    border-radius: var(--radius-sm);
-    text-decoration: none;
-    color: var(--text-main);
-    box-shadow: var(--shadow);
-    transition: var(--transition);
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-}
-
-.category-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-    border-left: 4px solid var(--primary);
-}
-
-/* Shops Grid */
-.shops-section {
-    margin: 2rem 0;
-}
-
-.shops-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-@media (max-width: 992px) {
-    .shops-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 640px) {
-    .shops-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-.shop-card {
-    background: var(--surface);
-    border-radius: var(--radius);
-    padding: 1.5rem;
-    box-shadow: var(--shadow);
-    transition: var(--transition);
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.shop-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
-}
-
-.shop-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 1rem;
-    margin-bottom: 1rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border);
-}
-
-/* Shop Table */
+/* Shops Table */
 .shops-table-container {
     overflow-x: auto;
     background: var(--surface);
@@ -121,7 +41,6 @@
     color: var(--secondary);
     white-space: nowrap;
     font-size: 0.85rem;
-    text-transform: none;
     letter-spacing: 0.05em;
 }
 
@@ -129,6 +48,7 @@
     background: rgba(255, 255, 255, 0.05);
 }
 
+/* Links */
 .shop-link {
     color: var(--primary);
     text-decoration: none;
@@ -146,26 +66,7 @@
     display: inline-block;
 }
 
-/* Badges & Pills */
-.shop-category {
-    background: var(--btn-navy);
-    color: white !important;
-    padding: 0.25rem 0.75rem;
-    border-radius: 50px;
-    font-size: 0.75rem;
-    font-weight: 500;
-    white-space: nowrap;
-    transition: var(--btn-transition);
-}
-
-.shop-category:hover {
-    background: var(--btn-hover-bg);
-    color: var(--btn-navy) !important;
-    transform: scale(1.05);
-    backdrop-filter: blur(4px);
-    box-shadow: var(--shadow-sm);
-}
-
+/* Category Badge */
 .category-badge {
     background: var(--btn-navy);
     color: white !important;
@@ -194,37 +95,14 @@
     font-weight: 600;
 }
 
-.shop-name {
-    font-size: 1.15rem;
-    font-weight: 600;
-    line-height: 1.3;
+/* No Results Empty State */
+.no-results {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-muted);
 }
 
-.shop-name a {
-    color: var(--text-main);
-    text-decoration: none;
-    transition: var(--transition);
-}
-
-.shop-name a:hover {
-    color: var(--primary);
-}
-
-.shop-info {
-    flex: 1;
-}
-
-.shop-info p {
-    margin: 0.5rem 0;
-    font-size: 0.9rem;
-    color: var(--secondary);
-}
-
-.shop-info strong {
-    color: var(--text-main);
-    font-weight: 600;
-}
-
+/* Material Icon Vertical Alignment (shared) */
 .material-icons.v-middle {
     vertical-align: middle;
     margin-right: 4px;

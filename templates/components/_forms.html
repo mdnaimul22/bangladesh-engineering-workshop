@@ -1,0 +1,88 @@
+{# ── Form Macros ────────────────────────────────────────────── #}
+
+{% macro form_input(name, label='', type='text', value='', placeholder='',
+                     icon='', required=false, readonly=false, step='', attrs='') %}
+<div class="form-group mb-0">
+    {% if label %}
+    <label for="{{ name }}"
+           class="mb-0.5 text-xs text-[var(--color-primary)] font-bold flex items-center gap-1 min-h-[24px]">
+        {% if icon %}<span class="material-icons text-sm">{{ icon }}</span>{% endif %}
+        {{ label }}
+    </label>
+    {% endif %}
+    <input type="{{ type }}" name="{{ name }}" id="{{ name }}"
+           class="w-full px-3 py-2 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] transition focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)]"
+           value="{{ value }}"
+           placeholder="{{ placeholder }}"
+           {% if required %}required{% endif %}
+           {% if readonly %}readonly{% endif %}
+           {% if step %}step="{{ step }}"{% endif %}
+           {{ attrs }}>
+</div>
+{% endmacro %}
+
+{% macro form_select(name, label='', options=[], selected='', icon='',
+                      required=false, placeholder='', attrs='') %}
+<div class="form-group mb-0">
+    {% if label %}
+    <label for="{{ name }}"
+           class="mb-0.5 text-xs text-[var(--color-primary)] font-bold flex items-center gap-1 min-h-[24px]">
+        {% if icon %}<span class="material-icons text-sm">{{ icon }}</span>{% endif %}
+        {{ label }}
+    </label>
+    {% endif %}
+    <select name="{{ name }}" id="{{ name }}"
+            class="w-full px-3 py-2 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] transition focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)]"
+            {% if required %}required{% endif %} {{ attrs }}>
+        {% if placeholder %}<option value="">-- {{ placeholder }} --</option>{% endif %}
+        {% for opt in options %}
+        <option value="{{ opt.value }}" {% if opt.value == selected %}selected{% endif %}>
+            {{ opt.label }}
+        </option>
+        {% endfor %}
+    </select>
+</div>
+{% endmacro %}
+
+{% macro form_textarea(name, label='', value='', placeholder='',
+                        icon='', required=false, rows=4, attrs='') %}
+<div class="form-group mb-0">
+    {% if label %}
+    <label for="{{ name }}"
+           class="mb-0.5 text-xs text-[var(--color-primary)] font-bold flex items-center gap-1 min-h-[24px]">
+        {% if icon %}<span class="material-icons text-sm">{{ icon }}</span>{% endif %}
+        {{ label }}
+    </label>
+    {% endif %}
+    <textarea name="{{ name }}" id="{{ name }}" rows="{{ rows }}"
+              class="w-full px-3 py-2 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] transition focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] resize-y"
+              placeholder="{{ placeholder }}"
+              {% if required %}required{% endif %}
+              {{ attrs }}>{{ value }}</textarea>
+</div>
+{% endmacro %}
+
+{% macro form_file(name, label='', accept='', attrs='') %}
+<div class="form-group mb-0">
+    {% if label %}
+    <label for="{{ name }}"
+           class="mb-0.5 text-xs text-[var(--color-primary)] font-bold flex items-center gap-1 min-h-[24px]">
+        <span class="material-icons text-sm">attach_file</span>
+        {{ label }}
+    </label>
+    {% endif %}
+    <input type="file" name="{{ name }}" id="{{ name }}"
+           class="w-full text-sm text-[var(--color-text-muted)]"
+           {% if accept %}accept="{{ accept }}"{% endif %}
+           {{ attrs }}>
+</div>
+{% endmacro %}
+
+{# Shared unit options — extracted from duplicate macros in
+   work_order_form.html and purchase_form.html #}
+{% macro unit_options(selected_value='') %}
+{% set units = ['Pcs','Kg','Ton','Meter','Feet','Inch','Set','Job','Ltr','Nos','Bag','Coil'] %}
+{% for u in units %}
+<option value="{{ u }}" {% if selected_value == u %}selected{% endif %}>{{ _(u) }}</option>
+{% endfor %}
+{% endmacro %}

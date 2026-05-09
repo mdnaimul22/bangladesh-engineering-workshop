@@ -1,91 +1,132 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="bn" x-data :data-theme="$store.theme.current">
 
 <head>
     <meta charset="UTF-8">
+    {# FOUC prevention: set theme BEFORE any CSS loads #}
+    <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('bew-theme') || 'light')</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}বাংলাদেশ ইঞ্জিনিয়ারিং ওয়ার্কশপ{% endblock %}</title>
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/logo.svg') }}">
+
+    {# ── 1. Design Token System (Single Source of Truth) ──────── #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tokens.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+
+    {# ── 2. Legacy CSS (scoped via body.legacy-styles) ───────── #}
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='buttons.css') }}">
+
+    {# ── 3. Fonts ────────────────────────────────────────────── #}
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link
-        href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&family=Inter:wght@300;400;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&family=Inter:wght@300;400;700&display=swap"
+          rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <!-- Tailwind CSS (Play CDN — backward compatible with existing CSS) -->
+    {# ── 4. Tailwind CSS CDN → Token-Driven Config ───────────── #}
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwindcss.config = {
-            darkMode: ['class', '[data-theme="dark"]'],
+            darkMode: ['selector', '[data-theme="dark"]'],
             theme: {
                 extend: {
                     colors: {
-                        primary: 'var(--primary)',
-                        'primary-dark': 'var(--primary-dark)',
-                        secondary: 'var(--secondary)',
-                        success: 'var(--success)',
-                        danger: 'var(--danger)',
-                        surface: 'var(--surface)',
-                        'card-bg': 'var(--card-bg)',
-                        'text-main': 'var(--text-main)',
-                        'text-muted': 'var(--text-muted)',
-                        'bew-border': 'var(--border)',
-                        'bew-bg': 'var(--background)',
-                        'footer-bg': 'var(--footer-bg)',
+                        /* New token-mapped colors */
+                        primary:       'var(--color-primary)',
+                        'primary-dark':'var(--color-primary-dark)',
+                        success:       'var(--color-success)',
+                        warning:       'var(--color-warning)',
+                        danger:        'var(--color-danger)',
+                        info:          'var(--color-info)',
+                        surface:       'var(--color-surface)',
+                        'card-bg':     'var(--color-card)',
+                        'text-main':   'var(--color-text)',
+                        'text-muted':  'var(--color-text-muted)',
+                        'bew-border':  'var(--color-border)',
+                        'bew-bg':      'var(--color-bg)',
+                        'footer-bg':   'var(--color-footer)',
+                        /* Legacy compat aliases (same values, old names) */
+                        secondary:     'var(--color-text-muted)',
                     },
                     fontFamily: {
-                        bengali: ['"Noto Sans Bengali"', 'sans-serif'],
-                        sans: ['Inter', '"Noto Sans Bengali"', 'sans-serif'],
+                        bengali: ['var(--font-primary)'],
+                        sans:    ['var(--font-display)'],
+                        mono:    ['var(--font-mono)'],
                     },
                     zIndex: {
-                        'overlay': '900',
-                        'sidebar': '950',
-                        'header': '1000',
-                        'dropdown': '1010',
+                        'base':     'var(--z-base)',
+                        'dropdown': 'var(--z-dropdown)',
+                        'sticky':   'var(--z-sticky)',
+                        'overlay':  'var(--z-overlay)',
+                        'sidebar':  'var(--z-sidebar)',
+                        'header':   'var(--z-header)',
+                        'popover':  'var(--z-popover)',
+                        'modal':    'var(--z-modal)',
+                        'toast':    'var(--z-toast)',
+                        'tooltip':  'var(--z-tooltip)',
                     },
                     height: {
                         'header': 'var(--header-height)',
+                    },
+                    borderRadius: {
+                        'bew':    'var(--radius)',
+                        'bew-sm': 'var(--radius-sm)',
+                        'bew-lg': 'var(--radius-lg)',
+                    },
+                    boxShadow: {
+                        'bew':    'var(--shadow)',
+                        'bew-sm': 'var(--shadow-sm)',
+                        'bew-lg': 'var(--shadow-lg)',
                     },
                 }
             }
         }
     </script>
 
-    <!-- Alpine.js -->
+    {# ── 5. Alpine.js — Stores first, then CDN ──────────────── #}
+    <script defer src="{{ url_for('static', filename='js/alpine-components/theme-switcher.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='js/alpine-store.js') }}"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     {% block extra_css %}{% endblock %}
+    {% block extra_head %}{% endblock %}
 </head>
 
-<body class="font-bengali">
+<body class="font-bengali legacy-styles">
 
     {# ══════════════════════════════════════════════════════════════
-       OVERLAY — Mobile sidebar backdrop
+       OVERLAY — Mobile sidebar backdrop (Alpine-controlled)
        ══════════════════════════════════════════════════════════════ #}
-    <div id="overlay"
-        class="fixed top-[var(--header-height)] left-0 w-screen h-[calc(100vh-var(--header-height))]
-               bg-black/40 backdrop-blur-sm z-overlay
-               opacity-0 invisible transition-all duration-200">
+    <div x-show="$store.sidebar.open" x-cloak
+         @click="$store.sidebar.close()"
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed top-[var(--header-height)] left-0 w-screen h-[calc(100vh-var(--header-height))]
+                bg-black/40 backdrop-blur-sm z-overlay">
     </div>
 
     {# ══════════════════════════════════════════════════════════════
        NAVBAR — Sticky header with navigation
        ══════════════════════════════════════════════════════════════ #}
-    <nav class="bg-surface h-header border-b border-bew-border sticky top-0 z-header
-                flex items-center shadow-sm px-0">
+    <nav class="bg-[var(--color-surface)] h-header border-b border-bew-border sticky top-0 z-[1000]
+                flex items-center shadow-sm px-0 isolate" role="navigation" aria-label="{{ _('Main Navigation') }}">
         <div class="container mx-auto flex justify-between items-center w-full px-4">
             <!-- Left: Menu + Logo -->
             <div class="flex items-center gap-0.5">
-                <button id="menuToggle"
+                <button @click="$store.sidebar.toggle()"
                     class="bg-transparent border-none cursor-pointer text-text-muted p-2 rounded-md
-                           flex items-center justify-center hover:bg-bew-bg hover:text-primary transition-colors">
+                           flex items-center justify-center hover:bg-bew-bg hover:text-primary transition-colors"
+                    aria-label="{{ _('Toggle sidebar') }}"
+                    :aria-expanded="$store.sidebar.open">
                     <span class="material-icons text-2xl">menu</span>
                 </button>
                 <a href="{{ url_for('shops.index') }}"
                     class="flex items-center gap-2 text-primary no-underline font-bold text-xl tracking-tight">
-                    <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="BW Logo"
+                    <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="BEW Logo"
                         class="h-[60px] w-auto md:h-[85px]">
                     <span class="text-base md:text-xl">বাংলাদেশ ইঞ্জিনিয়ারিং ওয়ার্কসপ</span>
                 </a>
@@ -155,46 +196,37 @@
                         class="text-text-muted no-underline hover:text-primary transition-colors
                                {% if session.get('lang') == 'en' %}!text-primary font-bold{% endif %}">EN</a>
                 </div>
-            </div>
-        </div>
 
-        <!-- Theme Toggle (absolute positioned) -->
-        <div class="absolute top-3 right-4 z-[1001] flex items-center">
-            <button id="themeToggle" title="Toggle Theme"
-                class="bg-transparent border-none cursor-pointer text-text-muted p-1.5
-                       rounded-full flex items-center justify-center transition-all opacity-80
-                       hover:bg-black/5 hover:text-primary hover:opacity-100">
-                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="5"></circle>
-                    <line x1="12" y1="1" x2="12" y2="3"></line>
-                    <line x1="12" y1="21" x2="12" y2="23"></line>
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                    <line x1="1" y1="12" x2="3" y2="12"></line>
-                    <line x1="21" y1="12" x2="23" y2="12"></line>
-                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                </svg>
-                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
-                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                </svg>
-            </button>
+                {# Theme Toggle (Alpine-powered) — inline with nav controls #}
+                <button @click="$store.theme.toggle()"
+                        :title="'Theme: ' + $store.theme.label"
+                        class="bg-transparent border-none cursor-pointer text-text-muted p-1.5
+                               rounded-full flex items-center justify-center transition-all opacity-80
+                               hover:bg-black/5 hover:text-primary hover:opacity-100 ml-1"
+                        aria-label="{{ _('Toggle Theme') }}">
+                    <span class="material-icons text-xl" x-text="$store.theme.icon"></span>
+                </button>
+            </div>
         </div>
     </nav>
 
     {# ══════════════════════════════════════════════════════════════
-       SIDEBAR — Categories panel (slide-in from left)
+       SIDEBAR — Categories panel (Alpine-controlled)
        ══════════════════════════════════════════════════════════════ #}
-    <aside id="sidebar"
-        class="sidebar fixed top-[var(--header-height)] -left-[280px] w-[280px]
-               h-[calc(100vh-var(--header-height))] bg-surface z-sidebar
-               transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
-               shadow-lg flex flex-col overflow-y-auto
-               md:w-[280px] md:-left-[280px]">
+    <aside id="sidebar" role="complementary" aria-label="{{ _('Categories') }}"
+           class="fixed top-[var(--header-height)] left-0 w-[280px]
+                  h-[calc(100vh-var(--header-height))] bg-surface z-sidebar
+                  transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
+                  shadow-lg flex flex-col overflow-y-auto
+                  md:w-[280px] -translate-x-full"
+           :class="$store.sidebar.open ? '!translate-x-0' : '-translate-x-full'">
         <div class="h-16 px-6 border-b border-bew-border flex justify-between items-center bg-surface">
             <h3 class="text-lg font-semibold text-text-main">{{ _('Categories') }}</h3>
+            <button @click="$store.sidebar.close()"
+                    class="p-1 rounded-full hover:bg-bew-bg text-text-muted transition-colors"
+                    aria-label="{{ _('Close sidebar') }}">
+                <span class="material-icons">close</span>
+            </button>
         </div>
         <div class="p-3">
             <div class="space-y-0.5">
@@ -215,14 +247,26 @@
     {# ══════════════════════════════════════════════════════════════
        MAIN CONTENT — Flash messages + page content
        ══════════════════════════════════════════════════════════════ #}
-    <main class="container mx-auto px-4">
+    <main class="container mx-auto px-4" role="main" id="main-content">
+        {# Flash messages — Alpine-powered auto-dismiss #}
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-        <div class="flash-messages">
+        <div class="space-y-2 mb-4 mt-4" aria-live="polite">
             {% for category, message in messages %}
-            <div class="flash-message flash-{{ category }}">
-                {{ message }}
-                <button class="flash-close" onclick="this.parentElement.remove()">×</button>
+            <div x-data="{ show: true }" x-show="show"
+                 x-init="setTimeout(() => show = false, 5000)"
+                 x-transition:leave="transition ease-in duration-300"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0 -translate-y-2"
+                 role="alert"
+                 class="px-4 py-3 rounded-[var(--radius-sm)] flex justify-between items-center text-sm
+                        {% if category == 'success' %}bg-[rgba(16,185,129,0.1)] text-[var(--color-success)] border-l-4 border-[var(--color-success)]
+                        {% elif category == 'error' %}bg-[rgba(239,68,68,0.1)] text-[var(--color-danger)] border-l-4 border-[var(--color-danger)]
+                        {% else %}bg-[rgba(37,99,235,0.1)] text-[var(--color-primary)] border-l-4 border-[var(--color-primary)]
+                        {% endif %}">
+                <span>{{ message }}</span>
+                <button @click="show = false" class="text-current opacity-70 hover:opacity-100 ml-4"
+                        aria-label="{{ _('Close') }}">×</button>
             </div>
             {% endfor %}
         </div>
@@ -237,7 +281,7 @@
        ══════════════════════════════════════════════════════════════ #}
     <footer class="bg-footer-bg backdrop-blur-[15px] backdrop-saturate-[180%]
                    text-text-main pt-6 mt-16 border-t border-bew-border
-                   shadow-[0_-10px_30px_rgba(0,0,0,0.05)] text-sm">
+                   shadow-[0_-10px_30px_rgba(0,0,0,0.05)] text-sm" role="contentinfo">
         <div class="container mx-auto px-4
                     grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_1.5fr_1fr]
                     gap-8 lg:gap-12 pb-1 items-start">
@@ -341,7 +385,9 @@
         </div>
     </footer>
 
+    {# ── Legacy script (kept until all templates migrated) ─── #}
     <script src="{{ url_for('static', filename='script.js') }}"></script>
+    {% block extra_js %}{% endblock %}
 </body>
 
 </html>

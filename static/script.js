@@ -1,40 +1,7 @@
-// Shop Details JavaScript
+// BEW Legacy Script — Retained behaviors only
+// Sidebar toggle and theme switching are now handled by Alpine.js stores.
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Sidebar Toggle Logic
-    const menuToggle = document.getElementById('menuToggle');
-    const sidebar = document.getElementById('sidebar');
-    const closeSidebar = document.getElementById('closeSidebar');
-    const overlay = document.getElementById('overlay');
-
-    function toggleSidebar() {
-        if (sidebar && overlay) {
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-        }
-    }
-
-    if (menuToggle) {
-        menuToggle.addEventListener('click', toggleSidebar);
-    }
-
-    if (closeSidebar) {
-        closeSidebar.addEventListener('click', toggleSidebar);
-    }
-
-    if (overlay) {
-        overlay.addEventListener('click', toggleSidebar);
-    }
-
-    // Auto-hide flash messages after 5 seconds
-    const flashMessages = document.querySelectorAll('.flash-message');
-    flashMessages.forEach(msg => {
-        setTimeout(() => {
-            msg.style.opacity = '0';
-            msg.style.transform = 'translateY(-10px)';
-            setTimeout(() => msg.remove(), 300);
-        }, 5000);
-    });
 
     // Search input focus effect
     const searchInput = document.getElementById('searchInput');
@@ -48,26 +15,14 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Confirm delete
-    const deleteButtons = document.querySelectorAll('.btn-danger');
-    deleteButtons.forEach(btn => {
-        const form = btn.closest('form');
-        if (form && form.classList.contains('delete-form')) {
-            form.addEventListener('submit', function (e) {
-                if (!confirm('আপনি কি নিশ্চিতভাবে এই দোকানটি মুছে ফেলতে চান?')) {
-                    e.preventDefault();
-                }
-            });
-        }
-    });
-
-    // Add smooth scroll
+    // Add smooth scroll for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
-            });
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({ behavior: 'smooth' });
+            }
         });
     });
 
@@ -81,13 +36,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-
     // Toggle New Category Input in Shop Form
     const categorySelect = document.getElementById('category_id');
     const newCategoryInput = document.getElementById('new_category_name');
 
     if (categorySelect && newCategoryInput) {
-        // Run on change
         categorySelect.addEventListener('change', function () {
             if (this.value === 'new') {
                 newCategoryInput.style.display = 'block';
@@ -105,76 +58,4 @@ document.addEventListener('DOMContentLoaded', function () {
             newCategoryInput.required = true;
         }
     }
-
-    // Theme Switcher Logic
-    const themeToggle = document.getElementById('themeToggle');
-    const currentTheme = localStorage.getItem('theme') || 'light';
-
-    if (currentTheme === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-    }
-
-    if (themeToggle) {
-        themeToggle.addEventListener('click', () => {
-            let theme = document.documentElement.getAttribute('data-theme');
-            if (theme === 'dark') {
-                document.documentElement.removeAttribute('data-theme');
-                localStorage.setItem('theme', 'light');
-            } else {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-            }
-        });
-    }
 });
-
-// Live search (optional - requires API endpoint)
-function debounce(func, wait) {
-    let timeout;
-    return function executedFunction(...args) {
-        const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-    };
-}
-
-// Initialize live search if needed
-function initLiveSearch() {
-    const searchInput = document.getElementById('searchInput');
-    if (!searchInput) return;
-
-    const resultsContainer = document.createElement('div');
-    resultsContainer.className = 'live-search-results';
-    searchInput.parentElement.appendChild(resultsContainer);
-
-    const performSearch = debounce(async (query) => {
-        if (query.length < 2) {
-            resultsContainer.innerHTML = '';
-            return;
-        }
-
-        try {
-            const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
-            const shops = await response.json();
-
-            if (shops.length === 0) {
-                resultsContainer.innerHTML = '<div class="no-result">কোনো ফলাফল পাওয়া যায়নি</div>';
-                return;
-            }
-
-            resultsContainer.innerHTML = shops.slice(0, 5).map(shop => `
-                <a href="/shop/${shop.id}" class="search-result-item">
-                    <strong>${shop.name}</strong>
-                    <span>${shop.mobile || ''}</span>
-                </a>
-            `).join('');
-        } catch (error) {
-            console.error('Search error:', error);
-        }
-    }, 300);
-
-    searchInput.addEventListener('input', (e) => performSearch(e.target.value));
-}

@@ -1,0 +1,26 @@
+{# ── Badge Macros ───────────────────────────────────────────── #}
+
+{% macro badge(text, variant='info') %}
+{% set styles = {
+    'info':    'bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-dark)] text-white',
+    'success': 'bg-[var(--color-success-light)] text-[var(--color-success)]',
+    'warning': 'bg-[var(--color-warning-light)] text-[var(--color-warning)]',
+    'danger':  'bg-[var(--color-danger-light)] text-[var(--color-danger)]',
+    'neutral': 'bg-[var(--color-bg)] text-[var(--color-text-muted)]'
+} %}
+<span class="inline-block px-3 py-1 rounded-full text-xs font-semibold {{ styles[variant] }}">
+    {{ text }}
+</span>
+{% endmacro %}
+
+{% macro status_badge(status) %}
+{% if status|lower == 'closed' or status|lower == 'completed' %}
+{{ badge(_(status|title), 'success') }}
+{% elif status|lower == 'open' or status|lower == 'pending' %}
+{{ badge(_(status|title), 'warning') }}
+{% elif status|lower == 'cancelled' %}
+{{ badge(_(status|title), 'danger') }}
+{% else %}
+{{ badge(_(status|title), 'neutral') }}
+{% endif %}
+{% endmacro %}
