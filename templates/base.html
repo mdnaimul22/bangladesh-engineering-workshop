@@ -13,9 +13,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tokens.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
 
-    {# ── 2. Legacy CSS (scoped via body.legacy-styles) ───────── #}
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='buttons.css') }}">
+    {# ── 2. Legacy CSS removed — all templates now use Tailwind ── #}
 
     {# ── 3. Fonts ────────────────────────────────────────────── #}
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -136,15 +134,15 @@
             <div class="hidden md:flex items-center gap-6">
                 <a href="{{ url_for('shops.index') }}"
                     class="text-text-muted no-underline font-medium text-[0.95rem] hover:text-primary transition-colors">
-                    <span class="material-icons v-middle">home</span> {{ _('Home') }}
+                    <span class="material-icons align-middle">home</span> {{ _('Home') }}
                 </a>
 
                 <!-- ERP Dropdown -->
                 <div class="relative group flex items-center h-full">
                     <a href="javascript:void(0)"
                         class="text-text-muted no-underline font-medium text-[0.95rem] hover:text-primary transition-colors">
-                        <span class="material-icons v-middle">business_center</span> {{ _('ERP') }}
-                        <span class="material-icons v-middle text-lg">expand_more</span>
+                        <span class="material-icons align-middle">business_center</span> {{ _('ERP') }}
+                        <span class="material-icons align-middle text-lg">expand_more</span>
                     </a>
                     <div class="hidden group-hover:flex flex-col absolute top-full left-0
                                 bg-surface min-w-[240px] shadow-lg z-dropdown rounded-lg
@@ -152,36 +150,36 @@
                         <a href="{{ url_for('buyers.buyer_list') }}"
                             class="text-text-muted no-underline px-4 py-3 text-sm font-medium
                                    hover:bg-bew-bg hover:text-primary transition-all">
-                            <span class="material-icons v-middle text-lg">people</span> {{ _('Buyers') }}
+                            <span class="material-icons align-middle text-lg">people</span> {{ _('Buyers') }}
                         </a>
                         <a href="{{ url_for('purchases.purchase_list') }}"
                             class="text-text-muted no-underline px-4 py-3 text-sm font-medium
                                    hover:bg-bew-bg hover:text-primary transition-all">
-                            <span class="material-icons v-middle text-lg">shopping_cart</span> {{ _('Purchases') }}
+                            <span class="material-icons align-middle text-lg">shopping_cart</span> {{ _('Purchases') }}
                         </a>
                         <a href="{{ url_for('inventory.inventory_list') }}"
                             class="text-text-muted no-underline px-4 py-3 text-sm font-medium
                                    hover:bg-bew-bg hover:text-primary transition-all">
-                            <span class="material-icons v-middle text-lg">inventory_2</span> {{ _('Inventory') }}
+                            <span class="material-icons align-middle text-lg">inventory_2</span> {{ _('Inventory') }}
                         </a>
                         <a href="{{ url_for('work_orders.work_order_list') }}"
                             class="text-text-muted no-underline px-4 py-3 text-sm font-medium
                                    hover:bg-bew-bg hover:text-primary transition-all">
-                            <span class="material-icons v-middle text-lg">assignment</span> {{ _('Work Orders') }}
+                            <span class="material-icons align-middle text-lg">assignment</span> {{ _('Work Orders') }}
                         </a>
                         <a href="{{ url_for('sales.sale_list') }}"
                             class="text-text-muted no-underline px-4 py-3 text-sm font-medium
                                    hover:bg-bew-bg hover:text-primary transition-all">
-                            <span class="material-icons v-middle text-lg">receipt_long</span> {{ _('Sales') }}
+                            <span class="material-icons align-middle text-lg">receipt_long</span> {{ _('Sales') }}
                         </a>
                     </div>
                 </div>
 
                 <a href="{{ url_for('shops.shop_list') }}"
                     class="text-text-muted no-underline font-medium text-[0.95rem] hover:text-primary transition-colors">
-                    <span class="material-icons v-middle">storefront</span> {{ _('All Shops') }}
+                    <span class="material-icons align-middle">storefront</span> {{ _('All Shops') }}
                 </a>
-                <a href="{{ url_for('shops.new_shop') }}" class="btn btn-navy">
+                <a href="{{ url_for('shops.new_shop') }}" class="inline-flex items-center gap-1 px-4 py-2 bg-[var(--color-btn-primary)] text-white rounded-lg text-sm font-semibold no-underline hover:opacity-90 transition-opacity">
                     <span class="material-icons">add_circle</span>
                     {{ _('New Shop') }}
                 </a>

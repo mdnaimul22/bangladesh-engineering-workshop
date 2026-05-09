@@ -1,71 +1,54 @@
 {% extends 'base.html' %}
+{% from 'components/_navigation.html' import breadcrumb with context %}
+{% from 'components/_buttons.html' import btn with context %}
+{% from 'components/_seo.html' import og_tags, breadcrumb_schema with context %}
 
-{% block title %}Crane Repair & Maintenance - Bangladesh Engineering Workshop{% endblock %}
+{% block title %}Crane Repair & Maintenance - {{ _('Bangladesh Engineering Workshop') }}{% endblock %}
+
+{% block extra_head %}
+{{ og_tags(title='Crane Repair & Maintenance - Bangladesh Engineering Workshop', description='Hydraulic and structural crane services, rail alignment, load testing, and major inspections.', url=request.url) }}
+{% endblock %}
 
 {% block content %}
-<section class="page-header" style="padding: 1rem;">
-    <h1 style="margin-bottom: 0.5rem;">Crane Repair & Maintenance</h1>
-    <span class="subtitle reference-text">
-        Hydraulic & Structural Crane Services
-    </span>
-</section>
+{% set crumbs = [{'label': _('Home'), 'url': url_for('shops.index')}, {'label': _('Services'), 'url': url_for('core.services')}, {'label': 'Crane Repair', 'url': ''}] %}
+{{ breadcrumb(crumbs) }}
+{{ breadcrumb_schema(crumbs) }}
 
-<div class="container" style="margin-top: 2rem; margin-bottom: 3rem;">
-    <div class="service-container">
-        <!-- Main Content Area -->
-        <div class="service-content">
-            <img src="{{ url_for('static', filename='img/crane_repair.webp') }}" alt="Hydraulic crane under maintenance"
-                style="width: 100%; height: 350px; object-fit: cover; border-radius: var(--radius); margin-bottom: 2rem;">
-
-            <h2 style="margin-bottom: 1rem;">Crane Maintenance</h2>
-
-            <p class="service-description reference-text" style="margin-bottom: 1.5rem;">
-                Minimise machine failure and keep your crane in tip-top condition with our professional services.
-            </p>
-
-            <h3 class="reference-text" style="font-weight: 400; color: #333333; margin-bottom: 1rem;">Core Crane
-                Services:</h3>
-            <ul class="feature-list reference-text" style="padding-left: 2rem;">
-                <li style="margin-bottom: 0.5rem;">
-                    <strong>Scheduled Maintenance:</strong> Regular servicing to prevent unwanted project delays.
-                </li>
-                <li style="margin-bottom: 0.5rem;">
-                    <strong>Rail Alignment & Load Testing:</strong> Ensuring safe lifting capacity and stability.
-                </li>
-                <li style="margin-bottom: 0.5rem;">
-                    <strong>Boom & Cylinder Repairs:</strong> Expert machining and hydraulic cylinder repair for
-                    telescopic booms.
-                </li>
-                <li style="margin-bottom: 0.5rem;">
-                    <strong>Major Inspections:</strong> Detailed compliance checks meeting safety standards (10-year
-                    inspections).
-                </li>
-            </ul>
-
-            <h3 class="reference-text" style="font-weight: 400; color: #333333; margin-top: 2rem; margin-bottom: 1rem;">
-                EWP & Access Equipment</h3>
-            <p class="reference-text" style="margin-bottom: 1rem;">
-                We also service elevated work platforms (EWPs) and scissor lifts, ensuring safety, reliability,
-                and compliance for all access equipment.
-            </p>
-        </div>
-    </div>
-
-    <div style="margin-top: 2rem; background: var(--background); padding: 1.5rem; border-radius: var(--radius);">
-        <h4 class="reference-text" style="margin-bottom: 0.5rem; font-weight: 400; color: #333333;">Need Urgent Help?
-        </h4>
-        <p class="reference-text" style="font-size: 0.9rem; margin-bottom: 1rem;">
-            Our team is ready to assist with breakdowns and emergency crane maintenance.
-        </p>
-        <div class="form-actions" style="justify-content: flex-start; margin-top: 1rem; gap: 1rem;">
-            <a href="tel:+8801906399161" class="btn btn-navy">
-                <span class="material-icons">call</span> {{ _('Contact Us') }}
-            </a>
-            <a href="{{ url_for('core.services') }}" class="btn btn-secondary">
-                <span class="material-icons">arrow_back</span> {{ _('Back to Services') }}
-            </a>
-        </div>
-    </div>
+<div class="text-center py-5 mb-4">
+    <h1 class="text-2xl md:text-3xl font-bold text-[var(--color-text)] mb-1">Crane Repair & Maintenance</h1>
+    <span class="text-[var(--color-text-muted)] text-sm">Hydraulic & Structural Crane Services</span>
 </div>
 
+<div class="bg-[var(--color-surface)] rounded-[var(--radius)] border border-[var(--color-border)] p-5 md:p-6 shadow-[var(--shadow-sm)] mb-5">
+    <img src="{{ url_for('static', filename='img/crane_repair.webp') }}" alt="Hydraulic crane under maintenance"
+         class="w-full h-[350px] object-cover rounded-[var(--radius)] mb-6">
+
+    <h2 class="text-xl font-bold text-[var(--color-text)] mb-3">Crane Maintenance</h2>
+    <p class="text-sm text-[var(--color-text-muted)] leading-relaxed mb-4">
+        Minimise machine failure and keep your crane in tip-top condition with our professional services.
+    </p>
+
+    <h3 class="text-base font-normal text-[var(--color-text)] mb-3">Core Crane Services:</h3>
+    <ul class="text-sm text-[var(--color-text-muted)] leading-relaxed pl-6 list-disc space-y-2 mb-5">
+        <li><strong class="text-[var(--color-text)]">Scheduled Maintenance:</strong> Regular servicing to prevent unwanted project delays.</li>
+        <li><strong class="text-[var(--color-text)]">Rail Alignment & Load Testing:</strong> Ensuring safe lifting capacity and stability.</li>
+        <li><strong class="text-[var(--color-text)]">Boom & Cylinder Repairs:</strong> Expert machining and hydraulic cylinder repair for telescopic booms.</li>
+        <li><strong class="text-[var(--color-text)]">Major Inspections:</strong> Detailed compliance checks meeting safety standards (10-year inspections).</li>
+    </ul>
+
+    <h3 class="text-base font-normal text-[var(--color-text)] mt-5 mb-3">EWP & Access Equipment</h3>
+    <p class="text-sm text-[var(--color-text-muted)] leading-relaxed">
+        We also service elevated work platforms (EWPs) and scissor lifts, ensuring safety, reliability,
+        and compliance for all access equipment.
+    </p>
+</div>
+
+<div class="p-5 bg-[var(--color-bg)] rounded-[var(--radius)] border border-[var(--color-border)] mb-6">
+    <h4 class="text-base font-normal text-[var(--color-text)] mb-2">Need Urgent Help?</h4>
+    <p class="text-sm text-[var(--color-text-muted)] mb-4">Our team is ready to assist with breakdowns and emergency crane maintenance.</p>
+    <div class="flex gap-3 flex-wrap">
+        {{ btn(text=_('Contact Us'), icon='call', variant='primary', href='tel:+8801906399161') }}
+        {{ btn(text=_('Back to Services'), icon='arrow_back', variant='secondary', href=url_for('core.services')) }}
+    </div>
+</div>
 {% endblock %}

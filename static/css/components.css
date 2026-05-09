@@ -116,25 +116,19 @@
     body { background: white !important; }
 }
 
-/* ── 5. Status Badge Glass Select (Work Order Form) ────────── */
-.status-glass-select {
-    padding: var(--space-2) var(--space-4);
-    border-radius: var(--radius-full);
-    font-size: var(--text-xs);
-    font-weight: var(--weight-bold);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border: none;
-    cursor: pointer;
+/* ── 5. Form Control — shared by 6+ form templates ─────────── */
+.form-control {
+    padding: 0.5rem 0.8rem;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
     transition: var(--transition);
+    width: 100%;
+    background: var(--color-input, var(--color-surface));
+    color: var(--color-text);
+    font-size: var(--text-sm);
 }
 
-.status-glass-select.status-yellow {
-    background: var(--color-warning-light);
-    color: var(--color-warning);
-}
-
-.status-glass-select.status-green {
-    background: var(--color-success-light);
-    color: var(--color-success);
+.form-control:focus {
+    border-color: var(--color-primary);
+    outline: none;
 }

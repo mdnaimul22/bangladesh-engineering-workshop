@@ -1,70 +1,61 @@
 {% extends 'base.html' %}
+{% from 'components/_navigation.html' import breadcrumb with context %}
+{% from 'components/_buttons.html' import btn with context %}
+{% from 'components/_seo.html' import og_tags, breadcrumb_schema with context %}
 
-{% block title %}Earthmoving Repair & Maintenance - Bangladesh Engineering Workshop{% endblock %}
+{% block title %}Earthmoving Repair & Maintenance - {{ _('Bangladesh Engineering Workshop') }}{% endblock %}
+
+{% block extra_head %}
+{{ og_tags(title='Earthmoving Equipment Repair - Bangladesh Engineering Workshop', description='Complete maintenance solutions for excavators, dozers, and heavy earthmoving machinery.', url=request.url) }}
+{% endblock %}
 
 {% block content %}
-<section class="page-header" style="padding: 1rem;">
-    <h1>Earthmoving Equipment Repair</h1>
-    <span class="subtitle reference-text">Complete Maintenance Solutions for Excavators & Dozers</span>
-</section>
+{% set crumbs = [{'label': _('Home'), 'url': url_for('shops.index')}, {'label': _('Services'), 'url': url_for('core.services')}, {'label': 'Earthmoving Repair', 'url': ''}] %}
+{{ breadcrumb(crumbs) }}
+{{ breadcrumb_schema(crumbs) }}
 
-<div class="container" style="margin-top: 2rem; margin-bottom: 3rem;">
-    <div class="service-container">
-        <!-- Main Content Area -->
-        <div class="service-content">
-            <img src="{{ url_for('static', filename='img/earthmoving.webp') }}" alt="Earthmoving Repair"
-                style="width: 100%; height: 350px; object-fit: cover; border-radius: var(--radius); margin-bottom: 2rem;">
+<div class="text-center py-5 mb-4">
+    <h1 class="text-2xl md:text-3xl font-bold text-[var(--color-text)] mb-1">Earthmoving Equipment Repair</h1>
+    <span class="text-[var(--color-text-muted)] text-sm">Complete Maintenance Solutions for Excavators & Dozers</span>
+</div>
 
-            <h2 style="margin-bottom: 1.5rem;">Earthmoving Repair & Maintenance Services</h2>
-            <p class="reference-text" style="margin-bottom: 1.5rem;">
-                Bangladesh Engineering Workshop BEW™ understands how important it is to have your essential
-                earthmoving equipment maintained and ready to support your projects, large or small. Our team includes
-                earthmoving mechanics and specialist digger mechanics experienced in providing crucial earthmoving
-                equipment
-                repairs, maintenance and excavator breakdown services to keep your business-critical machinery up and
-                running. What’s more, our earthmoving equipment repair services can come to you for optimum efficiency
-                and affordability.
-            </p>
+<div class="bg-[var(--color-surface)] rounded-[var(--radius)] border border-[var(--color-border)] p-5 md:p-6 shadow-[var(--shadow-sm)] mb-5">
+    <img src="{{ url_for('static', filename='img/earthmoving.webp') }}" alt="Earthmoving Repair"
+         class="w-full h-[350px] object-cover rounded-[var(--radius)] mb-6">
 
-            <h3 class="reference-text" style="font-weight: 400; color: #333333; margin-top: 2rem; margin-bottom: 1rem;">
-                Our BEW™ earthmoving services:</h3>
-            <ul class="feature-list reference-text" style="padding-left: 2rem;">
-                <li style="margin-bottom: 0.5rem;"><strong>Complete Engine Rebuilds:</strong> Diesel engine repairs and
-                    overhauls for excavators and dozers.</li>
-                <li style="margin-bottom: 0.5rem;"><strong>Bucket & Boom Repair:</strong> Welding, line-boring, and
-                    structural reinforcement for wear parts.</li>
-                <li style="margin-bottom: 0.5rem;"><strong>Track & Undercarriage:</strong> Repairing rollers, idlers,
-                    and track chains.</li>
-                <li style="margin-bottom: 0.5rem;"><strong>Hydraulic Systems:</strong> Pump/motor testing and cylinder
-                    resealing.</li>
-                <li style="margin-bottom: 0.5rem;"><strong>Mobile Repairs:</strong> On-site breakdown support to get you
-                    moving again.</li>
-            </ul>
+    <h2 class="text-xl font-bold text-[var(--color-text)] mb-4">Earthmoving Repair & Maintenance Services</h2>
+    <p class="text-sm text-[var(--color-text-muted)] leading-relaxed mb-4">
+        Bangladesh Engineering Workshop BEW™ understands how important it is to have your essential
+        earthmoving equipment maintained and ready to support your projects, large or small. Our team includes
+        earthmoving mechanics and specialist digger mechanics experienced in providing crucial earthmoving equipment
+        repairs, maintenance and excavator breakdown services to keep your business-critical machinery up and
+        running. What's more, our earthmoving equipment repair services can come to you for optimum efficiency
+        and affordability.
+    </p>
 
-            <h3 class="reference-text" style="font-weight: 400; color: #333333; margin-top: 2rem; margin-bottom: 1rem;">
-                Major Service & Overhauls</h3>
-            <p class="reference-text" style="margin-bottom: 1.5rem;">
-                Over time, heavy construction machines need more than a regular service. Our major service includes
-                detailed diagnostics, technical spec updates, and component upgrades. We service all major brands
-                including CAT, Komatsu, and Hitachi.
-            </p>
-        </div>
-    </div>
+    <h3 class="text-base font-normal text-[var(--color-text)] mt-5 mb-3">Our BEW™ earthmoving services:</h3>
+    <ul class="text-sm text-[var(--color-text-muted)] leading-relaxed pl-6 list-disc space-y-2 mb-5">
+        <li><strong class="text-[var(--color-text)]">Complete Engine Rebuilds:</strong> Diesel engine repairs and overhauls for excavators and dozers.</li>
+        <li><strong class="text-[var(--color-text)]">Bucket & Boom Repair:</strong> Welding, line-boring, and structural reinforcement for wear parts.</li>
+        <li><strong class="text-[var(--color-text)]">Track & Undercarriage:</strong> Repairing rollers, idlers, and track chains.</li>
+        <li><strong class="text-[var(--color-text)]">Hydraulic Systems:</strong> Pump/motor testing and cylinder resealing.</li>
+        <li><strong class="text-[var(--color-text)]">Mobile Repairs:</strong> On-site breakdown support to get you moving again.</li>
+    </ul>
 
-    <div style="margin-top: 2rem; background: var(--background); padding: 1.5rem; border-radius: var(--radius);">
-        <h4 class="reference-text" style="margin-bottom: 0.5rem; font-weight: 400; color: #333333;">Need Urgent Help?
-        </h4>
-        <p class="reference-text" style="font-size: 0.9rem; margin-bottom: 1rem;">
-            Our team is ready to assist with breakdowns and emergency maintenance.
-        </p>
-        <div class="form-actions" style="justify-content: flex-start; margin-top: 1rem; gap: 1rem;">
-            <a href="tel:+8801906399161" class="btn btn-navy">
-                <span class="material-icons">call</span> {{ _('Contact Us') }}
-            </a>
-            <a href="{{ url_for('core.services') }}" class="btn btn-secondary">
-                <span class="material-icons">arrow_back</span> {{ _('Back to Services') }}
-            </a>
-        </div>
+    <h3 class="text-base font-normal text-[var(--color-text)] mt-5 mb-3">Major Service & Overhauls</h3>
+    <p class="text-sm text-[var(--color-text-muted)] leading-relaxed">
+        Over time, heavy construction machines need more than a regular service. Our major service includes
+        detailed diagnostics, technical spec updates, and component upgrades. We service all major brands
+        including CAT, Komatsu, and Hitachi.
+    </p>
+</div>
+
+<div class="p-5 bg-[var(--color-bg)] rounded-[var(--radius)] border border-[var(--color-border)] mb-6">
+    <h4 class="text-base font-normal text-[var(--color-text)] mb-2">Need Urgent Help?</h4>
+    <p class="text-sm text-[var(--color-text-muted)] mb-4">Our team is ready to assist with breakdowns and emergency maintenance.</p>
+    <div class="flex gap-3 flex-wrap">
+        {{ btn(text=_('Contact Us'), icon='call', variant='primary', href='tel:+8801906399161') }}
+        {{ btn(text=_('Back to Services'), icon='arrow_back', variant='secondary', href=url_for('core.services')) }}
     </div>
 </div>
 {% endblock %}

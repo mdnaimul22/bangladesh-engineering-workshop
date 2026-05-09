@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
+{% from 'components/_buttons.html' import btn with context %}
 {% block title %}404 - {{ _('পৃষ্ঠা পাওয়া যায়নি') }}{% endblock %}
 {% block content %}
-<div class="container" style="text-align:center; padding: 60px 20px;">
-    <h1 style="font-size: 4rem; color: var(--navy);">404</h1>
-    <p style="font-size: 1.2rem; color: var(--text-muted);">{{ _('দুঃখিত, এই পৃষ্ঠাটি খুঁজে পাওয়া যায়নি।') }}</p>
-    <a href="{{ url_for('shops.index') }}" class="btn btn-navy" style="margin-top: 20px;">{{ _('হোমপেজে ফিরে যান') }}</a>
+<div class="flex flex-col items-center justify-center text-center py-16 px-5">
+    <h1 class="text-7xl font-bold text-[var(--color-primary)] mb-2">404</h1>
+    <p class="text-lg text-[var(--color-text-muted)] mb-6">{{ _('দুঃখিত, এই পৃষ্ঠাটি খুঁজে পাওয়া যায়নি।') }}</p>
+    {{ btn(text=_('হোমপেজে ফিরে যান'), icon='home', variant='primary', href=url_for('shops.index')) }}
 </div>
 {% endblock %}
