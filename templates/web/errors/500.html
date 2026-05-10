@@ -1,0 +1,10 @@
+{% extends "web_base.html" %}
+{% from 'components/_buttons.html' import btn with context %}
+{% block title %}500 - {{ _('Internal Server Error') }}{% endblock %}
+{% block content %}
+<div class="flex flex-col items-center justify-center text-center py-16 px-5">
+    <h1 class="text-7xl font-bold text-red-500 mb-2">500</h1>
+    <p class="text-lg text-[var(--color-text-muted)] mb-6">{{ _('Sorry, an internal server error has occurred.') }}</p>
+    {{ btn(text=_('Return to Homepage'), icon='home', variant='primary', href=url_for('shops.index')) }}
+</div>
+{% endblock %}

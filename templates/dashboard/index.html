@@ -1,0 +1,99 @@
+{% extends "dashboard_base.html" %}
+
+{% block title %}Dashboard | {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+    <div class="flex items-center justify-between">
+        <h2 class="text-2xl font-bold text-[var(--color-text)]">{{ _('Dashboard Overview') }}</h2>
+        <p class="text-[var(--color-text-muted)]">{{ _('Welcome back, Admin!') }}</p>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Visits Today -->
+        <div class="bg-[var(--color-surface)] p-6 rounded-xl border border-[var(--color-border)] shadow-sm">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center">
+                    <span class="material-icons">visibility</span>
+                </div>
+                <div>
+                    <p class="text-sm text-[var(--color-text-muted)] font-medium">{{ _('Visits Today') }}</p>
+                    <h3 class="text-2xl font-bold text-[var(--color-text)]">{{ stats.today_visits }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Buyers -->
+        <div class="bg-[var(--color-surface)] p-6 rounded-xl border border-[var(--color-border)] shadow-sm">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center">
+                    <span class="material-icons">people</span>
+                </div>
+                <div>
+                    <p class="text-sm text-[var(--color-text-muted)] font-medium">{{ _('Total Buyers') }}</p>
+                    <h3 class="text-2xl font-bold text-[var(--color-text)]">{{ stats.total_buyers }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Shops -->
+        <div class="bg-[var(--color-surface)] p-6 rounded-xl border border-[var(--color-border)] shadow-sm">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center">
+                    <span class="material-icons">storefront</span>
+                </div>
+                <div>
+                    <p class="text-sm text-[var(--color-text-muted)] font-medium">{{ _('Total Shops') }}</p>
+                    <h3 class="text-2xl font-bold text-[var(--color-text)]">{{ stats.total_shops }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Sales -->
+        <div class="bg-[var(--color-surface)] p-6 rounded-xl border border-[var(--color-border)] shadow-sm">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-orange-100 text-orange-600 rounded-lg flex items-center justify-center">
+                    <span class="material-icons">payments</span>
+                </div>
+                <div>
+                    <p class="text-sm text-[var(--color-text-muted)] font-medium">{{ _('Total Sales') }}</p>
+                    <h3 class="text-2xl font-bold text-[var(--color-text)]">{{ stats.total_sales }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions or Recent Activity could go here -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+        <div class="bg-[var(--color-surface)] p-6 rounded-xl border border-[var(--color-border)]">
+            <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                <span class="material-icons text-primary">speed</span>
+                {{ _('System Health') }}
+            </h3>
+            <div class="space-y-4">
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-[var(--color-text-muted)]">{{ _('Database Status') }}</span>
+                    <span class="px-2 py-0.5 bg-green-100 text-green-700 rounded-full text-xs font-bold">{{ _('Online') }}</span>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-[var(--color-text-muted)]">{{ _('Storage Usage') }}</span>
+                    <span class="text-[var(--color-text)] font-medium">12%</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-[var(--color-surface)] p-6 rounded-xl border border-[var(--color-border)]">
+            <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
+                <span class="material-icons text-primary">contact_mail</span>
+                {{ _('Recent Messages') }}
+            </h3>
+            <div class="text-center py-8">
+                <a href="{{ url_for('dashboard_home.messages') }}" class="text-primary hover:underline text-sm font-medium">
+                    {{ _('View Message Inbox') }}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -4,6 +4,7 @@ from flask_babel import _
 import src.services.shop_svc as shop_svc
 from src.helpers.exceptions import ValidationError
 from src.config import setup_logger, Settings
+from src.helpers.auth_middleware import admin_required
 
 logger = setup_logger(Settings.LOG_DIR / "routers.log", name="bew.routers.shops")
 
@@ -50,7 +51,7 @@ def shop_list():
         'has_next': page < total_pages
     }
 
-    return render_template('shop/shop_list.html',
+    return render_template('dashboard/shop/shop_list.html',
                            shops=shops,
                            categories=categories,
                            meta=meta)
@@ -70,7 +71,7 @@ def category_shops(category_id):
         'has_next': False
     }
 
-    return render_template('shop/shop_list.html',
+    return render_template('dashboard/shop/shop_list.html',
                            shops=shops,
                            categories=categories,
                            current_category=current_category,
@@ -86,10 +87,11 @@ def shop_detail(shop_id):
         flash(_('দোকান খুঁজে পাওয়া যায়নি!'), 'error')
         return redirect(url_for('shops.index'))
 
-    return render_template('shop/shop_detail.html', shop=shop)
+    return render_template('dashboard/shop/shop_detail.html', shop=shop)
 
 
-@shops_bp.route('/shops/new', methods=['GET', 'POST'])
+@shops_bp.route('/dashboard/shops/new', methods=['GET', 'POST'])
+@admin_required
 def new_shop():
     """Add new shop"""
     categories = shop_svc.get_categories()
@@ -101,12 +103,13 @@ def new_shop():
             return redirect(url_for('shops.shop_detail', shop_id=shop_id))
         except ValidationError as e:
             flash(_(str(e)), 'error')
-            return render_template('shop/shop_form.html', categories=categories, shop=request.form, action='add')
+            return render_template('dashboard/shop/shop_form.html', categories=categories, shop=request.form, action='add')
 
-    return render_template('shop/shop_form.html', categories=categories, shop={}, action='add')
+    return render_template('dashboard/shop/shop_form.html', categories=categories, shop={}, action='add')
 
 
-@shops_bp.route('/shops/<int:shop_id>/edit', methods=['GET', 'POST'])
+@shops_bp.route('/dashboard/shops/<int:shop_id>/edit', methods=['GET', 'POST'])
+@admin_required
 def edit_shop(shop_id):
     """Edit existing shop"""
     try:
@@ -124,12 +127,13 @@ def edit_shop(shop_id):
             return redirect(url_for('shops.shop_detail', shop_id=shop_id))
         except ValidationError as e:
             flash(_(str(e)), 'error')
-            return render_template('shop/shop_form.html', categories=categories, shop=request.form, action='edit', shop_id=shop_id)
+            return render_template('dashboard/shop/shop_form.html', categories=categories, shop=request.form, action='edit', shop_id=shop_id)
 
-    return render_template('shop/shop_form.html', categories=categories, shop=shop, action='edit', shop_id=shop_id)
+    return render_template('dashboard/shop/shop_form.html', categories=categories, shop=shop, action='edit', shop_id=shop_id)
 
 
-@shops_bp.route('/shops/<int:shop_id>/delete', methods=['POST'])
+@shops_bp.route('/dashboard/shops/<int:shop_id>/delete', methods=['POST'])
+@admin_required
 def delete_shop(shop_id):
     """Delete a shop with password protection"""
     password = request.form.get('delete_password', '')

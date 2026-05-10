@@ -21,6 +21,10 @@ class Settings(BaseSettings):
     DELETE_PASSWORD: str = Field(..., validation_alias="DELETE_PASSWORD")
     DELETE_PASSWORD_ENABLED: bool = Field(..., validation_alias="DELETE_PASSWORD_ENABLED")
 
+    # Admin Login
+    ADMIN_USERNAME: str = Field(default="admin", validation_alias="ADMIN_USERNAME")
+    ADMIN_PASSWORD: str = Field(default="admin", validation_alias="ADMIN_PASSWORD")
+
     # Business Info for SEO
     BUSINESS_NAME: str = Field(..., validation_alias="BUSINESS_NAME")
     BUSINESS_DESC: str = Field(..., validation_alias="BUSINESS_DESC")

@@ -1,0 +1,209 @@
+{% extends "dashboard_base.html" %}
+{% from 'components/_navigation.html' import breadcrumb with context %}
+{% from 'components/_buttons.html' import btn with context %}
+{% from 'components/_seo.html' import og_tags, json_ld, breadcrumb_schema with context %}
+
+{% block title %}{{ shop.name }} - {{ _('Bangladesh Engineering Workshop') }}{% endblock %}
+
+{% block extra_head %}
+{{ og_tags(
+    title=shop.name,
+    description=_('Shop details for') ~ ' ' ~ shop.name ~ ' - ' ~ (shop.address or ''),
+    url=request.url,
+    type='profile'
+) }}
+{{ json_ld({
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": shop.name,
+    "address": {"@type": "PostalAddress", "streetAddress": shop.address or ''},
+    "telephone": shop.mobile or ''
+}) }}
+{% endblock %}
+
+{% block content %}
+{# ── Breadcrumb ──────────────────────────────────────────── #}
+{{ breadcrumb_schema(crumbs) }}
+
+<div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 mb-4
+            bg-[var(--color-surface)] p-4 rounded-[var(--radius)] shadow-[var(--shadow)] border border-[var(--color-border)]">
+    <div class="flex items-center gap-3">
+        <div class="w-11 h-11 bg-[var(--color-btn-primary)] text-white rounded-lg flex items-center justify-center shadow-sm">
+            <span class="material-icons text-2xl">storefront</span>
+        </div>
+        <div>
+            <h1 class="m-0 text-xl md:text-2xl font-bold text-[var(--color-text)] leading-tight">{{ shop.name }}</h1>
+            <div class="text-sm text-[var(--color-text-muted)]">
+                {{ shop.category_name if shop.category_name else _('Shop Profile') }}
+            </div>
+        </div>
+    </div>
+    <div class="flex gap-2 flex-wrap">
+        {{ btn(text=_('Purchases'), icon='receipt_long', variant='secondary', href=url_for('purchases.shop_purchases', shop_id=shop.id)) }}
+        {{ btn(text=_('New Purchase'), icon='add_shopping_cart', variant='primary', href=url_for('purchases.new_purchase', supplier_id=shop.id)) }}
+        {{ btn(text=_('Edit'), icon='edit', variant='primary', href=url_for('shops.edit_shop', shop_id=shop.id)) }}
+        <form action="{{ url_for('shops.delete_shop', shop_id=shop.id) }}" method="POST" class="inline"
+              onsubmit='return confirm({{ _("Are you sure you want to delete this shop?")|tojson }});'>
+            <input type="hidden" name="delete_password" id="delete_password_field">
+            {{ btn(text=_('Delete'), icon='delete', variant='danger', type='submit') }}
+        </form>
+        {{ btn(text=_('Back'), icon='arrow_back', variant='secondary', href=url_for('shops.index')) }}
+    </div>
+</div>
+
+<section class="bg-[var(--color-surface)] rounded-[var(--radius)] p-4 md:p-6 my-4 shadow-[var(--shadow)] border border-[var(--color-border)]">
+
+    {# ── Header: Shop Info + Visiting Card ───────────────── #}
+    <div class="flex flex-col md:flex-row justify-between items-stretch gap-4 mb-4">
+
+        {# Left: Category, Name, Proprietor #}
+        <div class="flex-1 min-w-[280px] bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[var(--radius)] p-4 shadow-[var(--shadow-sm)]">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="m-0 text-sm text-[var(--color-text-muted)] flex items-center gap-1.5">
+                    <span class="material-icons text-base">storefront</span>
+                    {{ _('Institution') }}
+                </h3>
+                {% if shop.category_name %}
+                <a href="{{ url_for('shops.category_shops', category_id=shop.category_id) }}"
+                   class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold
+                          bg-[var(--color-btn-primary)] text-white no-underline whitespace-nowrap
+                          border border-white/10
+                          hover:bg-[var(--color-btn-hover)] hover:text-[var(--color-primary)]
+                          hover:scale-105 transition-all duration-300">
+                    {{ shop.category_name }}
+                </a>
+                {% endif %}
+            </div>
+            <h1 class="m-0 mb-3 text-2xl md:text-3xl font-light text-[var(--color-text)] leading-tight">
+                {{ shop.name }}
+            </h1>
+            <div class="text-base text-[var(--color-text-muted)]">
+                <span class="text-[var(--color-text-muted)] opacity-70">
+                    <span class="material-icons align-middle text-lg">person</span>
+                    {{ _('Owner') }}:
+                </span>
+                {{ shop.proprietor or _('Not specified') }}
+            </div>
+        </div>
+
+        {# Right: Visiting Card #}
+        <div class="shrink-0 min-w-[280px] bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[var(--radius)] p-4 shadow-[var(--shadow-sm)] flex flex-col items-center">
+            <h3 class="m-0 mb-2 text-sm text-[var(--color-text-muted)] flex items-center gap-1.5">
+                <span class="material-icons text-base">image</span>
+                {{ _('Visiting Card') }}
+            </h3>
+            {% if shop.visiting_card %}
+            <img src="/shop_img/{{ shop.visiting_card }}" alt="{{ _('Visiting Card for') }} {{ shop.name }}"
+                 class="w-[267px] h-[153px] object-cover rounded-md shadow-md border border-[var(--color-border)]
+                        cursor-pointer transition-all duration-[400ms] ease-[cubic-bezier(0.175,0.885,0.32,1.275)]
+                        hover:scale-[1.3] hover:shadow-xl hover:border-sky-500 hover:z-10 relative z-[1]">
+            {% else %}
+            <div class="w-[267px] h-[153px] bg-[var(--color-bg)] rounded-md border-2 border-dashed border-[var(--color-border)]
+                        flex items-center justify-center text-[var(--color-text-muted)] text-sm">
+                {{ _('No Card Found') }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {# ── Detail Grid: Products, Contact, Map ─────────────── #}
+    <div class="grid grid-cols-1 md:grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-6 mt-4">
+
+        {# Products Card #}
+        <div class="bg-[var(--color-surface)] p-5 rounded-[var(--radius)] border border-[var(--color-border)] shadow-[var(--shadow-sm)]">
+            <h3 class="text-base font-semibold text-[var(--color-text)] mb-3 flex items-center gap-2">
+                <span class="material-icons text-lg text-[var(--color-primary)]">inventory_2</span>
+                {{ _('Products List') }}
+            </h3>
+            <div class="text-sm text-[var(--color-text)] leading-relaxed whitespace-pre-line">
+                {{ shop.products or _('No products list available') }}
+            </div>
+        </div>
+
+        {# Contact Info Card #}
+        <div class="bg-[var(--color-surface)] p-5 rounded-[var(--radius)] border border-[var(--color-border)] shadow-[var(--shadow-sm)]">
+            <h3 class="text-base font-semibold text-[var(--color-text)] mb-3 flex items-center gap-2">
+                <span class="material-icons text-lg text-[var(--color-primary)]">contact_phone</span>
+                {{ _('Contact Information') }}
+            </h3>
+
+            {% macro detail_row(icon, label, content) %}
+            <div class="mb-4 pb-3 border-b border-dashed border-[var(--color-border)] last:mb-0 last:pb-0 last:border-b-0">
+                <div class="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wide flex items-center gap-1.5 mb-1.5">
+                    <span class="material-icons text-sm">{{ icon }}</span> {{ label }}
+                </div>
+                <div class="text-base text-[var(--color-text)] font-medium pl-0.5">
+                    {{ caller() }}
+                </div>
+            </div>
+            {% endmacro %}
+
+            {% call detail_row('place', _('Address')) %}
+                {{ shop.address or '-' }}
+            {% endcall %}
+
+            {% call detail_row('phone_android', _('Mobile')) %}
+                {% if shop.mobile %}
+                {% for num in shop.mobile.split() %}
+                <a href="tel:{{ num }}"
+                   class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold
+                          text-white no-underline bg-sky-500 mr-1.5 mb-1 shadow-sm
+                          hover:scale-105 hover:shadow-md hover:brightness-110 transition-all"
+                   dir="ltr">{{ num }}</a>
+                {% endfor %}
+                {% else %}-{% endif %}
+            {% endcall %}
+
+            {% call detail_row('payments', _('Online Transaction')) %}
+                {% if shop.transaction_status %}
+                <span class="{% if 'Bkash' in shop.transaction_status or 'Nagad' in shop.transaction_status %}inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold text-white bg-pink-600 shadow-sm{% endif %}">
+                    {{ shop.transaction_status }}
+                </span>
+                {% else %}-{% endif %}
+            {% endcall %}
+
+            {% call detail_row('chat', _('WhatsApp')) %}
+                {% if shop.whatsapp %}
+                {% for num in shop.whatsapp.split() %}
+                <a href="https://wa.me/{{ num.replace('-', '').replace(' ', '') }}" target="_blank"
+                   class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold
+                          text-white no-underline bg-[#25d366] mr-1.5 mb-1 shadow-sm
+                          hover:scale-105 hover:shadow-md hover:brightness-110 transition-all"
+                   dir="ltr">{{ num }}</a>
+                {% endfor %}
+                {% else %}-{% endif %}
+            {% endcall %}
+
+            {% call detail_row('language', _('Email/Web')) %}
+                {% set contact = shop.email_web | parse_contact_info %}
+                {% if contact.type == 'email' %}
+                <a href="mailto:{{ contact.value }}"
+                   class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold
+                          text-white no-underline bg-[var(--color-danger)] shadow-sm
+                          hover:scale-105 hover:shadow-md transition-all">{{ contact.value }}</a>
+                {% elif contact.type == 'web' %}
+                <a href="{{ contact.value if 'http' in contact.value else 'http://' + contact.value }}"
+                   target="_blank"
+                   class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold
+                          text-white no-underline bg-[var(--color-primary)] shadow-sm
+                          hover:scale-105 hover:shadow-md transition-all">{{ contact.value }}</a>
+                {% else %}{{ contact.value }}{% endif %}
+            {% endcall %}
+        </div>
+
+        {# Google Map Placeholder #}
+        <div class="bg-[var(--color-surface)] p-5 rounded-[var(--radius)] border border-[var(--color-border)] shadow-[var(--shadow-sm)]">
+            <h3 class="text-base font-semibold text-[var(--color-text)] mb-3 flex items-center gap-2">
+                <span class="material-icons text-lg text-[var(--color-primary)]">map</span>
+                {{ _('Google Map') }}
+            </h3>
+            <div class="w-full h-[200px] bg-[var(--color-bg)] rounded-[var(--radius)] border-2 border-dashed border-[var(--color-border)]
+                        flex items-center justify-center text-[var(--color-text-muted)] text-sm">
+                {{ _('Google Map Integration (Coming Soon)') }}
+            </div>
+        </div>
+    </div>
+
+
+</section>
+{% endblock %}

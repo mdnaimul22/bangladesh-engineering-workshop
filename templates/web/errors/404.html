@@ -1,0 +1,10 @@
+{% extends "web_base.html" %}
+{% from 'components/_buttons.html' import btn with context %}
+{% block title %}404 - {{ _('Page Not Found') }}{% endblock %}
+{% block content %}
+<div class="flex flex-col items-center justify-center text-center py-16 px-5">
+    <h1 class="text-7xl font-bold text-[var(--color-primary)] mb-2">404</h1>
+    <p class="text-lg text-[var(--color-text-muted)] mb-6">{{ _('Sorry, this page could not be found.') }}</p>
+    {{ btn(text=_('Return to Homepage'), icon='home', variant='primary', href=url_for('shops.index')) }}
+</div>
+{% endblock %}

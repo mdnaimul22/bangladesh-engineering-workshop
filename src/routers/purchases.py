@@ -5,9 +5,16 @@ import src.services.purchase_svc as purchase_svc
 from src.helpers.exceptions import ValidationError
 from src.config import setup_logger, Settings
 
+from src.helpers.auth_middleware import admin_required
+
 logger = setup_logger(Settings.LOG_DIR / "routers.log", name="bew.routers.purchases")
 
-purchases_bp = Blueprint('purchases', __name__)
+purchases_bp = Blueprint('purchases', __name__, url_prefix='/dashboard')
+
+@purchases_bp.before_request
+@admin_required
+def before_request():
+    pass
 
 
 @purchases_bp.route('/purchases')
@@ -18,7 +25,7 @@ def purchase_list():
     page = request.args.get('page', 1, type=int)
     from src.helpers.utils import paginate_list
     purchases, meta = paginate_list(purchases, page, per_page=10)
-    return render_template('purchase/purchase_list.html', purchases=purchases, supplier=None, meta=meta, search_query=query)
+    return render_template('dashboard/purchase/purchase_list.html', purchases=purchases, supplier=None, meta=meta, search_query=query)
 
 
 @purchases_bp.route('/shops/<int:shop_id>/purchases')
@@ -32,7 +39,7 @@ def shop_purchases(shop_id):
     page = request.args.get('page', 1, type=int)
     from src.helpers.utils import paginate_list
     purchases, meta = paginate_list(purchases, page, per_page=10)
-    return render_template('purchase/purchase_list.html', purchases=purchases, supplier=supplier, meta=meta)
+    return render_template('dashboard/purchase/purchase_list.html', purchases=purchases, supplier=supplier, meta=meta)
 
 
 @purchases_bp.route('/purchases/new', methods=['GET', 'POST'])
@@ -48,10 +55,10 @@ def new_purchase():
             return redirect(url_for('purchases.purchase_detail', purchase_id=purchase_id))
         except ValidationError as e:
             flash(_(str(e)), 'error')
-            return render_template('purchase/purchase_form.html', action='add', purchase={},
+            return render_template('dashboard/purchase/purchase_form.html', action='add', purchase={},
                                    shops=shops, preselected_supplier_id=preselected_supplier_id)
 
-    return render_template('purchase/purchase_form.html', action='add', purchase={},
+    return render_template('dashboard/purchase/purchase_form.html', action='add', purchase={},
                            shops=shops, preselected_supplier_id=preselected_supplier_id)
 
 
@@ -62,7 +69,7 @@ def purchase_detail(purchase_id):
     if not purchase:
         flash(_('Purchase not found!'), 'error')
         return redirect(url_for('purchases.purchase_list'))
-    return render_template('purchase/purchase_detail.html', purchase=purchase)
+    return render_template('dashboard/purchase/purchase_detail.html', purchase=purchase)
 
 
 @purchases_bp.route('/purchases/<purchase_id>/edit', methods=['GET', 'POST'])
@@ -83,7 +90,7 @@ def edit_purchase(purchase_id):
         except ValidationError as e:
             flash(_(str(e)), 'error')
 
-    return render_template('purchase/purchase_form.html', action='edit', purchase=purchase,
+    return render_template('dashboard/purchase/purchase_form.html', action='edit', purchase=purchase,
                            shops=shops, preselected_supplier_id=purchase.get('supplier_id'))
 
 

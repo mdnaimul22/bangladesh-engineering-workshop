@@ -1,0 +1,190 @@
+{% extends "layout.html" %}
+
+{% block layout_content %}
+    {# ══════════════════════════════════════════════════════════════
+       PUBLIC NAVBAR
+       ══════════════════════════════════════════════════════════════ #}
+    <nav class="bg-[var(--color-surface)] h-header border-b border-bew-border sticky top-0 z-[1000]
+                flex items-center shadow-sm px-0 isolate" role="navigation" aria-label="{{ _('Main Navigation') }}">
+        <div class="container mx-auto flex justify-between items-center w-full px-4">
+            <!-- Left: Logo -->
+            <div class="flex items-center gap-0.5">
+                <a href="{{ url_for('shops.index') }}"
+                    class="flex items-center gap-2 text-primary no-underline font-bold text-xl tracking-tight">
+                    <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="BEW Logo"
+                        class="h-[60px] w-auto md:h-[85px]">
+                    <span class="text-base md:text-xl">{{ _('Bangladesh Engineering Workshop') }}</span>
+                </a>
+            </div>
+
+            <!-- Right: Nav Links -->
+            <div class="hidden md:flex items-center gap-6">
+                <a href="{{ url_for('shops.index') }}"
+                    class="text-text-muted no-underline font-medium text-[0.95rem] hover:text-primary transition-colors">
+                    <span class="material-icons align-middle">home</span> {{ _('Home') }}
+                </a>
+                
+                <a href="{{ url_for('core.about') }}"
+                    class="text-text-muted no-underline font-medium text-[0.95rem] hover:text-primary transition-colors">
+                    <span class="material-icons align-middle">info</span> {{ _('About Us') }}
+                </a>
+
+                <a href="{{ url_for('core.services') }}"
+                    class="text-text-muted no-underline font-medium text-[0.95rem] hover:text-primary transition-colors">
+                    <span class="material-icons align-middle">build</span> {{ _('Services') }}
+                </a>
+
+                <a href="{{ url_for('core.contact') }}"
+                    class="text-text-muted no-underline font-medium text-[0.95rem] hover:text-primary transition-colors">
+                    <span class="material-icons align-middle">email</span> {{ _('Contact') }}
+                </a>
+
+                <!-- Language Toggle -->
+                <div class="flex items-center gap-1 text-sm">
+                    <a href="{{ url_for('set_language', lang='bn') }}"
+                        class="text-text-muted no-underline hover:text-primary transition-colors
+                               {% if session.get('lang', 'bn') == 'bn' %}!text-primary font-bold{% endif %}">বাংলা</a>
+                    <span class="text-text-muted">|</span>
+                    <a href="{{ url_for('set_language', lang='en') }}"
+                        class="text-text-muted no-underline hover:text-primary transition-colors
+                               {% if session.get('lang') == 'en' %}!text-primary font-bold{% endif %}">EN</a>
+                </div>
+
+                {# Theme Toggle #}
+                <button @click="$store.theme.toggle()"
+                        :title="'Theme: ' + $store.theme.label"
+                        class="bg-transparent border-none cursor-pointer text-text-muted p-1.5
+                               rounded-full flex items-center justify-center transition-all opacity-80
+                               hover:bg-black/5 hover:text-primary hover:opacity-100 ml-1"
+                        aria-label="{{ _('Toggle Theme') }}">
+                    <span class="material-icons text-xl" x-text="$store.theme.icon"></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    {# ══════════════════════════════════════════════════════════════
+       MAIN CONTENT
+       ══════════════════════════════════════════════════════════════ #}
+    <div class="container mx-auto px-4 mt-6 mb-16">
+        {% block content %}{% endblock %}
+    </div>
+
+    {# ══════════════════════════════════════════════════════════════
+       FOOTER
+       ══════════════════════════════════════════════════════════════ #}
+    <footer class="bg-footer-bg backdrop-blur-[15px] backdrop-saturate-[180%]
+                   text-text-main pt-6 mt-auto border-t border-bew-border
+                   shadow-[0_-10px_30px_rgba(0,0,0,0.05)] text-sm" role="contentinfo">
+        <div class="container mx-auto px-4
+                    grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_1.5fr_1fr]
+                    gap-8 lg:gap-12 pb-1 items-start">
+
+            <!-- Left: Quick Links -->
+            <div class="text-center sm:text-left">
+                <h4 class="text-text-main text-[15px] font-bold mb-4 relative pb-1
+                           after:content-[''] after:absolute after:left-1/2 sm:after:left-0
+                           after:-translate-x-1/2 sm:after:translate-x-0
+                           after:bottom-0 after:w-6 after:h-0.5 after:bg-primary">
+                    {{ _('Quick Links') }}
+                </h4>
+                <ul class="list-none p-0 m-0 space-y-2">
+                    <li>
+                        <a href="{{ url_for('core.about') }}"
+                            class="text-text-muted no-underline flex items-center gap-2 text-sm
+                                   justify-center sm:justify-start
+                                   hover:text-primary hover:pl-1 transition-all">
+                            <span class="material-icons text-base opacity-70">chevron_right</span>
+                            {{ _('About Us') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('core.services') }}"
+                            class="text-text-muted no-underline flex items-center gap-2 text-sm
+                                   justify-center sm:justify-start
+                                   hover:text-primary hover:pl-1 transition-all">
+                            <span class="material-icons text-base opacity-70">chevron_right</span>
+                            {{ _('Services') }}
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('core.contact') }}"
+                            class="text-text-muted no-underline flex items-center gap-2 text-sm
+                                   justify-center sm:justify-start
+                                   hover:text-primary hover:pl-1 transition-all">
+                            <span class="material-icons text-base opacity-70">chevron_right</span>
+                            {{ _('Contact Us') }}
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Center: Brand identity -->
+            <div class="text-center flex flex-col items-center">
+                <div class="flex items-center gap-3 mb-1 justify-center">
+                    <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="BEW Logo"
+                        class="h-9 w-auto">
+                    <h4 class="text-text-main text-base font-bold m-0 p-0">
+                        {{ _('Bangladesh Engineering Workshop') }}
+                    </h4>
+                </div>
+                <p class="text-text-muted leading-relaxed text-[13px] mt-2 max-w-[400px]">
+                    {{ _('Your trusted partner for heavy machinery repair, precision machining, and engineering solutions since years.') }}
+                </p>
+            </div>
+
+            <!-- Right: Contact Info -->
+            <div class="text-center sm:text-right flex flex-col items-center sm:items-end">
+                <div class="flex items-center justify-center sm:justify-end gap-6 mb-4">
+                    <div class="flex gap-2">
+                        <a href="tel:+8801906399161" title="Call Us"
+                            class="bg-surface text-text-main w-[30px] h-[30px] flex items-center justify-center
+                                   rounded-full border border-bew-border backdrop-blur-sm
+                                   hover:bg-primary hover:text-white hover:-translate-y-0.5
+                                   hover:shadow-md transition-all">
+                            <span class="material-icons text-lg">phone</span>
+                        </a>
+                        <a href="https://wa.me/8801906399161" title="WhatsApp"
+                            class="bg-surface text-text-main w-[30px] h-[30px] flex items-center justify-center
+                                   rounded-full border border-bew-border backdrop-blur-sm
+                                   hover:bg-primary hover:text-white hover:-translate-y-0.5
+                                   hover:shadow-md transition-all">
+                            <span class="material-icons text-lg">chat</span>
+                        </a>
+                    </div>
+                    <h4 class="text-text-main text-[15px] font-bold m-0 relative pb-1
+                               after:content-[''] after:absolute after:right-0
+                               after:bottom-0 after:w-6 after:h-0.5 after:bg-primary">
+                        {{ _('Contact Info') }}
+                    </h4>
+                </div>
+                <ul class="list-none p-0 m-0 w-full space-y-2">
+                    <li class="flex justify-center sm:justify-end items-center gap-1.5
+                               text-text-muted text-[13px] leading-snug">
+                        <span class="material-icons text-primary text-lg shrink-0">phone_android</span>
+                        <span>+880 1906 399161</span>
+                    </li>
+                    <li class="flex justify-center sm:justify-end items-center gap-1.5
+                               text-text-muted text-[13px] leading-snug">
+                        <span class="material-icons text-primary text-lg shrink-0">email</span>
+                        <span>info@bew-bd.com</span>
+                    </li>
+                    <li class="flex justify-center sm:justify-end items-center gap-1.5
+                               text-text-muted text-[13px] leading-snug">
+                        <span class="material-icons text-primary text-lg shrink-0">place</span>
+                        <span>{{ _('City Bypass, Mostofar Mor, Horintana, Khulna') }}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Bottom Bar -->
+        <div class="bg-black/[0.03] py-3 text-center border-t border-bew-border">
+            <div class="container mx-auto px-4">
+                <p class="text-text-muted text-xs m-0">
+                    &copy; <span x-data x-text="new Date().getFullYear()"></span> {{ _('Bangladesh Engineering Workshop') }}. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </footer>
+{% endblock %}

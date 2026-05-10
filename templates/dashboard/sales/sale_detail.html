@@ -1,0 +1,109 @@
+{% extends "dashboard_base.html" %}
+{% from 'components/_navigation.html' import page_header, breadcrumb with context %}
+{% from 'components/_buttons.html' import btn with context %}
+{% from 'components/_seo.html' import og_tags, breadcrumb_schema with context %}
+
+{% block title %}{{ _('Sale Detail') }} - #{{ sale.display_id | lower }}{% endblock %}
+
+{% block extra_head %}
+{{ og_tags(title=_('Sale') ~ ' #' ~ (sale.display_id | lower), description=_('Sale record for') ~ ' ' ~ sale.buyer_name, url=request.url) }}
+{% endblock %}
+
+{% block content %}
+{{ breadcrumb_schema(crumbs) }}
+
+{# ── Page Header ─────────────────────────────────────────── #}
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4
+            bg-[var(--color-surface)] p-4 rounded-[var(--radius)] shadow-[var(--shadow)] border border-[var(--color-border)]">
+    <div>
+        <h1 class="m-0 text-xl font-bold text-[var(--color-text)] flex items-center gap-2">
+            <span class="material-icons text-[var(--color-primary)]">receipt_long</span>
+            {{ _('Sale Record') }} #{{ sale.display_id | lower }}
+        </h1>
+    </div>
+    <div class="flex gap-2 flex-wrap">
+        {{ btn(text=_('Edit Sale'), icon='edit', variant='primary', href=url_for('sales.edit_sale', sale_id=sale.id)) }}
+        {{ btn(text=_('Back'), icon='arrow_back', variant='secondary', href=url_for('sales.sale_list')) }}
+    </div>
+</div>
+
+{# ── Content Grid: Invoice + Voucher ─────────────────────── #}
+<div class="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-5">
+
+    {# ── LEFT: Invoice Details ───────────────────────────── #}
+    <div class="bg-[var(--color-surface)] rounded-[var(--radius)] border border-[var(--color-border)] p-5 shadow-[var(--shadow-sm)]">
+
+        {# Buyer + Date header #}
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 mb-4 border-b border-[var(--color-border)]">
+            <div class="flex items-center gap-2">
+                <span class="material-icons text-xl text-[var(--color-primary)]">person</span>
+                <h2 class="m-0 text-lg font-bold text-[var(--color-text)]">{{ sale.buyer_name }}</h2>
+            </div>
+            <div class="flex items-center gap-2 text-[var(--color-text-muted)]">
+                <span class="material-icons text-xl">calendar_today</span>
+                <span>{{ sale.sale_date_display }}</span>
+            </div>
+        </div>
+
+        {# Items Table #}
+        <div class="overflow-x-auto">
+            <table class="w-full border-collapse text-sm min-w-[500px]">
+                <thead>
+                    <tr class="bg-[var(--color-bg)] text-[var(--color-text-muted)]">
+                        <th class="px-3 py-2.5 text-left text-xs font-semibold uppercase border-b border-[var(--color-border)]">{{ _('Material') }}</th>
+                        <th class="px-3 py-2.5 text-left text-xs font-semibold uppercase border-b border-[var(--color-border)]">{{ _('Source') }}</th>
+                        <th class="px-3 py-2.5 text-center text-xs font-semibold uppercase border-b border-[var(--color-border)]">{{ _('Weight') }}</th>
+                        <th class="px-3 py-2.5 text-center text-xs font-semibold uppercase border-b border-[var(--color-border)]">{{ _('Qty') }}</th>
+                        <th class="px-3 py-2.5 text-right text-xs font-semibold uppercase border-b border-[var(--color-border)]">{{ _('Unit Price') }}</th>
+                        <th class="px-3 py-2.5 text-right text-xs font-semibold uppercase border-b border-[var(--color-border)]">{{ _('Total') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in sale.get('items', []) %}
+                    <tr class="border-b border-[var(--color-border)] hover:bg-[var(--color-bg)]/30 transition-colors">
+                        <td class="px-3 py-3 font-semibold text-[var(--color-text)]">{{ item.product_name }}</td>
+                        <td class="px-3 py-3">
+                            {% if item.inventory_material_name %}
+                            <span class="inline-block px-2 py-0.5 bg-emerald-500/10 text-emerald-600 rounded text-xs font-medium">
+                                {{ _('LINK') }}: {{ item.inventory_material_name }}
+                            </span>
+                            {% else %}
+                            <span class="text-[var(--color-text-muted)] text-xs">-</span>
+                            {% endif %}
+                        </td>
+                        <td class="px-3 py-3 text-center text-[var(--color-text)]">{{ item.weight }}</td>
+                        <td class="px-3 py-3 text-center text-[var(--color-text)]">{{ item.quantity }}</td>
+                        <td class="px-3 py-3 text-right text-[var(--color-text)]">{{ item.unit_price }}</td>
+                        <td class="px-3 py-3 text-right font-bold text-[var(--color-text)]">{{ item.total_price }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="border-t-2 border-[var(--color-border)]">
+                        <td colspan="5" class="px-3 py-3 text-right font-bold text-[var(--color-text)]">{{ _('Grand Total') }}:</td>
+                        <td class="px-3 py-3 text-right font-bold text-lg text-[var(--color-primary)]">৳ {{ sale.total_amount }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    {# ── RIGHT: Voucher Image ────────────────────────────── #}
+    <div class="bg-[var(--color-surface)] rounded-[var(--radius)] border border-[var(--color-border)] p-4 shadow-[var(--shadow-sm)]">
+        <h3 class="text-base font-semibold m-0 mb-3 flex items-center gap-2 text-[var(--color-text)]">
+            <span class="material-icons text-[var(--color-primary)]">attach_file</span>
+            {{ _('Voucher / Bill') }}
+        </h3>
+        {% if sale.voucher_image %}
+        <div class="border border-[var(--color-border)] p-2 rounded-[var(--radius)] bg-[var(--color-bg)]">
+            <a href="{{ url_for('shop_img', filename=sale.voucher_image) }}" target="_blank">
+                <img src="{{ url_for('shop_img', filename=sale.voucher_image) }}" alt="Voucher" class="w-full rounded">
+            </a>
+        </div>
+        <p class="text-center mt-2 text-xs text-[var(--color-text-muted)]">{{ _('Click to view full size') }}</p>
+        {% else %}
+        <p class="text-[var(--color-text-muted)] italic text-sm">{{ _('No voucher uploaded for this sale.') }}</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

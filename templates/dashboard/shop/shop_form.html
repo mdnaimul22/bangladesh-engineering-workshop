@@ -1,0 +1,377 @@
+{% extends "dashboard_base.html" %}
+{% from 'components/_navigation.html' import page_header, breadcrumb with context %}
+{% from 'components/_buttons.html' import btn with context %}
+{% from 'components/_seo.html' import og_tags, breadcrumb_schema with context %}
+
+{% block title %}
+{{ _('Add New Shop') if action == 'add' else _('Edit Shop') }} - {{ _('Bangladesh Engineering Workshop') }}
+{% endblock %}
+
+{% block extra_head %}
+{{ og_tags(
+    title=_('Add New Shop') if action == 'add' else _('Edit Shop'),
+    description=_('Manage shop entries for Bangladesh Engineering Workshop.'),
+    url=request.url
+) }}
+{% endblock %}
+
+{% block content %}
+{# ── Breadcrumb ──────────────────────────────────────────── #}
+{{ breadcrumb_schema(crumbs) }}
+
+{# ── Page Header ─────────────────────────────────────────── #}
+{% set header_actions %}
+{{ btn(text=_('Back'), icon='arrow_back', variant='secondary', href=url_for('shops.shop_list')) }}
+{% endset %}
+
+{{ page_header(
+    title=_('Add New Shop') if action == 'add' else _('Edit Shop'),
+    icon='add_circle' if action == 'add' else 'edit',
+    actions=[header_actions]
+) }}
+
+{# ── Form Variables ───────────────────────────────────────── #}
+{% set lbl = "flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide min-h-[28px]" %}
+{% set inp = "form-control w-full h-[38px] px-3 py-1.5 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all" %}
+
+{# ── Form ────────────────────────────────────────────────── #}
+<section class="mt-4">
+    <form action="{% if action == 'add' %}{{ url_for('shops.new_shop') }}{% else %}{{ url_for('shops.edit_shop', shop_id=shop_id) }}{% endif %}" method="POST" enctype="multipart/form-data" 
+          class="bg-[var(--color-surface)] p-5 md:p-6 rounded-[var(--radius-lg)]
+                 shadow-[var(--shadow)] border border-[var(--color-border)]"
+          x-data="shopForm()">
+
+        {# ── Row 1: Shop Name, Visiting Card, Preview ──── #}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+            {# Shop Name #}
+            <div class="flex flex-col justify-end">
+                <label for="name" class="{{ lbl }}">
+                    <span class="material-icons text-sm">storefront</span>
+                    {{ _('Shop Name') }}
+                </label>
+                <input type="text" name="name" id="name" required
+                       value="{{ shop.name or '' }}"
+                       placeholder="{{ _('Enter shop name') }}"
+                       class="{{ inp }}">
+            </div>
+
+            {# Visiting Card Upload #}
+            <div class="flex flex-col justify-end">
+                <label for="visiting_card" class="{{ lbl }}">
+                    <span class="material-icons text-sm">image</span>
+                    {{ _('Visiting Card') }}
+                </label>
+                <input type="file" name="visiting_card" id="visiting_card" accept="image/*"
+                       @change="handleImageUpload"
+                       class="{{ inp }} file:mr-3 file:py-1 file:px-3 file:rounded-md file:border file:border-[var(--color-border)] file:bg-[var(--color-bg)] file:text-[var(--color-text)] file:text-xs file:font-semibold file:cursor-pointer file:h-full px-0 py-0 overflow-hidden">
+            </div>
+
+            {# Preview Box #}
+            <div class="flex justify-center md:justify-end">
+                <div id="imagePreview"
+                     class="w-[265px] h-[120px] bg-[var(--color-bg)]/50 backdrop-blur-sm
+                            border border-[var(--color-border)] rounded-[var(--radius)]
+                            flex items-center justify-center overflow-hidden
+                            shadow-md relative z-10">
+                    <template x-if="imageUrl">
+                        <img :src="imageUrl" alt="Preview" class="w-full h-full object-cover rounded">
+                    </template>
+                    <template x-if="!imageUrl">
+                        <div>
+                            {% if shop.visiting_card %}
+                            <img src="/shop_img/{{ shop.visiting_card }}" alt="{{ _('Current Card') }}"
+                                 class="w-full h-full object-cover rounded">
+                            {% else %}
+                            <span class="text-[var(--color-text-muted)] text-xs">{{ _('Preview') }}</span>
+                            {% endif %}
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+
+        {# ── Row 2: Proprietor, Address, Category ──────── #}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+            <div>
+                <label for="proprietor"
+                       class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+                    <span class="material-icons text-sm">person</span>
+                    {{ _('Proprietor') }}
+                </label>
+                <input type="text" name="proprietor" id="proprietor"
+                       value="{{ shop.proprietor or '' }}"
+                       placeholder="{{ _('Proprietor Name') }}"
+                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all min-h-[38px]">
+            </div>
+
+            <div>
+                <label for="address"
+                       class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+                    <span class="material-icons text-sm">place</span>
+                    {{ _('Address') }}
+                </label>
+                <input type="text" name="address" id="address"
+                       value="{{ shop.address or '' }}"
+                       placeholder="{{ _('Shop Address') }}"
+                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all min-h-[38px]">
+            </div>
+
+            <div x-data="{ category: '{{ shop.category_id or '' }}' }">
+                <label for="category_id"
+                       class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+                    <span class="material-icons text-sm">category</span>
+                    {{ _('Category') }}
+                </label>
+                <select name="category_id" id="category_id" x-model="category"
+                        class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all min-h-[38px]">
+                    <option value="">-- {{ _('Select Category') }} --</option>
+                    {% for cat in categories %}
+                    <option value="{{ cat.id }}">
+                        {{ cat.name }} ({{ cat.name_english }})
+                    </option>
+                    {% endfor %}
+                    <option value="new">+ {{ _('Add New Category') }}</option>
+                </select>
+                <input type="text" name="new_category_name" id="new_category_name"
+                       x-show="category === 'new'" x-cloak
+                       :required="category === 'new'"
+                       placeholder="{{ _('Enter new category name') }}"
+                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
+                              bg-[var(--color-input)] text-[var(--color-text)] text-sm mt-2
+                              focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
+                              outline-none transition-all">
+            </div>
+        </div>
+
+        {# ── Row 3: Mobile, WhatsApp, Online Transaction ── #}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+            <div>
+                <label for="mobile"
+                       class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+                    <span class="material-icons text-sm">phone_android</span>
+                    {{ _('Mobile') }}
+                </label>
+                <input type="text" name="mobile" id="mobile"
+                       value="{{ shop.mobile or '' }}"
+                       placeholder="{{ _('e.g. 017XX-XXXXXX') }}"
+                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all min-h-[38px]">
+            </div>
+
+            <div>
+                <label for="whatsapp"
+                       class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+                    <span class="material-icons text-sm">chat</span>
+                    {{ _('WhatsApp') }}
+                </label>
+                <input type="text" name="whatsapp" id="whatsapp"
+                       value="{{ shop.whatsapp or '' }}"
+                       placeholder="{{ _('WhatsApp Number') }}"
+                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all min-h-[38px]">
+            </div>
+
+            <div>
+                <label for="transaction_status"
+                       class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+                    <span class="material-icons text-sm">payments</span>
+                    {{ _('Online Transaction') }}
+                </label>
+                <input type="text" name="transaction_status" id="transaction_status"
+                       value="{{ shop.transaction_status or '' }}"
+                       placeholder="{{ _('e.g. Bkash 018XX-XXXXXX') }}"
+                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all min-h-[38px]">
+            </div>
+        </div>
+
+        {# ── Row 4: Email/Web, Tags, Products ──────────── #}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+            {# Email/Web #}
+            <div>
+                <label for="email_web"
+                       class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+                    <span class="material-icons text-sm">language</span>
+                    {{ _('Email/Web') }}
+                </label>
+                <input type="text" name="email_web" id="email_web"
+                       value="{{ shop.email_web or '' }}"
+                       placeholder="{{ _('Email or Website') }}"
+                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all min-h-[38px]">
+            </div>
+
+            {# Tags #}
+            <div>
+                <label class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+                    <span class="material-icons text-sm">local_offer</span>
+                    {{ _('Tags') }}
+                    <span class="text-[var(--color-text-muted)] font-normal text-[0.65rem] ml-1">({{ _('comma separated') }})</span>
+                </label>
+
+                {# Tag Input Row #}
+                <div class="flex gap-1 mb-2">
+                    <input type="text" id="new-tag-input"
+                           x-model="newTagInput"
+                           @keydown.enter.prevent="addTag()"
+                           placeholder="{{ _('e.g. Lathe') }}"
+                           class="form-control flex-1 px-3 py-1 border border-[var(--color-border)] rounded-md
+                                  bg-[var(--color-input)] text-[var(--color-text)] text-sm h-8
+                                  focus:border-[var(--color-primary)] outline-none transition-all">
+                    <button type="button" @click="addTag()"
+                            class="w-9 h-8 min-w-[36px] flex items-center justify-center
+                                   bg-[var(--color-btn-primary)] text-white rounded-md
+                                   hover:opacity-90 hover:scale-105 transition-all shrink-0">
+                        <span class="material-icons text-lg">add</span>
+                    </button>
+                </div>
+
+                <input type="hidden" name="tags" :value="tags.map(t => t.name).join(',')">
+
+                {# Tags Container #}
+                <div id="tags-container"
+                     class="max-h-[100px] overflow-y-auto flex flex-wrap gap-1.5">
+                    <template x-for="tag in tags" :key="tag.id">
+                        <div class="tag-item flex items-center gap-1.5 px-3 py-1.5
+                                    bg-gradient-to-br from-sky-100 to-sky-200 rounded-lg max-w-[400px]">
+                            <span class="tag-label flex-1 text-sky-600 font-medium text-sm flex items-center gap-1">
+                                <span class="material-icons text-sm">local_offer</span>
+                                <span class="tag-text" x-text="tag.name"></span>
+                            </span>
+                            <button type="button" @click="removeTag(tag.id)"
+                                    class="btn-remove-tag w-5 h-5 flex items-center justify-center
+                                           bg-red-100 text-red-600 border-none rounded-full text-xs
+                                           cursor-pointer hover:bg-red-200 hover:scale-110 transition-all"
+                                    title="{{ _('Remove tag') }}">×</button>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            {# Products List #}
+            <div>
+                <label for="products"
+                       class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+                    <span class="material-icons text-sm">inventory_2</span>
+                    {{ _('Products List') }}
+                </label>
+                <textarea name="products" id="products" rows="4"
+                          placeholder="{{ _('List products...') }}"
+                          class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
+                                 bg-[var(--color-input)] text-[var(--color-text)] text-sm leading-snug
+                                 focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
+                                 outline-none transition-all h-20 resize-y">{{ shop.products or '' }}</textarea>
+            </div>
+        </div>
+
+        {# ── Submit Actions ────────────────────────────── #}
+        <div class="flex flex-wrap items-center gap-3 pt-4 border-t border-[var(--color-border)]">
+            {% if action == 'add' %}
+            {{ btn(text=_('Add Shop'), icon='add_circle', variant='primary', type='submit') }}
+            {% else %}
+            {{ btn(text=_('Save'), icon='save', variant='primary', type='submit') }}
+            {% endif %}
+            {{ btn(text=_('Cancel'), icon='close', variant='secondary', href=url_for('shops.shop_list')) }}
+        </div>
+    </form>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('alpine:init', () => {
+    Alpine.data('shopForm', () => ({
+        shopId: {{ shop_id if action == 'edit' and shop_id else 'null' }},
+        isEditMode: {{ 'true' if action == 'edit' else 'false' }},
+        imageUrl: '',
+        newTagInput: '',
+        tags: [
+            {% if shop.tags %}
+            {% for tag in shop.tags %}
+            { id: '{{ tag.id }}', name: '{{ tag.name|escape }}' }{{ ',' if not loop.last }}
+            {% endfor %}
+            {% endif %}
+        ],
+
+        handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.imageUrl = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        },
+
+        async addTag() {
+            const rawInput = this.newTagInput.trim();
+            if (!rawInput) {
+                alert("{{ _('Enter tag name') }}");
+                return;
+            }
+
+            const inputTags = rawInput.split(',').map(t => t.trim()).filter(t => t);
+
+            if (!this.isEditMode) {
+                inputTags.forEach(tagName => {
+                    const tempId = 'temp_' + Math.random().toString(36).substr(2, 9);
+                    this.tags.push({ id: tempId, name: tagName });
+                });
+                this.newTagInput = '';
+                return;
+            }
+
+            // Edit Mode: API calls
+            for (const tagName of inputTags) {
+                try {
+                    const createResponse = await fetch('/api/tag/add', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: tagName, name_bn: '' })
+                    });
+                    if (!createResponse.ok) {
+                        console.error('Failed to create tag: ' + tagName);
+                        continue;
+                    }
+                    const tagData = await createResponse.json();
+
+                    const addResponse = await fetch(`/api/shop/${this.shopId}/tag/add`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ tag_id: tagData.id })
+                    });
+                    
+                    if (addResponse.ok) {
+                        if (!this.tags.find(t => t.id == tagData.id)) {
+                            this.tags.push({ id: tagData.id, name: tagName });
+                        }
+                    }
+                } catch (err) {
+                    console.error('Error adding tag: ' + tagName, err);
+                }
+            }
+            this.newTagInput = '';
+        },
+
+        async removeTag(tagId) {
+            if (!this.isEditMode) {
+                this.tags = this.tags.filter(t => t.id !== tagId);
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/shop/${this.shopId}/tag/remove`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tag_id: tagId })
+                });
+                if (response.ok) {
+                    this.tags = this.tags.filter(t => t.id !== tagId);
+                } else {
+                    alert("{{ _('Error removing tag') }}");
+                }
+            } catch (err) {
+                alert("{{ _('Error removing tag') }}");
+            }
+        }
+    }));
+});
+</script>
+{% endblock %}

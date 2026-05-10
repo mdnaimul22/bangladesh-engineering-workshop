@@ -881,6 +881,46 @@ class SQLAlchemy(SQLAlchemy):
         self.session.commit()
         return True
 
+    # ==================== ANALYTICS & MESSAGES ====================
+    def log_visit(self, url, ip, user_agent):
+        visit = Analytics(page_url=url, visitor_ip=ip, user_agent=user_agent)
+        self.session.add(visit)
+        self.session.commit()
+
+    def get_visit_stats(self):
+        # Basic stats: total visits, visits today
+        total = Analytics.query.count()
+        today_start = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        today = Analytics.query.filter(Analytics.visit_time >= today_start).count()
+        
+        return {
+            'total_visits': total,
+            'today_visits': today
+        }
+
+    def add_visitor_message(self, data):
+        msg = VisitorMessage(
+            name=data.get('name'),
+            email=data.get('email'),
+            subject=data.get('subject'),
+            message=data.get('message')
+        )
+        self.session.add(msg)
+        self.session.commit()
+        return msg.id
+
+    def get_all_messages(self, limit=50):
+        msgs = VisitorMessage.query.order_by(VisitorMessage.created_at.desc()).limit(limit).all()
+        return [m.to_dict() for m in msgs]
+
+    def mark_message_read(self, msg_id):
+        msg = VisitorMessage.query.get(msg_id)
+        if msg:
+            msg.is_read = True
+            self.session.commit()
+            return True
+        return False
+
 db = SQLAlchemy()
 
 # ==================== ID SEQUENCE SYSTEM ====================
@@ -1512,6 +1552,46 @@ class WorkOrderPart(db.Model):
             'weight': self.weight,
             'price': self.price,
             'current_stock': self.raw_material.current_stock if self.raw_material else None
+        }
+
+# ==================== ANALYTICS & VISITOR MESSAGES ====================
+class Analytics(db.Model):
+    __tablename__ = 'analytics'
+    id = db.Column(db.Integer, primary_key=True)
+    page_url = db.Column(db.String(500), nullable=False)
+    visitor_ip = db.Column(db.String(50))
+    user_agent = db.Column(db.String(500))
+    visit_time = db.Column(db.DateTime, default=datetime.datetime.now)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'page_url': self.page_url,
+            'visitor_ip': self.visitor_ip,
+            'user_agent': self.user_agent,
+            'visit_time': self.visit_time.isoformat()
+        }
+
+class VisitorMessage(db.Model):
+    __tablename__ = 'visitor_messages'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(200), nullable=False)
+    subject = db.Column(db.String(500))
+    message = db.Column(db.Text, nullable=False)
+    is_read = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.datetime.now)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'email': self.email,
+            'subject': self.subject,
+            'message': self.message,
+            'is_read': self.is_read,
+            'created_at': self.created_at.isoformat(),
+            'created_at_display': self.created_at.strftime('%d-%m-%Y %H:%M')
         }
 
 if __name__ == '__main__':

@@ -1,0 +1,31 @@
+{% extends "web_base.html" %}
+
+{% block title %}Admin Login | {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto mt-16 bg-[var(--color-surface)] p-8 rounded-xl shadow-[var(--shadow-lg)] border border-[var(--color-border)]">
+    <div class="text-center mb-8">
+        <h2 class="text-2xl font-bold text-[var(--color-text)]">{{ _('Admin Login') }}</h2>
+        <p class="text-[var(--color-text-muted)] text-sm mt-2">{{ _('Enter your credentials to access the dashboard.') }}</p>
+    </div>
+
+    <form method="POST" action="{{ url_for('auth.admin_login') }}" class="space-y-6">
+        <div>
+            <label for="username" class="block text-sm font-medium text-[var(--color-text)] mb-2">{{ _('Username') }}</label>
+            <input type="text" id="username" name="username" required
+                class="w-full px-4 py-2 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] transition-all">
+        </div>
+
+        <div>
+            <label for="password" class="block text-sm font-medium text-[var(--color-text)] mb-2">{{ _('Password') }}</label>
+            <input type="password" id="password" name="password" required
+                class="w-full px-4 py-2 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg text-[var(--color-text)] focus:ring-2 focus:ring-[var(--color-primary)] focus:border-[var(--color-primary)] transition-all">
+        </div>
+
+        <button type="submit"
+            class="w-full py-2.5 px-4 bg-[var(--color-primary)] text-white rounded-lg font-medium hover:bg-[var(--color-primary-dark)] transition-colors shadow-sm">
+            {{ _('Login') }}
+        </button>
+    </form>
+</div>
+{% endblock %}

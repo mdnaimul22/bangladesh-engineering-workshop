@@ -5,9 +5,16 @@ import src.services.work_order_svc as work_order_svc
 from src.helpers.exceptions import ValidationError
 from src.config import setup_logger, Settings
 
+from src.helpers.auth_middleware import admin_required
+
 logger = setup_logger(Settings.LOG_DIR / "routers.log", name="bew.routers.work_orders")
 
-work_orders_bp = Blueprint('work_orders', __name__)
+work_orders_bp = Blueprint('work_orders', __name__, url_prefix='/dashboard')
+
+@work_orders_bp.before_request
+@admin_required
+def before_request():
+    pass
 
 
 @work_orders_bp.route('/work-orders')
@@ -18,7 +25,7 @@ def work_order_list():
     page = request.args.get('page', 1, type=int)
     from src.helpers.utils import paginate_list
     work_orders, meta = paginate_list(work_orders, page, per_page=10)
-    return render_template('work_orders/work_order_list.html', work_orders=work_orders, meta=meta, search_query=query)
+    return render_template('dashboard/work_orders/work_order_list.html', work_orders=work_orders, meta=meta, search_query=query)
 
 
 @work_orders_bp.route('/work-orders/new', methods=['GET', 'POST'])
@@ -37,10 +44,10 @@ def new_work_order():
             return redirect(url_for('work_orders.work_order_detail', work_order_id=work_order_id))
         except ValidationError as e:
             flash(_(str(e)), 'error')
-            return render_template('work_orders/work_order_form.html', action='add',
+            return render_template('dashboard/work_orders/work_order_form.html', action='add',
                                    work_order={}, companies=companies, suppliers=suppliers)
 
-    return render_template('work_orders/work_order_form.html', action='add',
+    return render_template('dashboard/work_orders/work_order_form.html', action='add',
                            work_order=work_order, companies=companies, suppliers=suppliers)
 
 
@@ -51,7 +58,7 @@ def work_order_detail(work_order_id):
     if not work_order:
         flash(_('Work order not found!'), 'error')
         return redirect(url_for('work_orders.work_order_list'))
-    return render_template('work_orders/work_order_detail.html', work_order=work_order)
+    return render_template('dashboard/work_orders/work_order_detail.html', work_order=work_order)
 
 
 @work_orders_bp.route('/work-orders/<work_order_id>/edit', methods=['GET', 'POST'])
@@ -73,7 +80,7 @@ def edit_work_order(work_order_id):
         except ValidationError as e:
             flash(_(str(e)), 'error')
 
-    return render_template('work_orders/work_order_form.html', action='edit',
+    return render_template('dashboard/work_orders/work_order_form.html', action='edit',
                            work_order=work_order, companies=companies, suppliers=suppliers)
 
 

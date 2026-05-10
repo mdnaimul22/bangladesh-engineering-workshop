@@ -1,0 +1,219 @@
+{% extends "layout.html" %}
+
+{% block layout_content %}
+    {# ══════════════════════════════════════════════════════════════
+       OVERLAY — Mobile sidebar backdrop (Alpine-controlled)
+       ══════════════════════════════════════════════════════════════ #}
+    <div x-show="$store.sidebar.open" x-cloak
+         @click="$store.sidebar.close()"
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-200"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed top-[var(--header-height)] left-0 w-screen h-[calc(100vh-var(--header-height))]
+                bg-black/40 backdrop-blur-sm z-overlay md:hidden">
+    </div>
+
+    {# ══════════════════════════════════════════════════════════════
+       DASHBOARD NAVBAR — Sticky header with navigation
+       ══════════════════════════════════════════════════════════════ #}
+    <nav class="bg-[var(--color-surface)] h-header border-b border-bew-border sticky top-0 z-[1000]
+                flex items-center shadow-sm px-0 isolate" role="navigation" aria-label="{{ _('Dashboard Navigation') }}">
+        <div class="container mx-auto flex justify-between items-center w-full px-4">
+            <!-- Left: Menu + Logo -->
+            <div class="flex items-center gap-0.5">
+                <button @click="$store.sidebar.toggle()"
+                    class="bg-transparent border-none cursor-pointer text-text-muted p-2 rounded-md
+                           flex items-center justify-center hover:bg-bew-bg hover:text-primary transition-colors"
+                    aria-label="{{ _('Toggle sidebar') }}"
+                    :aria-expanded="$store.sidebar.open">
+                    <span class="material-icons text-2xl">menu</span>
+                </button>
+                <a href="{{ url_for('shops.index') }}"
+                    class="flex items-center gap-2 text-primary no-underline font-bold text-xl tracking-tight ml-2">
+                    <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="BEW Logo"
+                        class="h-[40px] w-auto md:h-[50px]">
+                    <span class="hidden md:inline text-base md:text-lg">{{ _('BEW Dashboard') }}</span>
+                </a>
+            </div>
+
+            <!-- Right: Nav Links -->
+            <div class="flex items-center gap-4 md:gap-6">
+                <!-- ERP Dropdown -->
+                <div x-data="{ open: false }" class="relative hidden md:flex items-center h-full" @click.away="open = false" @keydown.escape.window="open = false">
+                    <button @click="open = !open"
+                        :aria-expanded="open"
+                        class="text-text-muted no-underline font-medium text-[0.95rem] hover:text-primary transition-colors flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">
+                        <span class="material-icons align-middle">business_center</span> <span class="ml-1">{{ _('ERP Modules') }}</span>
+                        <span class="material-icons align-middle text-lg ml-0.5 transition-transform duration-200" :class="open ? 'rotate-180' : ''">expand_more</span>
+                    </button>
+                    <div x-show="open" 
+                         x-transition.opacity.duration.200ms
+                         style="display: none;"
+                         class="flex flex-col absolute top-[120%] left-0
+                                bg-[var(--color-surface)] min-w-[240px] shadow-lg z-[var(--z-dropdown)] rounded-lg
+                                py-2 border border-[var(--color-border)]">
+                        <a href="{{ url_for('buyers.buyer_list') }}"
+                            class="text-text-muted no-underline px-4 py-3 text-sm font-medium
+                                   hover:bg-bew-bg hover:text-primary transition-all">
+                            <span class="material-icons align-middle text-lg mr-2">people</span> {{ _('Buyers') }}
+                        </a>
+                        <a href="{{ url_for('purchases.purchase_list') }}"
+                            class="text-text-muted no-underline px-4 py-3 text-sm font-medium
+                                   hover:bg-bew-bg hover:text-primary transition-all">
+                            <span class="material-icons align-middle text-lg mr-2">shopping_cart</span> {{ _('Purchases') }}
+                        </a>
+                        <a href="{{ url_for('inventory.inventory_list') }}"
+                            class="text-text-muted no-underline px-4 py-3 text-sm font-medium
+                                   hover:bg-bew-bg hover:text-primary transition-all">
+                            <span class="material-icons align-middle text-lg mr-2">inventory_2</span> {{ _('Inventory') }}
+                        </a>
+                        <a href="{{ url_for('sales.sale_list') }}"
+                            class="text-text-muted no-underline px-4 py-3 text-sm font-medium
+                                   hover:bg-bew-bg hover:text-primary transition-all">
+                            <span class="material-icons align-middle text-lg mr-2">receipt_long</span> {{ _('Sales') }}
+                        </a>
+                        <a href="{{ url_for('work_orders.work_order_list') }}"
+                            class="text-text-muted no-underline px-4 py-3 text-sm font-medium
+                                   hover:bg-bew-bg hover:text-primary transition-all">
+                            <span class="material-icons align-middle text-lg mr-2">assignment</span> {{ _('Work Orders') }}
+                        </a>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('shops.new_shop') }}" class="hidden md:inline-flex items-center gap-1 px-4 py-2 bg-[var(--color-btn-primary)] text-white rounded-lg text-sm font-semibold no-underline hover:opacity-90 transition-opacity">
+                    <span class="material-icons text-sm">add</span>
+                    {{ _('New Shop') }}
+                </a>
+
+                <a href="{{ url_for('auth.logout') }}" title="{{ _('Logout') }}" class="hidden md:inline-flex items-center gap-1 px-3 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-semibold no-underline hover:bg-red-100 transition-colors">
+                    <span class="material-icons text-[1.1rem]">logout</span>
+                </a>
+
+                <!-- Language Toggle -->
+                <div class="flex items-center gap-1 text-sm">
+                    <a href="{{ url_for('set_language', lang='bn') }}"
+                        class="text-text-muted no-underline hover:text-primary transition-colors
+                               {% if session.get('lang', 'bn') == 'bn' %}!text-primary font-bold{% endif %}">বাং</a>
+                    <span class="text-text-muted">|</span>
+                    <a href="{{ url_for('set_language', lang='en') }}"
+                        class="text-text-muted no-underline hover:text-primary transition-colors
+                               {% if session.get('lang') == 'en' %}!text-primary font-bold{% endif %}">EN</a>
+                </div>
+
+                {# Theme Toggle #}
+                <button @click="$store.theme.toggle()"
+                        :title="'Theme: ' + $store.theme.label"
+                        class="bg-transparent border-none cursor-pointer text-text-muted p-1.5
+                               rounded-full flex items-center justify-center transition-all opacity-80
+                               hover:bg-black/5 hover:text-primary hover:opacity-100"
+                        aria-label="{{ _('Toggle Theme') }}">
+                    <span class="material-icons text-xl" x-text="$store.theme.icon"></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="flex flex-1 relative w-full h-full">
+        {# ══════════════════════════════════════════════════════════════
+           SIDEBAR — Categories and ERP panel
+           ══════════════════════════════════════════════════════════════ #}
+        <aside id="sidebar" role="complementary" aria-label="{{ _('Sidebar') }}"
+               class="fixed top-[var(--header-height)] left-0 w-[280px]
+                      h-[calc(100vh-var(--header-height))] bg-surface z-sidebar border-r border-bew-border
+                      transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
+                      shadow-lg flex flex-col overflow-y-auto
+                      md:w-[280px] -translate-x-full md:translate-x-0"
+               :class="$store.sidebar.open ? '!translate-x-0' : '-translate-x-full'">
+            <div class="h-16 px-6 border-b border-bew-border flex justify-between items-center bg-surface md:hidden">
+                <h3 class="text-lg font-semibold text-text-main">{{ _('Menu') }}</h3>
+                <button @click="$store.sidebar.close()"
+                        class="p-1 rounded-full hover:bg-bew-bg text-text-muted transition-colors"
+                        aria-label="{{ _('Close sidebar') }}">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+
+            <div class="p-4 flex-1 flex flex-col gap-6">
+                <!-- Dashboard & Analytics -->
+                <div class="space-y-1">
+                    <a href="{{ url_for('dashboard_home.index') }}" 
+                        class="flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium transition-all
+                               {{ 'bg-primary text-white shadow-md' if request.endpoint == 'dashboard_home.index' else 'text-text-muted hover:bg-bew-bg hover:text-primary' }}">
+                        <span class="material-icons text-[1.2rem]">dashboard</span>
+                        {{ _('Dashboard Home') }}
+                    </a>
+                    <a href="{{ url_for('dashboard_home.messages') }}" 
+                        class="flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium transition-all
+                               {{ 'bg-primary text-white shadow-md' if request.endpoint == 'dashboard_home.messages' else 'text-text-muted hover:bg-bew-bg hover:text-primary' }}">
+                        <span class="material-icons text-[1.2rem]">contact_mail</span>
+                        {{ _('Visitor Messages') }}
+                    </a>
+                </div>
+
+                <hr class="border-bew-border/50">
+
+                <!-- Category Dropdown -->
+                <div x-data="{ catOpen: false }">
+                    <button @click="catOpen = !catOpen"
+                            class="w-full flex items-center justify-between px-4 py-2.5 bg-bew-bg rounded-lg text-text-main font-medium hover:bg-primary/10 hover:text-primary transition-colors">
+                        <span class="flex items-center gap-2"><span class="material-icons text-primary text-sm">category</span> {{ _('Categories') }}</span>
+                        <span class="material-icons text-sm transition-transform duration-200" :class="catOpen ? 'rotate-180' : ''">expand_more</span>
+                    </button>
+                    <div x-show="catOpen" x-collapse>
+                        <div class="space-y-0.5 mt-2 pl-4 border-l-2 border-bew-border/50 ml-2">
+                            {% for cat in categories if categories %}
+                            <a href="{{ url_for('shops.category_shops', category_id=cat.id) }}"
+                                class="block px-4 py-2 text-text-muted text-[0.9rem] no-underline rounded-md font-medium
+                                       hover:bg-bew-bg hover:text-primary transition-all">
+                                {{ cat.name }}
+                            </a>
+                            {% else %}
+                            <p class="text-text-muted text-xs px-4 py-2">{{ _('Loading categories...') }}</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Action -->
+                <div class="space-y-2">
+                    <a href="{{ url_for('shops.new_shop') }}" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-[var(--color-btn-primary)] text-white rounded-lg text-sm font-semibold no-underline hover:opacity-90 transition-opacity">
+                        <span class="material-icons text-sm">add_circle</span>
+                        {{ _('Add New Shop') }}
+                    </a>
+                    
+                    <a href="{{ url_for('auth.logout') }}" class="md:hidden w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-red-50 text-red-600 rounded-lg text-sm font-semibold no-underline hover:bg-red-100 transition-opacity">
+                        <span class="material-icons text-sm">logout</span>
+                        {{ _('Logout') }}
+                    </a>
+                </div>
+
+                <hr class="border-bew-border">
+
+                <!-- ERP Links (Mobile view only - or Desktop as well for convenience) -->
+                <div class="md:hidden">
+                    <h4 class="text-xs font-bold text-text-muted uppercase tracking-wider mb-2 px-2">{{ _('ERP Modules') }}</h4>
+                    <div class="space-y-0.5">
+                        <a href="{{ url_for('buyers.buyer_list') }}" class="flex items-center gap-3 px-4 py-2 text-text-muted no-underline rounded-md font-medium hover:bg-bew-bg hover:text-primary transition-all"><span class="material-icons text-[1.1rem]">people</span> {{ _('Buyers') }}</a>
+                        <a href="{{ url_for('purchases.purchase_list') }}" class="flex items-center gap-3 px-4 py-2 text-text-muted no-underline rounded-md font-medium hover:bg-bew-bg hover:text-primary transition-all"><span class="material-icons text-[1.1rem]">shopping_cart</span> {{ _('Purchases') }}</a>
+                        <a href="{{ url_for('inventory.inventory_list') }}" class="flex items-center gap-3 px-4 py-2 text-text-muted no-underline rounded-md font-medium hover:bg-bew-bg hover:text-primary transition-all"><span class="material-icons text-[1.1rem]">inventory_2</span> {{ _('Inventory') }}</a>
+                        <a href="{{ url_for('sales.sale_list') }}" class="flex items-center gap-3 px-4 py-2 text-text-muted no-underline rounded-md font-medium hover:bg-bew-bg hover:text-primary transition-all"><span class="material-icons text-[1.1rem]">receipt_long</span> {{ _('Sales') }}</a>
+                        <a href="{{ url_for('work_orders.work_order_list') }}" class="flex items-center gap-3 px-4 py-2 text-text-muted no-underline rounded-md font-medium hover:bg-bew-bg hover:text-primary transition-all"><span class="material-icons text-[1.1rem]">assignment</span> {{ _('Work Orders') }}</a>
+                    </div>
+                </div>
+
+            </div>
+        </aside>
+
+        {# ══════════════════════════════════════════════════════════════
+           DASHBOARD MAIN CONTENT
+           ══════════════════════════════════════════════════════════════ #}
+        <div class="flex-1 w-full min-w-0 md:pl-[280px] transition-all duration-300 relative">
+            <div class="container mx-auto px-4 sm:px-6 py-6 pb-20 max-w-[1400px]">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

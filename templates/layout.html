@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="bn" x-data :data-theme="$store.theme.current">
+
+<head>
+    <meta charset="UTF-8">
+    {# FOUC prevention: set theme BEFORE any CSS loads #}
+    <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('bew-theme') || 'light')</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ _('Bangladesh Engineering Workshop') }}{% endblock %}</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/logo.svg') }}">
+
+    {# ── 1. Design Token System (Single Source of Truth) ──────── #}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tokens.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+
+    {# ── 2. Legacy CSS removed — all templates now use Tailwind ── #}
+
+    {# ── 3. Fonts ────────────────────────────────────────────── #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&family=Inter:wght@300;400;700&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    {# ── 4. Tailwind CSS CDN → Token-Driven Config ───────────── #}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwindcss.config = {
+            darkMode: ['selector', '[data-theme="dark"]'],
+            theme: {
+                extend: {
+                    colors: {
+                        /* New token-mapped colors */
+                        primary:       'var(--color-primary)',
+                        'primary-dark':'var(--color-primary-dark)',
+                        success:       'var(--color-success)',
+                        warning:       'var(--color-warning)',
+                        danger:        'var(--color-danger)',
+                        info:          'var(--color-info)',
+                        surface:       'var(--color-surface)',
+                        'card-bg':     'var(--color-card)',
+                        'text-main':   'var(--color-text)',
+                        'text-muted':  'var(--color-text-muted)',
+                        'bew-border':  'var(--color-border)',
+                        'bew-bg':      'var(--color-bg)',
+                        'footer-bg':   'var(--color-footer)',
+                        /* Legacy compat aliases (same values, old names) */
+                        secondary:     'var(--color-text-muted)',
+                    },
+                    fontFamily: {
+                        bengali: ['var(--font-primary)'],
+                        sans:    ['var(--font-display)'],
+                        mono:    ['var(--font-mono)'],
+                    },
+                    zIndex: {
+                        'base':     'var(--z-base)',
+                        'dropdown': 'var(--z-dropdown)',
+                        'sticky':   'var(--z-sticky)',
+                        'overlay':  'var(--z-overlay)',
+                        'sidebar':  'var(--z-sidebar)',
+                        'header':   'var(--z-header)',
+                        'popover':  'var(--z-popover)',
+                        'modal':    'var(--z-modal)',
+                        'toast':    'var(--z-toast)',
+                        'tooltip':  'var(--z-tooltip)',
+                    },
+                    height: {
+                        'header': 'var(--header-height)',
+                    },
+                    borderRadius: {
+                        'bew':    'var(--radius)',
+                        'bew-sm': 'var(--radius-sm)',
+                        'bew-lg': 'var(--radius-lg)',
+                    },
+                    boxShadow: {
+                        'bew':    'var(--shadow)',
+                        'bew-sm': 'var(--shadow-sm)',
+                        'bew-lg': 'var(--shadow-lg)',
+                    },
+                }
+            }
+        }
+    </script>
+
+    {# ── 5. Alpine.js — Stores first, then CDN ──────────────── #}
+    <script defer src="{{ url_for('static', filename='js/alpine-components/theme-switcher.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='js/alpine-components/directives.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='js/alpine-components/searchable-select.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='js/alpine-store.js') }}"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    {% block extra_css %}{% endblock %}
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body class="font-bengali bg-[var(--color-bg)] text-[var(--color-text)] min-h-screen flex flex-col antialiased">
+
+    {# ══════════════════════════════════════════════════════════════
+       MAIN CONTENT — Flash messages + page content
+       ══════════════════════════════════════════════════════════════ #}
+    <main class="w-full flex-grow relative" role="main" id="main-content">
+        {# Flash messages — Alpine-powered auto-dismiss #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="fixed top-[var(--header-height)] right-4 z-[2000] w-full max-w-sm space-y-2 mt-4 pointer-events-none" aria-live="polite">
+            {% for category, message in messages %}
+            <div x-data="{ show: true }" x-show="show"
+                 x-init="setTimeout(() => show = false, 5000)"
+                 x-transition:leave="transition ease-in duration-300"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0 translate-x-8"
+                 role="alert"
+                 class="px-4 py-3 shadow-lg pointer-events-auto rounded-[var(--radius-sm)] flex justify-between items-center text-sm
+                        {% if category == 'success' %}bg-[var(--color-surface)] text-[var(--color-success)] border-l-4 border-[var(--color-success)]
+                        {% elif category == 'error' %}bg-[var(--color-surface)] text-[var(--color-danger)] border-l-4 border-[var(--color-danger)]
+                        {% else %}bg-[var(--color-surface)] text-[var(--color-primary)] border-l-4 border-[var(--color-primary)]
+                        {% endif %}">
+                <span>{{ message }}</span>
+                <button @click="show = false" class="text-current opacity-70 hover:opacity-100 ml-4"
+                        aria-label="{{ _('Close') }}">×</button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% block layout_content %}{% endblock %}
+    </main>
+
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

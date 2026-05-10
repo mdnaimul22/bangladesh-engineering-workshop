@@ -1,0 +1,50 @@
+{% extends "web_base.html" %}
+{% from 'components/_navigation.html' import breadcrumb with context %}
+{% from 'components/_buttons.html' import btn with context %}
+{% from 'components/_seo.html' import og_tags, breadcrumb_schema with context %}
+
+{% block title %}Truck Repair - {{ _('Bangladesh Engineering Workshop') }}{% endblock %}
+
+{% block extra_head %}
+{{ og_tags(title='Truck Repair - Bangladesh Engineering Workshop', description='Heavy vehicle maintenance and mobile mechanics for fleet operations.', url=request.url) }}
+{% endblock %}
+
+{% block content %}
+{% set crumbs = [{'label': _('Home'), 'url': url_for('shops.index')}, {'label': _('Services'), 'url': url_for('core.services')}, {'label': 'Truck Repair', 'url': ''}] %}
+{{ breadcrumb(crumbs) }}
+{{ breadcrumb_schema(crumbs) }}
+
+<div class="text-center py-5 mb-4">
+    <h1 class="text-2xl md:text-3xl font-bold text-[var(--color-text)] mb-1">Truck Repair</h1>
+    <span class="text-[var(--color-text-muted)] text-sm">Heavy Vehicle Maintenance & Mobile Mechanics</span>
+</div>
+
+<div class="bg-[var(--color-surface)] rounded-[var(--radius)] border border-[var(--color-border)] p-5 md:p-6 shadow-[var(--shadow-sm)] mb-5">
+    <img src="{{ url_for('static', filename='img/truck_repair.webp') }}" alt="Heavy truck under maintenance"
+         class="w-full h-[350px] object-cover rounded-[var(--radius)] mb-6">
+
+    <h2 class="text-xl font-bold text-[var(--color-text)] mb-4">Truck Repair Services</h2>
+    <p class="text-sm text-[var(--color-text-muted)] leading-relaxed mb-4">
+        Staying one step ahead of repairs is essential to keeping your fleet operational.
+        We offer expert maintenance and repair services for all heavy trucks, ensuring safety,
+        reliability, and longevity.
+    </p>
+
+    <h3 class="text-base font-normal text-[var(--color-text)] mb-3">Our Truck Repair Services:</h3>
+    <ul class="text-sm text-[var(--color-text-muted)] leading-relaxed pl-6 list-disc space-y-2">
+        <li><strong class="text-[var(--color-text)]">Regular Maintenance:</strong> Detailed inspections including tyres, engine oil, greasing, filter replacement, and diagnostic checks.</li>
+        <li><strong class="text-[var(--color-text)]">Major Service:</strong> Recommended every 30,000km, including brake/clutch fluid replacement, transmission oil changes, and full engine checks.</li>
+        <li><strong class="text-[var(--color-text)]">Emergency Repairs:</strong> Quick diagnosis and repair for breakdowns to get you back on the road.</li>
+        <li><strong class="text-[var(--color-text)]">Chassis & Axle Work:</strong> Structural repairs, chassis straightening, and axle alignment.</li>
+    </ul>
+</div>
+
+<div class="p-5 bg-[var(--color-bg)] rounded-[var(--radius)] border border-[var(--color-border)] mb-6">
+    <h4 class="text-base font-normal text-[var(--color-text)] mb-2">Need Urgent Help?</h4>
+    <p class="text-sm text-[var(--color-text-muted)] mb-4">Our mobile mechanics are ready to assist with breakdowns and emergency repairs.</p>
+    <div class="flex gap-3 flex-wrap">
+        {{ btn(text=_('Contact Us'), icon='call', variant='primary', href='tel:+8801906399161') }}
+        {{ btn(text=_('Back to Services'), icon='arrow_back', variant='secondary', href=url_for('core.services')) }}
+    </div>
+</div>
+{% endblock %}

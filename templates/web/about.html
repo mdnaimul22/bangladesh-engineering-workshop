@@ -1,0 +1,94 @@
+{% extends "web_base.html" %}
+{% from 'components/_navigation.html' import breadcrumb with context %}
+{% from 'components/_buttons.html' import btn with context %}
+{% from 'components/_seo.html' import og_tags, breadcrumb_schema with context %}
+
+{% block title %}{{ _('About Us') }} - {{ _('Bangladesh Engineering Workshop') }}{% endblock %}
+
+{% block extra_head %}
+{{ og_tags(title=_('About Us - Bangladesh Engineering Workshop'), description='Premier hub for heavy equipment service, maintenance-repairs and engineering solutions.', url=request.url) }}
+{% endblock %}
+
+{% block content %}
+{% set crumbs = [{'label': _('Home'), 'url': url_for('shops.index')}, {'label': _('About Us'), 'url': ''}] %}
+{{ breadcrumb(crumbs) }}
+{{ breadcrumb_schema(crumbs) }}
+
+{# ── Hero Image ──────────────────────────────────────────── #}
+<div class="mb-6">
+    <img src="{{ url_for('static', filename='img/about_hero.png') }}" alt="Heavy Equipment Specialists"
+         class="w-full rounded-[var(--radius)] shadow-[var(--shadow)]">
+</div>
+
+{# ── Intro ───────────────────────────────────────────────── #}
+<div class="text-center mb-8">
+    <h1 class="text-2xl md:text-3xl font-bold text-[var(--color-text)] mb-4">Reliable Heavy Construction Machinery Repair & Maintenance Service</h1>
+    <p class="text-[var(--color-text-muted)] max-w-[950px] mx-auto leading-relaxed">
+        Bangladesh Engineering Workshop is a premier hub for heavy equipment service, maintenance-repairs and
+        engineering solutions for the country's mechanical sector. Our specialist heavy equipment mechanics are
+        professionally trained to provide all the support you need to keep your large machinery up and running for longer.
+    </p>
+</div>
+
+{# ── Our Specialist Services ─────────────────────────────── #}
+<div class="text-center mb-6">
+    <h2 class="text-xl md:text-2xl font-bold text-[var(--color-text)] mb-3">Our Specialist Services</h2>
+    <p class="text-[var(--color-text-muted)] max-w-[950px] mx-auto leading-relaxed mb-6">
+        From proactive maintenance, inspections and servicing to repairs, new parts and breakdown recovery,
+        BEW™ heavy machinery services keep your large equipment and your project teams in business.
+    </p>
+</div>
+
+{# ── Service Cards Grid ──────────────────────────────────── #}
+{% set services = [
+    {'img': 'img/lathe_logo.svg', 'title': 'Heavy Engineering', 'desc': 'Specialized lathe and machining works. Capacity up to 12 feet length and 32 inches diameter for industrial rollers and shafts.', 'alias': 'heavy_engineering'},
+    {'img': 'img/gear.svg', 'title': 'Metal Components', 'desc': 'Precision milling and shaping for high-accuracy manufacturing of flanges, bearing housings, and custom gears.', 'alias': 'metal_components'},
+    {'img': 'img/truck_repair_logo.svg', 'title': 'Truck Repair', 'desc': 'Comprehensive fleet maintenance, engine rebuilds, and chassis work for heavy trucks and transport vehicles.', 'alias': 'truck-repair'},
+    {'img': 'img/crane_repair_small2.png', 'title': 'Crane Repair', 'desc': 'Hydraulic and structural crane services, including rail alignment, load testing, and major inspections.', 'alias': 'crane-repair-and-maintenance'},
+    {'img': 'img/earthmover_small.png', 'title': 'Earthmoving Repair', 'desc': 'Expert maintenance for excavators and dozers, including bucket repair, hydraulic testing, and track work.', 'alias': 'earthmoving-repair'},
+    {'img': 'img/forklift_small.png', 'title': 'Material Handling', 'desc': 'Repairs for conveyors, forklifts, and industrial systems to ensure safety and productivity in manufacturing.', 'alias': 'material-handling-repairs'},
+    {'img': 'img/ewp_small.png', 'title': 'EWP Repair', 'desc': 'EWP access platform maintenance, inspections, and repairs for ensuring longevity, productivity and workplace safety.', 'alias': 'ewp-repair'}
+] %}
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mb-8">
+    {% for s in services %}
+    <div class="bg-[var(--color-surface)] rounded-[var(--radius)] border border-[var(--color-border)] shadow-[var(--shadow-sm)]
+                flex flex-col items-center text-center p-5 pb-16 relative group hover:shadow-lg transition-shadow">
+        <img src="{{ url_for('static', filename=s.img) }}" alt="{{ s.title }}" class="h-16 w-auto mb-3 opacity-80 group-hover:opacity-100 transition-opacity">
+        <h3 class="text-base font-bold text-[var(--color-text)] mb-2">{{ s.title }}</h3>
+        <p class="text-sm text-[var(--color-text-muted)] leading-relaxed">{{ s.desc }}</p>
+        <a href="{{ url_for('core.service_detail', service_alias=s.alias) }}"
+           class="absolute bottom-4 left-4 right-4 inline-flex items-center justify-center gap-1 px-3 py-2
+                  bg-[var(--color-btn-orange)] text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-all no-underline">
+            <span class="material-icons text-base">visibility</span> {{ _('Learn More') }}
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+{# ── Capabilities + Vision ───────────────────────────────── #}
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
+    <div class="bg-[var(--color-surface)] rounded-[var(--radius)] border border-[var(--color-border)] p-5 shadow-[var(--shadow-sm)]">
+        <div class="flex items-center gap-2 mb-3">
+            <img src="{{ url_for('static', filename='img/capabilitie.svg') }}" alt="Capabilities" class="h-14 w-auto">
+            <h3 class="text-base text-[var(--color-text-muted)] font-normal m-0">Core Capabilities</h3>
+        </div>
+        <ul class="text-sm text-[var(--color-text-muted)] leading-relaxed pl-6 list-disc space-y-1">
+            <li><strong class="text-[var(--color-text)]">Turning & Machining:</strong> Large capacity lathe work for rollers and shafts.</li>
+            <li><strong class="text-[var(--color-text)]">Milling & Shaping:</strong> Precision gear cutting and shaping.</li>
+            <li><strong class="text-[var(--color-text)]">Fabrication:</strong> Custom welding and diverse metal structures.</li>
+            <li><strong class="text-[var(--color-text)]">Spare Parts:</strong> Production of couplings, pulleys, and specialized mounts.</li>
+        </ul>
+    </div>
+    <div class="bg-[var(--color-surface)] rounded-[var(--radius)] border border-[var(--color-border)] p-5 shadow-[var(--shadow-sm)]">
+        <div class="flex items-center gap-2 mb-3">
+            <img src="{{ url_for('static', filename='img/vision.svg') }}" alt="Vision" class="h-14 w-auto">
+            <h3 class="text-base text-[var(--color-text-muted)] font-normal m-0">Our Vision</h3>
+        </div>
+        <p class="text-sm text-[var(--color-text-muted)] leading-relaxed pl-6">
+            To become the leading name in industrial engineering services and the most trusted digital platform
+            for the mechanical workshop community in Bangladesh.
+        </p>
+    </div>
+</div>
+{% endblock %}

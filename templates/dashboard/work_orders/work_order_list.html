@@ -1,0 +1,136 @@
+{% from 'components/_pagination.html' import render_pagination %}
+{% extends "dashboard_base.html" %}
+{% from 'components/_navigation.html' import page_header, breadcrumb with context %}
+{% from 'components/_buttons.html' import btn with context %}
+{% from 'components/_badges.html' import status_badge with context %}
+{% from 'components/_seo.html' import og_tags, breadcrumb_schema with context %}
+
+{% block title %}{{ _('Work Orders') }} - {{ _('Bangladesh Engineering Workshop') }}{% endblock %}
+
+{% block extra_head %}
+{{ og_tags(
+    title=_('Work Orders'),
+    description=_('Production job orders for Bangladesh Engineering Workshop.'),
+    url=request.url
+) }}
+{% endblock %}
+
+{% block content %}
+{# ── Breadcrumb ──────────────────────────────────────────── #}
+{{ breadcrumb_schema(crumbs) }}
+
+{# ── Page Header ─────────────────────────────────────────── #}
+{% set header_actions %}
+{# Compact Search Bar #}
+<form action="{{ url_for('work_orders.work_order_list') }}" method="get"
+      class="flex items-center gap-2 bg-[var(--color-surface)]/50 backdrop-blur-sm
+             border border-[var(--color-border)] rounded-full px-3 py-1.5
+             shadow-[var(--shadow-sm)]">
+    <span class="material-icons text-[var(--color-text-muted)] text-lg">search</span>
+    <input type="text" name="q" placeholder="{{ _('Search...') }}" value="{{ search_query or '' }}"
+           class="bg-transparent border-none outline-none text-sm text-[var(--color-text)] w-32 sm:w-40
+                  placeholder:text-[var(--color-text-muted)]">
+    {% if search_query %}
+    <a href="{{ url_for('work_orders.work_order_list') }}"
+       class="text-[var(--color-text-muted)] hover:text-[var(--color-danger)] transition-colors"
+       title="{{ _('Clear') }}">
+        <span class="material-icons text-lg">close</span>
+    </a>
+    {% endif %}
+</form>
+
+{{ btn(text=_('Add Order'), icon='add_task', variant='primary', href=url_for('work_orders.new_work_order')) }}
+{{ btn(text=_('Back'), icon='arrow_back', variant='secondary', href=url_for('shops.index')) }}
+{% endset %}
+
+{{ page_header(
+    title=_('Work Orders'),
+    icon='assignment',
+    actions=[header_actions]
+) }}
+
+{# ── Work Orders Table ───────────────────────────────────── #}
+<section class="mt-4 min-w-0">
+    {% if work_orders %}
+    <div class="overflow-x-auto bg-[var(--color-surface)] rounded-[var(--radius)] shadow-[var(--shadow)] border border-[var(--color-border)] min-w-0">
+        <table class="w-full border-collapse table-auto min-w-[900px] text-sm">
+            <thead>
+                <tr class="bg-[var(--color-bg)] text-[var(--color-text-muted)]">
+                    <th class="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
+                        <span class="material-icons text-sm align-middle mr-0.5">calendar_today</span> {{ _('Date') }}
+                    </th>
+                    <th class="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
+                        <span class="material-icons text-sm align-middle mr-0.5">build</span> {{ _('Job') }}
+                    </th>
+                    <th class="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
+                        ID
+                    </th>
+                    <th class="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
+                        <span class="material-icons text-sm align-middle mr-0.5">business</span> {{ _('Company') }}
+                    </th>
+                    <th class="px-3 py-3 text-right text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
+                        <span class="material-icons text-sm align-middle mr-0.5">sell</span> {{ _('Quoted Price') }}
+                    </th>
+                    <th class="px-3 py-3 text-right text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
+                        <span class="material-icons text-sm align-middle mr-0.5">calculate</span> {{ _('Total Cost') }}
+                    </th>
+                    <th class="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
+                        <span class="material-icons text-sm align-middle mr-0.5">info</span> {{ _('Status') }}
+                    </th>
+                    <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)] w-24">
+                        <span class="material-icons text-sm align-middle mr-0.5">settings</span> {{ _('Actions') }}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for w in work_orders %}
+                <tr class="border-b border-[var(--color-border)] hover:bg-[var(--color-bg)]/50 transition-colors">
+                    <td class="px-3 py-2.5 text-center text-[var(--color-text-muted)] whitespace-nowrap" data-label="{{ _('Date') }}">{{ w.job_date_display or '-' }}</td>
+                    <td class="px-3 py-2.5" data-label="{{ _('Job') }}">
+                        <a href="{{ url_for('work_orders.work_order_detail', work_order_id=w.id) }}"
+                           class="text-[var(--color-primary)] no-underline font-bold hover:underline">{{ w.job_name }}</a>
+                    </td>
+                    <td class="px-3 py-2.5 text-center text-xs font-mono whitespace-nowrap" data-label="ID">
+                        <a href="{{ url_for('work_orders.work_order_detail', work_order_id=w.id) }}"
+                           class="text-[var(--color-primary)] no-underline hover:underline">{{ (w.display_id or w.id)|lower }}</a>
+                    </td>
+                    <td class="px-3 py-2.5" data-label="{{ _('Company') }}">
+                        <a href="{{ url_for('work_orders.work_order_detail', work_order_id=w.id) }}"
+                           class="text-[var(--color-primary)] no-underline hover:underline">{{ w.company_name }}</a>
+                    </td>
+                    <td class="px-3 py-2.5 text-right whitespace-nowrap font-medium text-[var(--color-text)]" data-label="{{ _('Quoted Price') }}">
+                        ৳ {{ "{:,.0f}".format(w.quoted_price or 0) }}
+                    </td>
+                    <td class="px-3 py-2.5 text-right whitespace-nowrap font-bold text-[var(--color-text)]" data-label="{{ _('Total Cost') }}">
+                        ৳ {{ "{:,.0f}".format(w.total_cost or 0) }}
+                    </td>
+                    <td class="px-3 py-2.5 text-center" data-label="{{ _('Status') }}">
+                        {{ status_badge(w.status or 'open') }}
+                    </td>
+                    <td class="px-4 py-3 text-right" data-label="{{ _('Actions') }}">
+                        <div class="flex gap-1.5 justify-end flex-nowrap">
+                            {{ btn(icon='visibility', variant='secondary', size='sm', href=url_for('work_orders.work_order_detail', work_order_id=w.id)) }}
+                            {{ btn(icon='edit', variant='primary', size='sm', href=url_for('work_orders.edit_work_order', work_order_id=w.id)) }}
+                            <form action="{{ url_for('work_orders.delete_work_order', work_order_id=w.id) }}"
+                                  method="POST" class="inline-flex"
+                                  onsubmit="return confirm('{{ _('Are you sure you want to delete this work order?') }}');">
+                                {{ btn(icon='delete', variant='danger', size='sm', type='submit') }}
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+            {{ render_pagination(meta, 'work_orders.work_order_list', search_query) }}
+    </div>
+    {% else %}
+    <div class="text-center py-12 text-[var(--color-text-muted)]">
+        <span class="material-icons text-5xl opacity-30 block mb-2">assignment</span>
+        <p class="text-lg">{{ _('No work orders found.') }}</p>
+        {{ btn(text=_('Add Order'), icon='add_task', variant='primary', href=url_for('work_orders.new_work_order')) }}
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

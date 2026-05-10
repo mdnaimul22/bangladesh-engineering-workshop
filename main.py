@@ -58,8 +58,30 @@ limiter.init_app(app)
 def _no_limit_static():
     return request.path.startswith('/static/')
 
+from src.routers.auth import auth_bp
+from src.routers.dashboard import dashboard_bp
+
 # ── Extensions & Blueprints ──────────────────────────────────
 db.init_app(app)
+
+@app.before_request
+def log_analytics():
+    # Exclude static files and assets
+    excluded_prefixes = ['/static/', '/shop_img/', '/favicon.ico', '/robots.txt']
+    if any(request.path.startswith(prefix) for prefix in excluded_prefixes):
+        return
+    
+    try:
+        db.log_visit(
+            url=request.url,
+            ip=request.remote_addr,
+            user_agent=request.user_agent.string
+        )
+    except Exception as e:
+        logger.warning(f"Failed to log visit: {e}")
+
+app.register_blueprint(auth_bp)
+app.register_blueprint(dashboard_bp)
 app.register_blueprint(buyers_bp)
 app.register_blueprint(inventory_bp)
 app.register_blueprint(shops_bp)

@@ -1,0 +1,156 @@
+{% extends "dashboard_base.html" %}
+{% from 'components/_navigation.html' import page_header, breadcrumb with context %}
+{% from 'components/_buttons.html' import btn with context %}
+{% from 'components/_forms.html' import searchable_select with context %}
+{% from 'components/_seo.html' import og_tags, breadcrumb_schema with context %}
+
+{% block title %}{{ _('Edit Sale') if action == 'edit' else _('New Sale') }} - {{ _('Bangladesh Engineering Workshop') }}{% endblock %}
+
+{% block extra_head %}
+{{ og_tags(title=_('Edit Sale') if action == 'edit' else _('New Sale'), description=_('Manage sale entries.'), url=request.url) }}
+{% endblock %}
+
+{% block content %}
+{{ breadcrumb_schema(crumbs) }}
+
+{% set header_actions %}
+{{ btn(text=_('Back'), icon='arrow_back', variant='secondary', href=url_for('sales.sale_list')) }}
+{% endset %}
+{{ page_header(title=_('Edit Sale Record') if action == 'edit' else _('New Sale Record'), icon='edit' if action == 'edit' else 'local_mall', actions=[header_actions]) }}
+
+{% set lbl = "flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide min-h-[28px]" %}
+{% set inp = "form-control w-full h-[38px] px-3 py-1.5 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all" %}
+
+<section class="mt-4">
+    <form method="POST" enctype="multipart/form-data"
+          class="bg-[var(--color-surface)] p-5 md:p-6 rounded-[var(--radius-lg)] shadow-[var(--shadow)] border border-[var(--color-border)]"
+          x-data="saleItems()">
+
+        {# ── Header: Buyer, Date, Voucher ────────────────── #}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5 p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)]">
+            <div class="flex flex-col justify-end">
+                {% set buyer_options = [] %}
+                {% for b in buyers %}
+                    {% set _ = buyer_options.append({'value': b.id|string, 'label': b.company_name}) %}
+                {% endfor %}
+                {{ searchable_select(
+                    name='buyer_id',
+                    label=_('Buyer'),
+                    icon='business',
+                    options=buyer_options,
+                    selected=(sale.buyer_id|string if sale.buyer_id else ''),
+                    required=true,
+                    placeholder=_('Select Buyer')
+                ) }}
+            </div>
+            <div class="flex flex-col justify-end">
+                <label for="sale_date" class="{{ lbl }}"><span class="material-icons text-sm">calendar_month</span> {{ _('Sale Date') }}</label>
+                <div class="relative flex items-center group">
+                    <input type="date" name="sale_date" id="sale_date" class="{{ inp }} pr-10" 
+                           required placeholder="dd/mm/yyyy"
+                           value="{{ sale.sale_date if sale.sale_date else '' }}"
+                           x-init="if(!$el.value) $el.value = new Date().toLocaleDateString('en-CA')">
+                    <span class="material-icons absolute right-3 text-[var(--color-primary)] pointer-events-none text-lg">calendar_today</span>
+                </div>
+            </div>
+            <div class="flex flex-col justify-end">
+                <label for="voucher_image" class="{{ lbl }}"><span class="material-icons text-sm">attach_file</span> {{ _('Voucher / Bill') }}</label>
+                <input type="file" name="voucher_image" id="voucher_image" class="{{ inp }} file:mr-3 file:py-1 file:px-2 file:rounded file:border file:h-full file:bg-[var(--color-bg)] file:text-xs file:font-semibold" accept="image/*">
+                {% if sale.voucher_image %}
+                <a href="{{ url_for('shop_img', filename=sale.voucher_image) }}" target="_blank" class="text-[var(--color-primary)] text-xs mt-1 inline-block hover:underline">{{ _('View Current') }}</a>
+                {% endif %}
+            </div>
+        </div>
+
+        {# ── Items Section (Alpine.js) ───────────────────── #}
+        <div class="p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)] mb-5">
+            <div class="flex justify-between items-center mb-4 pb-2 border-b border-[var(--color-border)]">
+                <h3 class="text-base font-semibold m-0 flex items-center gap-2 text-[var(--color-text)]">
+                    <span class="material-icons text-lg">list</span> {{ _('ITEMS') }}
+                </h3>
+                <button type="button" @click="addItem()"
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[var(--color-primary)]/10 text-[var(--color-primary)] border border-[var(--color-primary)]/20 rounded-md text-xs font-bold uppercase tracking-wider hover:bg-[var(--color-primary)] hover:text-white transition-all">
+                    <span class="material-icons text-sm">add</span> {{ _('Add Item') }}
+                </button>
+            </div>
+
+            <template x-for="(item, index) in items" :key="index">
+                <div class="mb-3 pb-3 border-b border-[var(--color-border)]">
+                    <div class="grid grid-cols-2 md:grid-cols-[2fr_1fr_1fr_1fr_1.5fr_42px] gap-2.5 items-end">
+                        <div>
+                            <label class="{{ lbl }}">{{ _('Product Name') }}</label>
+                            <input type="text" name="product_name" class="{{ inp }}" required placeholder="{{ _('Item Name') }}" x-model="item.product_name">
+                        </div>
+                        <div>
+                            <label class="{{ lbl }}">{{ _('Weight (kg)') }}</label>
+                            <input type="number" step="0.01" name="weight" class="{{ inp }}" placeholder="0.0" x-model.number="item.weight">
+                        </div>
+                        <div>
+                            <label class="{{ lbl }}">{{ _('Quantity') }}</label>
+                            <input type="number" step="0.01" name="quantity" class="{{ inp }}" required placeholder="1" x-model.number="item.quantity">
+                        </div>
+                        <div>
+                            <label class="{{ lbl }}">{{ _('Unit Price') }}</label>
+                            <input type="number" step="0.01" name="unit_price" class="{{ inp }}" required placeholder="0.00" x-model.number="item.unit_price">
+                        </div>
+                        <div>
+                            <label class="{{ lbl }}">{{ _('Source') }}</label>
+                            <select name="inventory_link_id" class="{{ inp }}" x-model="item.inventory_link_id">
+                                <option value="">-- {{ _('None') }} --</option>
+                                {% for inv_item in inventory %}
+                                <option value="{{ inv_item.id }}">{{ inv_item.material_name }} ({{ inv_item.quantity }}) - {{ inv_item.shop_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="flex items-end">
+                            <button type="button" @click="removeItem(index)"
+                                    class="w-[38px] h-[38px] flex items-center justify-center bg-red-500 text-white rounded-md hover:bg-red-600 transition-all">
+                                <span class="material-icons text-lg">delete</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+        </div>
+
+        {# ── Submit Actions ──────────────────────────────── #}
+        <div class="flex flex-wrap items-center gap-3 pt-4 border-t border-[var(--color-border)]">
+            {{ btn(text=_('Save'), icon='save', variant='primary', type='submit') }}
+            {% if action == 'edit' %}
+            {{ btn(text=_('Cancel'), icon='close', variant='secondary', href=url_for('sales.sale_detail', sale_id=sale.id)) }}
+            {% else %}
+            {{ btn(text=_('Cancel'), icon='close', variant='secondary', href=url_for('sales.sale_list')) }}
+            {% endif %}
+        </div>
+    </form>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function saleItems() {
+    const serverItems = {{ sale.get('items', []) | tojson if sale.get('items') else '[]' }};
+    return {
+        items: serverItems.length
+            ? serverItems.map(i => ({
+                product_name: i.product_name || '',
+                weight: i.weight || 0,
+                quantity: i.quantity || 1,
+                unit_price: i.unit_price || 0,
+                inventory_link_id: i.inventory_link_id || '',
+            }))
+            : [{ product_name: '', weight: 0, quantity: 1, unit_price: 0, inventory_link_id: '' }],
+        addItem() {
+            this.items.push({ product_name: '', weight: 0, quantity: 1, unit_price: 0, inventory_link_id: '' });
+        },
+        removeItem(index) {
+            if (this.items.length > 1) this.items.splice(index, 1);
+        },
+        init() {
+            // Component initialized
+        }
+    };
+}
+</script>
+{% endblock %}

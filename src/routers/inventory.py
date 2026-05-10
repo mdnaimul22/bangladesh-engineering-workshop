@@ -5,9 +5,16 @@ import src.services.inventory_svc as inventory_svc
 from src.helpers.exceptions import ValidationError
 from src.config import setup_logger, Settings
 
+from src.helpers.auth_middleware import admin_required
+
 logger = setup_logger(Settings.LOG_DIR / "routers.log", name="bew.routers.inventory")
 
-inventory_bp = Blueprint('inventory', __name__)
+inventory_bp = Blueprint('inventory', __name__, url_prefix='/dashboard')
+
+@inventory_bp.before_request
+@admin_required
+def before_request():
+    pass
 
 
 @inventory_bp.route('/inventory')
@@ -18,7 +25,7 @@ def inventory_list():
     page = request.args.get('page', 1, type=int)
     from src.helpers.utils import paginate_list
     inventory, meta = paginate_list(inventory, page, per_page=10)
-    return render_template('inventory/inventory_list.html', inventory=inventory, meta=meta, search_query=query)
+    return render_template('dashboard/inventory/inventory_list.html', inventory=inventory, meta=meta, search_query=query)
 
 
 @inventory_bp.route('/inventory/new', methods=['GET', 'POST'])
@@ -33,9 +40,9 @@ def new_inventory():
             return redirect(url_for('inventory.inventory_list'))
         except ValidationError as e:
             flash(_(str(e)), 'error')
-            return render_template('inventory/inventory_form.html', shops=shops)
+            return render_template('dashboard/inventory/inventory_form.html', shops=shops)
 
-    return render_template('inventory/inventory_form.html', shops=shops)
+    return render_template('dashboard/inventory/inventory_form.html', shops=shops)
 
 
 @inventory_bp.route('/inventory/<int:item_id>/delete', methods=['POST'])
