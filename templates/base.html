@@ -6,7 +6,7 @@
     {# FOUC prevention: set theme BEFORE any CSS loads #}
     <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('bew-theme') || 'light')</script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}বাংলাদেশ ইঞ্জিনিয়ারিং ওয়ার্কশপ{% endblock %}</title>
+    <title>{% block title %}{{ _('Bangladesh Engineering Workshop') }}{% endblock %}</title>
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/logo.svg') }}">
 
     {# ── 1. Design Token System (Single Source of Truth) ──────── #}
@@ -83,6 +83,7 @@
 
     {# ── 5. Alpine.js — Stores first, then CDN ──────────────── #}
     <script defer src="{{ url_for('static', filename='js/alpine-components/theme-switcher.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='js/alpine-components/directives.js') }}"></script>
     <script defer src="{{ url_for('static', filename='js/alpine-store.js') }}"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
@@ -126,7 +127,7 @@
                     class="flex items-center gap-2 text-primary no-underline font-bold text-xl tracking-tight">
                     <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="BEW Logo"
                         class="h-[60px] w-auto md:h-[85px]">
-                    <span class="text-base md:text-xl">বাংলাদেশ ইঞ্জিনিয়ারিং ওয়ার্কসপ</span>
+                    <span class="text-base md:text-xl">{{ _('Bangladesh Engineering Workshop') }}</span>
                 </a>
             </div>
 
@@ -138,39 +139,43 @@
                 </a>
 
                 <!-- ERP Dropdown -->
-                <div class="relative group flex items-center h-full">
-                    <a href="javascript:void(0)"
-                        class="text-text-muted no-underline font-medium text-[0.95rem] hover:text-primary transition-colors">
-                        <span class="material-icons align-middle">business_center</span> {{ _('ERP') }}
-                        <span class="material-icons align-middle text-lg">expand_more</span>
-                    </a>
-                    <div class="hidden group-hover:flex flex-col absolute top-full left-0
+                <div x-data="{ open: false }" class="relative flex items-center h-full" @click.away="open = false" @keydown.escape.window="open = false">
+                    <button @click="open = !open"
+                        :aria-expanded="open"
+                        class="text-text-muted no-underline font-medium text-[0.95rem] hover:text-primary transition-colors flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded">
+                        <span class="material-icons align-middle">business_center</span> <span class="ml-1">{{ _('ERP') }}</span>
+                        <span class="material-icons align-middle text-lg ml-0.5 transition-transform duration-200" :class="open ? 'rotate-180' : ''">expand_more</span>
+                    </button>
+                    <div x-show="open" 
+                         x-transition.opacity.duration.200ms
+                         style="display: none;"
+                         class="flex flex-col absolute top-[120%] left-0
                                 bg-[var(--color-surface)] min-w-[240px] shadow-lg z-[var(--z-dropdown)] rounded-lg
                                 py-2 border border-[var(--color-border)]">
                         <a href="{{ url_for('buyers.buyer_list') }}"
                             class="text-text-muted no-underline px-4 py-3 text-sm font-medium
-                                   hover:bg-bew-bg hover:text-primary transition-all">
-                            <span class="material-icons align-middle text-lg">people</span> {{ _('Buyers') }}
+                                   hover:bg-bew-bg hover:text-primary transition-all focus:bg-bew-bg focus:text-primary focus:outline-none">
+                            <span class="material-icons align-middle text-lg mr-2">people</span> {{ _('Buyers') }}
                         </a>
                         <a href="{{ url_for('purchases.purchase_list') }}"
                             class="text-text-muted no-underline px-4 py-3 text-sm font-medium
-                                   hover:bg-bew-bg hover:text-primary transition-all">
-                            <span class="material-icons align-middle text-lg">shopping_cart</span> {{ _('Purchases') }}
+                                   hover:bg-bew-bg hover:text-primary transition-all focus:bg-bew-bg focus:text-primary focus:outline-none">
+                            <span class="material-icons align-middle text-lg mr-2">shopping_cart</span> {{ _('Purchases') }}
                         </a>
                         <a href="{{ url_for('inventory.inventory_list') }}"
                             class="text-text-muted no-underline px-4 py-3 text-sm font-medium
-                                   hover:bg-bew-bg hover:text-primary transition-all">
-                            <span class="material-icons align-middle text-lg">inventory_2</span> {{ _('Inventory') }}
-                        </a>
-                        <a href="{{ url_for('work_orders.work_order_list') }}"
-                            class="text-text-muted no-underline px-4 py-3 text-sm font-medium
-                                   hover:bg-bew-bg hover:text-primary transition-all">
-                            <span class="material-icons align-middle text-lg">assignment</span> {{ _('Work Orders') }}
+                                   hover:bg-bew-bg hover:text-primary transition-all focus:bg-bew-bg focus:text-primary focus:outline-none">
+                            <span class="material-icons align-middle text-lg mr-2">inventory_2</span> {{ _('Inventory') }}
                         </a>
                         <a href="{{ url_for('sales.sale_list') }}"
                             class="text-text-muted no-underline px-4 py-3 text-sm font-medium
-                                   hover:bg-bew-bg hover:text-primary transition-all">
-                            <span class="material-icons align-middle text-lg">receipt_long</span> {{ _('Sales') }}
+                                   hover:bg-bew-bg hover:text-primary transition-all focus:bg-bew-bg focus:text-primary focus:outline-none">
+                            <span class="material-icons align-middle text-lg mr-2">receipt_long</span> {{ _('Sales') }}
+                        </a>
+                        <a href="{{ url_for('work_orders.work_order_list') }}"
+                            class="text-text-muted no-underline px-4 py-3 text-sm font-medium
+                                   hover:bg-bew-bg hover:text-primary transition-all focus:bg-bew-bg focus:text-primary focus:outline-none">
+                            <span class="material-icons align-middle text-lg mr-2">assignment</span> {{ _('Work Orders') }}
                         </a>
                     </div>
                 </div>
@@ -236,7 +241,7 @@
                     {{ cat.name }}
                 </a>
                 {% else %}
-                <p class="text-text-muted text-sm px-4 py-2">ক্যাটেগরি লোড হচ্ছে...</p>
+                <p class="text-text-muted text-sm px-4 py-2">{{ _('Loading categories...') }}</p>
                 {% endfor %}
             </div>
         </div>
@@ -383,8 +388,6 @@
         </div>
     </footer>
 
-    {# ── Legacy script (kept until all templates migrated) ─── #}
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 

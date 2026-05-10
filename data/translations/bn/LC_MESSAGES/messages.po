@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-01-31 14:45+0000\n"
+"POT-Creation-Date: 2026-05-10 06:11+0600\n"
 "PO-Revision-Date: 2025-12-16 09:53-0500\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: bn\n"
@@ -16,174 +16,459 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.17.0\n"
+"Generated-By: Babel 2.18.0\n"
 
-#: templates/about.html:43 templates/about.html:55 templates/about.html:67
-#: templates/about.html:80 templates/about.html:92 templates/about.html:105
-#: templates/about.html:116
-msgid "Learn More"
-msgstr "আরও জানুন"
+#: main.py:98
+msgid "Too many requests. Please wait a moment."
+msgstr ""
 
-#: templates/base.html:37
-msgid "Home"
-msgstr "হোম"
+#: src/routers/buyers.py:30
+msgid "Buyer added successfully!"
+msgstr ""
 
-#: templates/base.html:42
-msgid "ERP"
-msgstr "ইআরপি"
+#: src/routers/buyers.py:45 src/routers/buyers.py:56 src/routers/buyers.py:84
+msgid "Buyer not found!"
+msgstr ""
 
-#: templates/base.html:48
-msgid "Buyers"
-msgstr "ক্রেতা তালিকা"
+#: src/routers/buyers.py:62
+msgid "Buyer updated successfully!"
+msgstr ""
 
-#: templates/base.html:52 templates/purchase/purchase_list.html:8
-#: templates/purchase/purchase_list.html:10 templates/shop/shop_detail.html:152
-msgid "Purchases"
-msgstr "ক্রয় সমূহ"
+#: src/routers/buyers.py:80
+msgid "Buyer deleted successfully!"
+msgstr ""
 
-#: templates/base.html:56
-msgid "Inventory"
-msgstr "ইনভেন্টরি"
+#: src/routers/buyers.py:82
+msgid "Cannot delete buyer with existing orders. Delete orders first."
+msgstr ""
 
-#: templates/base.html:59
-msgid "Work Orders"
-msgstr "কাজের আদেশ"
+#: src/routers/buyers.py:86
+#, fuzzy
+msgid "Error deleting buyer!"
+msgstr "ক্রেতা নির্বাচন করুন"
 
-#: templates/base.html:64
-msgid "Sales"
-msgstr "বিক্রয় সমূহ"
+#: src/routers/inventory.py:31
+msgid "Inventory added successfully!"
+msgstr ""
 
-#: templates/base.html:70 templates/shop/shop_list.html:12
-msgid "All Shops"
-msgstr "সকল দোকান"
+#: src/routers/inventory.py:46
+msgid "Inventory item deleted successfully!"
+msgstr ""
 
-#: templates/base.html:74
-msgid "New Shop"
-msgstr "নতুন দোকান"
+#: src/routers/inventory.py:48
+#, fuzzy
+msgid "Error deleting inventory item!"
+msgstr "কোনো ক্রেতা পাওয়া যায়নি।"
 
-#: templates/base.html:90
-msgid "Categories"
-msgstr "ক্যাটেগরি সমূহ"
+#: src/routers/purchases.py:28 src/routers/shops.py:79 src/routers/shops.py:108
+msgid "দোকান খুঁজে পাওয়া যায়নি!"
+msgstr ""
 
-#: templates/base.html:130
-msgid "Quick Links"
-msgstr "কুইক লিঙ্ক"
+#: src/routers/purchases.py:46
+msgid "Purchase saved successfully!"
+msgstr ""
 
-#: templates/base.html:132
+#: src/routers/purchases.py:62 src/routers/purchases.py:72
+#, fuzzy
+msgid "Purchase not found!"
+msgstr "কোনো ক্রয়ের রেকর্ড পাওয়া যায়নি।"
+
+#: src/routers/purchases.py:80
+#, fuzzy
+msgid "Purchase updated successfully!"
+msgstr "ক্রয়ের তারিখ"
+
+#: src/routers/purchases.py:95
+msgid "Purchase deleted successfully!"
+msgstr ""
+
+#: src/routers/purchases.py:97
+#, fuzzy
+msgid "Error deleting purchase!"
+msgstr "ক্রয় সম্পাদনা"
+
+#: src/routers/sales.py:32
+msgid "Sale created successfully!"
+msgstr ""
+
+#: src/routers/sales.py:49
+#, fuzzy
+msgid "Sale record not found!"
+msgstr "কোনো বিক্রয় রেকর্ড পাওয়া যায়নি।"
+
+#: src/routers/sales.py:58
+msgid "Sale record updated successfully!"
+msgstr ""
+
+#: src/routers/sales.py:72
+#, fuzzy
+msgid "Sale not found!"
+msgstr "কোনো বিক্রয় রেকর্ড পাওয়া যায়নি।"
+
+#: src/routers/sales.py:83
+msgid "Sale deleted successfully!"
+msgstr ""
+
+#: src/routers/sales.py:85
+msgid "Error deleting sale!"
+msgstr ""
+
+#: src/routers/shops.py:93
+msgid "দোকান সফলভাবে যোগ করা হয়েছে!"
+msgstr ""
+
+#: src/routers/shops.py:116
+msgid "দোকানের তথ্য সফলভাবে আপডেট করা হয়েছে!"
+msgstr ""
+
+#: src/routers/shops.py:131
+msgid "দোকান সফলভাবে মুছে ফেলা হয়েছে!"
+msgstr ""
+
+#: src/routers/shops.py:133
+msgid "দোকান মুছে ফেলতে সমস্যা হয়েছে!"
+msgstr ""
+
+#: src/routers/work_orders.py:35
+msgid "Work order created successfully!"
+msgstr ""
+
+#: src/routers/work_orders.py:51 src/routers/work_orders.py:61
+#, fuzzy
+msgid "Work order not found!"
+msgstr "কোনো ওয়ার্ক অর্ডার পাওয়া যায়নি।"
+
+#: src/routers/work_orders.py:70
+msgid "Work order updated successfully!"
+msgstr ""
+
+#: src/routers/work_orders.py:85
+msgid "Work order deleted successfully!"
+msgstr ""
+
+#: src/routers/work_orders.py:87
+msgid "Error deleting work order!"
+msgstr ""
+
+#: templates/about.html:6 templates/about.html:13 templates/base.html:307
 msgid "About Us"
 msgstr "আমাদের সম্পর্কে"
 
-#: templates/base.html:134
-msgid "All Shops"
-msgstr "সকল দোকান"
-
-#: templates/base.html:143 templates/base.html:177
-#: templates/shop/shop_form.html:4
+#: templates/about.html:6 templates/base.html:9 templates/base.html:130
+#: templates/base.html:328 templates/base.html:385
+#: templates/buyer/buyer_form.html:7 templates/buyer/buyer_list.html:8
+#: templates/components/_seo.html:4 templates/index.html:5
+#: templates/inventory/inventory_form.html:6
+#: templates/inventory/inventory_list.html:7
+#: templates/purchase/purchase_detail.html:6
+#: templates/purchase/purchase_form.html:7
+#: templates/purchase/purchase_list.html:7 templates/sales/sale_form.html:6
+#: templates/sales/sale_list.html:7 templates/service/service_detail.html:6
+#: templates/service/services.html:6
+#: templates/service_page/crane-repair-and-maintenance.html:6
+#: templates/service_page/earthmoving-repair.html:6
+#: templates/service_page/ewp-repair.html:6
+#: templates/service_page/heavy_engineering.html:6
+#: templates/service_page/material-handling-repairs.html:6
+#: templates/service_page/metal_components.html:6
+#: templates/service_page/truck-repair.html:6 templates/shop/shop_detail.html:6
+#: templates/shop/shop_form.html:7 templates/shop/shop_list.html:10
+#: templates/shop/shop_list.html:12
+#: templates/work_orders/work_order_form.html:6
+#: templates/work_orders/work_order_list.html:8
 msgid "Bangladesh Engineering Workshop"
 msgstr "বাংলাদেশ ইঞ্জিনিয়ারিং ওয়ার্কশপ"
 
-#: templates/base.html:145
-msgid "Your trusted partner for heavy machinery repair, precision machining, and engineering solutions since years."
-msgstr "ভারী যন্ত্রপাতি মেরামত, নির্ভুল মেশিনিং এবং ইঞ্জিনিয়ারিং সলিউশনের জন্য আপনার বিশ্বস্ত সহযোগী।"
+#: templates/about.html:9
+#, fuzzy
+msgid "About Us - Bangladesh Engineering Workshop"
+msgstr "বাংলাদেশ ইঞ্জিনিয়ারিং ওয়ার্কশপ"
 
-#: templates/base.html:157
+#: templates/about.html:13 templates/base.html:138 templates/index.html:5
+#: templates/service/service_detail.html:14 templates/service/services.html:13
+#: templates/service_page/crane-repair-and-maintenance.html:13
+#: templates/service_page/earthmoving-repair.html:13
+#: templates/service_page/ewp-repair.html:13
+#: templates/service_page/heavy_engineering.html:13
+#: templates/service_page/material-handling-repairs.html:13
+#: templates/service_page/metal_components.html:13
+#: templates/service_page/truck-repair.html:13
+msgid "Home"
+msgstr "হোম"
+
+#: templates/about.html:63
+msgid "Learn More"
+msgstr "আরও জানুন"
+
+#: templates/base.html:115
+msgid "Main Navigation"
+msgstr ""
+
+#: templates/base.html:122
+msgid "Toggle sidebar"
+msgstr ""
+
+#: templates/base.html:146
+msgid "ERP"
+msgstr "ইআরপি"
+
+#: templates/base.html:158
+msgid "Buyers"
+msgstr "ক্রেতা তালিকা"
+
+#: templates/base.html:163 templates/purchase/purchase_list.html:7
+#: templates/purchase/purchase_list.html:11
+#: templates/purchase/purchase_list.html:32 templates/shop/shop_detail.html:42
+msgid "Purchases"
+msgstr "ক্রয় সমূহ"
+
+#: templates/base.html:168 templates/inventory/inventory_list.html:7
+msgid "Inventory"
+msgstr "ইনভেন্টরি"
+
+#: templates/base.html:173 templates/sales/sale_list.html:7
+#: templates/sales/sale_list.html:10
+msgid "Sales"
+msgstr "বিক্রয় সমূহ"
+
+#: templates/base.html:178 templates/work_orders/work_order_list.html:8
+#: templates/work_orders/work_order_list.html:12
+#: templates/work_orders/work_order_list.html:29
+msgid "Work Orders"
+msgstr "কাজের আদেশ"
+
+#: templates/base.html:185 templates/base.html:316
+#: templates/shop/shop_list.html:12 templates/shop/shop_list.html:18
+#: templates/shop/shop_list.html:29 templates/shop/shop_list.html:32
+#: templates/shop/shop_list.html:38
+msgid "All Shops"
+msgstr "সকল দোকান"
+
+#: templates/base.html:189
+msgid "New Shop"
+msgstr "নতুন দোকান"
+
+#: templates/base.html:209
+msgid "Toggle Theme"
+msgstr ""
+
+#: templates/base.html:219 templates/base.html:227
+msgid "Categories"
+msgstr "ক্যাটেগরি সমূহ"
+
+#: templates/base.html:230
+msgid "Close sidebar"
+msgstr ""
+
+#: templates/base.html:244
+msgid "Loading categories..."
+msgstr "ক্যাটেগরি লোড হচ্ছে..."
+
+#: templates/base.html:272 templates/components/_alerts.html:21
+#: templates/components/_alerts.html:41 templates/components/_modals.html:23
+#, fuzzy
+msgid "Close"
+msgstr "খরচ"
+
+#: templates/base.html:298
+msgid "Quick Links"
+msgstr "কুইক লিঙ্ক"
+
+#: templates/base.html:332
+msgid ""
+"Your trusted partner for heavy machinery repair, precision machining, and"
+" engineering solutions since years."
+msgstr ""
+"ভারী যন্ত্রপাতি মেরামত, নির্ভুল মেশিনিং এবং ইঞ্জিনিয়ারিং সলিউশনের জন্য "
+"আপনার বিশ্বস্ত সহযোগী।"
+
+#: templates/base.html:358
 msgid "Contact Info"
 msgstr "যোগাযোগের তথ্য"
 
-#: templates/base.html:170
+#: templates/base.html:375
 msgid "City Bypass, Mostofar Mor, Horintana, Khulna"
 msgstr "সিটি বাইপাস, মোস্তফার মোড়, হরিণটানা, খুলনা"
 
-#: templates/index.html:7
+#: templates/index.html:9 templates/index.html:33
 msgid "Hardware & Mechanical Supplier Directory"
 msgstr "হার্ডওয়্যার ও মেকানিক্যাল সাপ্লায়ার ডিরেক্টরি"
 
-#: templates/index.html:8
+#: templates/index.html:10 templates/index.html:36
 msgid "Information of Engineering Workshops, Suppliers and Sellers"
 msgstr "ইঞ্জিনিয়ারিং ওয়ার্কশপ, সরবরাহকারী এবং বিক্রেতাদের তথ্য"
 
-#: templates/index.html:13
+#: templates/index.html:48
 msgid "Search by product, category, mobile number or shop name..."
 msgstr "পণ্য, ক্যাটেগরি, মোবাইল নম্বর বা দোকানের নাম দিয়ে খুঁজুন..."
 
-#: templates/index.html:16
+#: templates/index.html:52
+#, fuzzy
+msgid "Search shops"
+msgstr "পণ্যর দোকান"
+
+#: templates/index.html:59
 msgid "Search"
 msgstr "খুঁজুন"
 
-#: templates/index.html:25
+#: templates/index.html:69
 msgid "Search Results"
 msgstr "অনুসন্ধান ফলাফল"
 
-#: templates/index.html:40 templates/shop/shop_detail.html:27
+#: templates/index.html:99 templates/shop/shop_detail.html:83
 msgid "Owner"
 msgstr "মালিক"
 
-#: templates/index.html:44 templates/shop/shop_detail.html:73
-#: templates/shop/shop_form.html:82 templates/shop/shop_list.html:30
+#: templates/index.html:105 templates/shop/shop_detail.html:145
+#: templates/shop/shop_form.html:166 templates/shop/shop_list.html:72
+#: templates/shop/shop_list.html:112
 msgid "Mobile"
 msgstr "মোবাইল"
 
-#: templates/index.html:54 templates/shop/shop_list.html:102
+#: templates/index.html:119 templates/shop/shop_list.html:175
 msgid "No shops found."
 msgstr "কোনো দোকান পাওয়া যায়নি।"
 
-#: templates/index.html:60
+#: templates/buyer/buyer_list.html:36 templates/index.html:124
 msgid "Clear"
 msgstr "মুছুন"
 
-#: templates/buyer/buyer_detail.html:11
-msgid "Industrial Machinery & Tools Partner"
-msgstr "ইন্ডাস্ট্রিয়াল মেশিনারিজ এবং টুলস পার্টনার"
+#: templates/buyer/buyer_detail.html:7 templates/buyer/buyer_detail.html:40
+#, fuzzy
+msgid "Buyer Profile"
+msgstr "কোম্পানি"
 
-#: templates/buyer/buyer_detail.html:19
-#: templates/purchase/purchase_detail.html:20
-#: templates/shop/shop_detail.html:158
-#: templates/work_orders/work_order_detail.html:19
+#: templates/buyer/buyer_detail.html:12
+msgid "Buyer profile for"
+msgstr ""
+
+#: templates/buyer/buyer_detail.html:46
+#: templates/purchase/purchase_detail.html:37
+#: templates/shop/shop_detail.html:44
+#: templates/work_orders/work_order_detail.html:42
 msgid "Edit"
 msgstr "সম্পাদনা করুন"
 
-#: templates/buyer/buyer_detail.html:23
-#: templates/purchase/purchase_detail.html:29
-#: templates/purchase/purchase_list.html:19 templates/shop/shop_detail.html:168
-#: templates/work_orders/work_order_detail.html:28
+#: templates/buyer/buyer_detail.html:47 templates/buyer/buyer_form.html:25
+#: templates/inventory/inventory_form.html:22
+#: templates/inventory/inventory_list.html:24
+#: templates/purchase/purchase_detail.html:38
+#: templates/purchase/purchase_form.html:24
+#: templates/purchase/purchase_list.html:28 templates/sales/sale_detail.html:26
+#: templates/sales/sale_form.html:16 templates/sales/sale_list.html:18
+#: templates/shop/shop_detail.html:50 templates/shop/shop_form.html:24
+#: templates/work_orders/work_order_detail.html:43
+#: templates/work_orders/work_order_form.html:16
+#: templates/work_orders/work_order_list.html:25
 msgid "Back"
 msgstr "ফিরে যান"
 
-#: templates/buyer/buyer_detail.html:109
-#: templates/inventory/inventory_list.html:20
-#: templates/purchase/purchase_detail.html:13
-#: templates/purchase/purchase_list.html:31 templates/sales/sale_detail.html:28
-#: templates/sales/sale_list.html:20
-#: templates/work_orders/work_order_detail.html:12
-#: templates/work_orders/work_order_list.html:20
+#: templates/buyer/buyer_detail.html:54
+#, fuzzy
+msgid "TOTAL SALES"
+msgstr "মোট খরচ"
+
+#: templates/buyer/buyer_detail.html:56
+#, fuzzy
+msgid "ACTIVE ORDERS"
+msgstr "অর্ডার সংরক্ষণ করুন"
+
+#: templates/buyer/buyer_detail.html:57
+#, fuzzy
+msgid "SALES COUNT"
+msgstr "বিক্রয় রেকর্ড"
+
+#: templates/buyer/buyer_detail.html:58
+#, fuzzy
+msgid "SINCE"
+msgstr "মূল্য"
+
+#: templates/buyer/buyer_detail.html:58
+msgid "N/A"
+msgstr ""
+
+#: templates/buyer/buyer_detail.html:79 templates/buyer/buyer_form.html:79
+msgid "Contact Persons"
+msgstr "যোগাযোগের ব্যক্তি"
+
+#: templates/buyer/buyer_detail.html:150
+#, fuzzy
+msgid "No contact persons recorded"
+msgstr "যোগাযোগের ব্যক্তি"
+
+#: templates/buyer/buyer_detail.html:161
+#, fuzzy
+msgid "Transaction History"
+msgstr "ট্রানজেকশন আইডি"
+
+#: templates/buyer/buyer_detail.html:164
+#: templates/work_orders/work_order_form.html:6
+#: templates/work_orders/work_order_form.html:9
+#: templates/work_orders/work_order_form.html:18
+#: templates/work_orders/work_order_list.html:24
+#: templates/work_orders/work_order_list.html:114
+msgid "Add Order"
+msgstr "যোগ করুন"
+
+#: templates/buyer/buyer_detail.html:166 templates/sales/sale_form.html:6
+#: templates/sales/sale_form.html:9 templates/sales/sale_list.html:17
+#: templates/sales/sale_list.html:85
+msgid "New Sale"
+msgstr "নতুন বিক্রয়"
+
+#: templates/buyer/buyer_detail.html:177 templates/buyer/buyer_detail.html:196
+#: templates/inventory/inventory_list.html:41
+#: templates/purchase/purchase_detail.html:33
+#: templates/purchase/purchase_list.html:45
+#: templates/purchase/purchase_list.html:79 templates/sales/sale_list.html:29
+#: templates/sales/sale_list.html:54
+#: templates/work_orders/work_order_list.html:42
+#: templates/work_orders/work_order_list.html:70
 msgid "Date"
 msgstr "তারিখ"
 
-#: templates/buyer/buyer_detail.html:110
-msgid "Transaction ID"
+#: templates/buyer/buyer_detail.html:180 templates/buyer/buyer_detail.html:198
+#: templates/sales/sale_list.html:32 templates/sales/sale_list.html:55
+#, fuzzy
+msgid "ID"
+msgstr "পরিশোধিত"
+
+#: templates/buyer/buyer_detail.html:183
+#, fuzzy
+msgid "Transaction Details"
 msgstr "ট্রানজেকশন আইডি"
 
-#: templates/buyer/buyer_detail.html:111
-msgid "Type"
-msgstr "প্রকার"
-
-#: templates/buyer/buyer_detail.html:112
+#: templates/buyer/buyer_detail.html:186 templates/buyer/buyer_detail.html:211
+#: templates/work_orders/work_order_detail.html:243
 msgid "Amount"
 msgstr "পরিমাণ"
 
-#: templates/buyer/buyer_detail.html:113
-#: templates/work_orders/work_order_detail.html:43
-#: templates/work_orders/work_order_form.html:63
-#: templates/work_orders/work_order_list.html:24
+#: templates/buyer/buyer_detail.html:189 templates/buyer/buyer_detail.html:214
+#: templates/work_orders/work_order_list.html:60
+#: templates/work_orders/work_order_list.html:89
 msgid "Status"
 msgstr "অবস্থা"
 
-#: templates/buyer/buyer_detail.html:154
+#: templates/buyer/buyer_detail.html:200
+msgid "Details"
+msgstr ""
+
+#: templates/buyer/buyer_detail.html:223
 msgid "No transaction records found"
 msgstr "কোনো লেনদেনের রেকর্ড পাওয়া যায়নি"
 
-#: templates/buyer/buyer_form.html:10 templates/buyer/buyer_form.html:61
-#: templates/buyer/buyer_list.html:9
+#: templates/buyer/buyer_form.html:7 templates/buyer/buyer_form.html:29
+#, fuzzy
+msgid "Add New Buyer"
+msgstr "যোগ করুন"
+
+#: templates/buyer/buyer_form.html:7 templates/buyer/buyer_form.html:29
+#, fuzzy
+msgid "Edit Buyer Company"
+msgstr "কোম্পানি(ক্রেতা) নির্বাচন করুন"
+
+#: templates/buyer/buyer_form.html:12 templates/buyer/buyer_list.html:41
+#: templates/buyer/buyer_list.html:125
 msgid "Add Buyer"
 msgstr "যোগ করুন"
 
@@ -191,775 +476,1172 @@ msgstr "যোগ করুন"
 msgid "Edit Buyer"
 msgstr "ক্রেতা সম্পাদনা"
 
-#: templates/buyer/buyer_form.html:19
+#: templates/buyer/buyer_form.html:13
+#, fuzzy
+msgid "Manage buyer entries for Bangladesh Engineering Workshop."
+msgstr "বাংলাদেশ ইঞ্জিনিয়ারিং ওয়ার্কশপ"
+
+#: templates/buyer/buyer_form.html:46 templates/buyer/buyer_list.html:61
+#: templates/buyer/buyer_list.html:78
 msgid "Company Name"
 msgstr "কোম্পানির নাম"
 
-#: templates/buyer/buyer_form.html:26 templates/buyer/buyer_list.html:22
-#: templates/shop/shop_detail.html:67 templates/shop/shop_form.html:76
-#: templates/shop/shop_list.html:29
+#: templates/buyer/buyer_form.html:50
+#, fuzzy
+msgid "Enter company name"
+msgstr "কোম্পানির নাম"
+
+#: templates/buyer/buyer_form.html:60 templates/buyer/buyer_list.html:64
+#: templates/buyer/buyer_list.html:84 templates/shop/shop_detail.html:141
+#: templates/shop/shop_form.html:119 templates/shop/shop_list.html:69
+#: templates/shop/shop_list.html:107
 msgid "Address"
 msgstr "ঠিকানা"
 
-#: templates/buyer/buyer_form.html:32
-msgid "Contact Persons"
-msgstr "যোগাযোগের ব্যক্তি"
+#: templates/buyer/buyer_form.html:64
+#, fuzzy
+msgid "Enter address"
+msgstr "ঠিকানা"
 
-#: templates/buyer/buyer_form.html:54
-msgid "Add Contact"
-msgstr "যোগাযোগ যোগ করুন"
+#: templates/buyer/buyer_form.html:88 templates/buyer/buyer_form.html:89
+#: templates/work_orders/work_order_form.html:149
+#, fuzzy
+msgid "Name"
+msgstr "কাজের নাম"
 
-#: templates/buyer/buyer_form.html:63 templates/purchase/purchase_form.html:207
-#: templates/work_orders/work_order_form.html:290
-msgid "Save Changes"
-msgstr "সংরক্ষণ করুন"
+#: templates/buyer/buyer_form.html:97 templates/buyer/buyer_form.html:98
+#, fuzzy
+msgid "Designation"
+msgstr "কাজের বিবরণ"
 
-#: templates/buyer/buyer_form.html:67
-#: templates/inventory/inventory_form.html:66
-#: templates/purchase/purchase_form.html:211 templates/sales/sale_form.html:62
-#: templates/shop/shop_form.html:167
-#: templates/work_orders/work_order_form.html:294
-msgid "Cancel"
-msgstr "বাতিল"
+#: templates/buyer/buyer_form.html:107
+#, fuzzy
+msgid "Mobile Numbers"
+msgstr "মোবাইল"
 
-#: templates/buyer/buyer_list.html:7
-msgid "Buyer Companies"
-msgstr "কোম্পানি"
-
-#: templates/buyer/buyer_list.html:19 templates/shop/shop_list.html:26
-msgid "No"
+#: templates/buyer/buyer_form.html:126
+#, fuzzy
+msgid "No."
 msgstr "নং"
 
-#: templates/buyer/buyer_list.html:20
-msgid "Company Name"
-msgstr "কোম্পানির নাম"
+#: templates/buyer/buyer_form.html:137 templates/buyer/buyer_form.html:138
+#: templates/shop/shop_detail.html:165 templates/shop/shop_form.html:181
+msgid "WhatsApp"
+msgstr "হোয়াটসএপ"
 
-#: templates/buyer/buyer_list.html:24
-msgid "Contacts"
-msgstr "যোগাযোগ"
+#: templates/buyer/buyer_form.html:146 templates/buyer/buyer_form.html:147
+#, fuzzy
+msgid "Email"
+msgstr "ইমেইল/ওয়েব"
 
-#: templates/buyer/buyer_list.html:26
-msgid "Actions"
-msgstr "কার্যক্রম"
+#: templates/buyer/buyer_form.html:155
+msgid "Primary"
+msgstr ""
 
-#: templates/buyer/buyer_list.html:82
-msgstr "কোনো ক্রেতা পাওয়া যায়নি।"
-
-#: templates/inventory/inventory_form.html:8
-msgid "Add Inventory Item"
-msgstr "ইনভেন্টরি আইটেম যোগ করুন"
-
-#: templates/inventory/inventory_form.html:17
-msgid "Select Shop"
-msgstr "দোকান নির্বাচন করুন"
-
-#: templates/inventory/inventory_form.html:22
-msgid "Where was this material purchased from?"
-msgstr "এই উপাদানটি কোথা থেকে কেনা হয়েছে?"
-
-#: templates/inventory/inventory_form.html:29
-msgid "Material Name"
-msgstr "উপাদানের নাম"
-
-#: templates/inventory/inventory_form.html:37
-#: templates/purchase/purchase_form.html:36
-msgid "Purchase Date"
-msgstr "ক্রয়ের তারিখ"
-
-#: templates/inventory/inventory_form.html:45
-#: templates/inventory/inventory_list.html:25 templates/sales/sale_form.html:85
-msgid "Quantity"
-msgstr "পরিমাণ"
-
-#: templates/inventory/inventory_form.html:50
-#: templates/inventory/inventory_list.html:27
-msgid "Cost"
-msgstr "খরচ"
-
-#: templates/inventory/inventory_form.html:56
-#: templates/inventory/inventory_list.html:29 templates/shop/shop_form.html:127
-#: templates/shop/shop_list.html:32
-msgid "Tags"
-msgstr "ট্যাগ"
-
-#: templates/inventory/inventory_form.html:63
-msgid "Add to Inventory"
-msgstr "ইনভেন্টরিতে যোগ করুন"
-
-#: templates/inventory/inventory_list.html:7
-msgid "Inventory (Raw Materials)"
-msgstr "ইনভেন্টরি কাঁচামাল"
-
-#: templates/inventory/inventory_list.html:9
-msgid "Add Material"
-msgstr "যোগ করুন"
-
-#: templates/inventory/inventory_list.html:21
-msgid "Material Name"
-msgstr "উপাদানের নাম"
-
-#: templates/inventory/inventory_list.html:23
-msgid "Source Shop"
-msgstr "পণ্যর দোকান"
-
-#: templates/inventory/inventory_list.html:64
-msgid "No inventory items found."
-msgstr "কোনো ইনভেন্টরি আইটেম পাওয়া যায়নি।"
-
-#: templates/purchase/purchase_detail.html:8
-msgid "Purchase"
-msgstr "ক্রয়"
-
-#: templates/purchase/purchase_detail.html:10
-#: templates/purchase/purchase_form.html:21
-#: templates/purchase/purchase_list.html:33
-#: templates/work_orders/work_order_detail.html:109
-#: templates/work_orders/work_order_form.html:159
-#: templates/work_orders/work_order_form.html:232
-#: templates/work_orders/work_order_form.html:314
-msgid "Supplier"
-msgstr "সরবরাহকারী"
-
-#: templates/purchase/purchase_detail.html:25
-#: templates/shop/shop_detail.html:164
-#: templates/work_orders/work_order_detail.html:24
-msgid "Delete"
-msgstr "মুছে ফেলুন"
-
-#: templates/purchase/purchase_detail.html:39
-#: templates/purchase/purchase_form.html:44
-#: templates/purchase/purchase_list.html:34
-#: templates/work_orders/work_order_form.html:199
-#: templates/work_orders/work_order_form.html:267
-#: templates/work_orders/work_order_form.html:349
-msgid "Voucher No"
-msgstr "ভাউচার নং"
-
-#: templates/purchase/purchase_detail.html:44
-#: templates/purchase/purchase_list.html:38
-#: templates/work_orders/work_order_list.html:30
-msgid "Payment"
-msgstr "পেমেন্ট"
-
-#: templates/purchase/purchase_detail.html:49
-#: templates/purchase/purchase_form.html:65
-#: templates/work_orders/work_order_detail.html:74
-#: templates/work_orders/work_order_form.html:116
-msgid "Paid Amount"
-msgstr "পরিশোধিত অর্থ"
-
-#: templates/purchase/purchase_detail.html:54
-msgid "Total Amount"
-msgstr "মোট পরিমাণ"
-
-#: templates/purchase/purchase_detail.html:62
-#: templates/purchase/purchase_form.html:85
-#: templates/work_orders/work_order_detail.html:95
-#: templates/work_orders/work_order_form.html:131
-msgid "Notes"
-msgstr "নোট"
-
-#: templates/purchase/purchase_detail.html:71
-msgid "Item"
-msgstr "আইটেম"
-
-#: templates/purchase/purchase_detail.html:72
-msgid "Spec"
-msgstr "বিবরণ"
-
-#: templates/purchase/purchase_detail.html:73
-#: templates/purchase/purchase_form.html:116
-#: templates/purchase/purchase_form.html:166
-#: templates/purchase/purchase_form.html:233
-#: templates/sales/sale_detail.html:40
-#: templates/work_orders/work_order_detail.html:111
-#: templates/work_orders/work_order_form.html:172
-#: templates/work_orders/work_order_form.html:244
-#: templates/work_orders/work_order_form.html:326
-msgid "Qty"
-msgstr "পরিমাণ"
-
-#: templates/purchase/purchase_detail.html:74
-#: templates/purchase/purchase_form.html:121
-#: templates/purchase/purchase_form.html:170
-#: templates/purchase/purchase_form.html:237
-#: templates/work_orders/work_order_detail.html:112
-#: templates/work_orders/work_order_form.html:177
-#: templates/work_orders/work_order_form.html:248
-#: templates/work_orders/work_order_form.html:330
-msgid "Unit"
-msgstr "ইউনিট"
-
-#: templates/purchase/purchase_detail.html:75
-#: templates/purchase/purchase_form.html:128
-#: templates/purchase/purchase_form.html:176
-#: templates/purchase/purchase_form.html:243
-msgid "Rate"
-msgstr "দর"
-
-#: templates/purchase/purchase_detail.html:76
-#: templates/purchase/purchase_form.html:133
-#: templates/purchase/purchase_form.html:181
-#: templates/purchase/purchase_form.html:247
-#: templates/purchase/purchase_list.html:36 templates/sales/sale_detail.html:42
-#: templates/shop/shop_list.html:16
-#: templates/work_orders/work_order_detail.html:166
-msgid "Total"
-msgstr "মোট"
-
-#: templates/purchase/purchase_detail.html:77
-msgid "Stock"
-msgstr "স্টক"
-
-#: templates/purchase/purchase_detail.html:106
-#: templates/purchase/purchase_list.html:43 templates/sales/sale_list.html:27
-#: templates/work_orders/work_order_detail.html:110
-msgid "Voucher"
-msgstr "ভাউচার"
-
-#: templates/purchase/purchase_detail.html:114
-msgid "Click to view full size"
-msgstr "পূর্ণ সাইজ দেখতে ক্লিক করুন"
-
-#: templates/purchase/purchase_detail.html:117
-msgid "No voucher uploaded for this purchase."
-msgstr "এই ক্রয়ের জন্য কোনো ভাউচার আপলোড করা হয়নি।"
-
-#: templates/purchase/purchase_form.html:10
-#: templates/purchase/purchase_list.html:16 templates/shop/shop_detail.html:155
-msgid "New Purchase"
-msgstr "নতুন ক্রয়"
-
-#: templates/purchase/purchase_form.html:12
-msgid "Edit Purchase"
-msgstr "ক্রয় সম্পাদনা"
-
-#: templates/purchase/purchase_form.html:24
-msgid "Select Supplier"
-msgstr "সরবরাহকারী নির্বাচন করুন"
-
-#: templates/purchase/purchase_form.html:52
-#: templates/work_orders/work_order_detail.html:56
-msgid "Payment Status"
-msgstr "পেমেন্ট স্ট্যাটাস"
-
-#: templates/purchase/purchase_form.html:56
-msgid "Pending"
-msgstr "অপেক্ষমান"
-
-#: templates/purchase/purchase_form.html:58
-msgid "Done"
-msgstr "সম্পন্ন"
-
-#: templates/purchase/purchase_form.html:72
-msgid "Voucher File"
-msgstr "ভাউচার ফাইল"
-
-#: templates/purchase/purchase_form.html:78
-#: templates/work_orders/work_order_form.html:210
-msgid "View Current Voucher"
-msgstr "বর্তমান ভাউচার দেখুন"
-
-#: templates/purchase/purchase_form.html:92
-#: templates/purchase/purchase_list.html:41 templates/sales/sale_list.html:25
-msgid "Items"
-msgstr "আইটেম সমূহ"
-
-#: templates/purchase/purchase_form.html:106
-#: templates/purchase/purchase_form.html:158
-#: templates/purchase/purchase_form.html:225 templates/sales/sale_form.html:77
-msgid "Product Name"
-msgstr "পণ্যের নাম"
-
-#: templates/purchase/purchase_form.html:111
-#: templates/purchase/purchase_form.html:162
-#: templates/purchase/purchase_form.html:229
-msgid "Specification"
-msgstr "স্পেসিফিকেশন"
-
-#: templates/purchase/purchase_form.html:138
-#: templates/purchase/purchase_form.html:185
-#: templates/purchase/purchase_form.html:251
-msgid "Stock Status"
-msgstr "স্টক স্ট্যাটাস"
-
-#: templates/purchase/purchase_form.html:141
-#: templates/purchase/purchase_form.html:187
-#: templates/purchase/purchase_form.html:253
-msgid "IN STOCK"
-msgstr "স্টকে আছে"
-
-#: templates/purchase/purchase_form.html:143
-#: templates/purchase/purchase_form.html:188
-#: templates/purchase/purchase_form.html:254
-msgid "OUT OF STOCK"
-msgstr "স্টক আউট"
-
-#: templates/purchase/purchase_form.html:197 templates/sales/sale_form.html:52
-msgid "Add Another Item"
-msgstr "আরও আইটেম যোগ করুন"
-
-#: templates/purchase/purchase_form.html:205
-msgid "Save Purchase"
-msgstr "ক্রয় সংরক্ষণ করুন"
-
-#: templates/purchase/purchase_list.html:40
-msgid "Paid"
-msgstr "পরিশোধিত"
-
-#: templates/purchase/purchase_list.html:44 templates/sales/sale_list.html:28
-#: templates/work_orders/work_order_list.html:35
+#: templates/buyer/buyer_form.html:165
 msgid "Action"
 msgstr "অ্যাকশন"
 
-#: templates/purchase/purchase_list.html:98
-msgid "No purchase records found."
-msgstr "কোনো ক্রয়ের রেকর্ড পাওয়া যায়নি।"
+#: templates/buyer/buyer_form.html:183
+#, fuzzy
+msgid "Add Person"
+msgstr "দোকান যোগ করুন"
 
-#: templates/sales/sale_detail.html:7
-msgid "Sale Record"
-msgstr "বিক্রয় রেকর্ড"
+#: templates/buyer/buyer_form.html:189
+#: templates/inventory/inventory_form.html:97
+#: templates/purchase/purchase_form.html:218 templates/sales/sale_form.html:106
+#: templates/shop/shop_form.html:294
+#: templates/work_orders/work_order_form.html:233
+msgid "Save"
+msgstr "সংরক্ষণ করুন"
 
-#: templates/sales/sale_detail.html:10
-msgid "Back to List"
-msgstr "ফিরে যান"
+#: templates/buyer/buyer_form.html:190 templates/components/_modals.html:52
+#: templates/inventory/inventory_form.html:98
+#: templates/purchase/purchase_form.html:219 templates/sales/sale_form.html:108
+#: templates/sales/sale_form.html:110 templates/shop/shop_form.html:296
+#: templates/work_orders/work_order_form.html:234
+msgid "Cancel"
+msgstr "বাতিল"
 
-#: templates/sales/sale_detail.html:23
-msgid "To"
+#: templates/buyer/buyer_list.html:8 templates/buyer/buyer_list.html:12
+#: templates/buyer/buyer_list.html:45
+msgid "Buyer Companies"
+msgstr "কোম্পানি"
+
+#: templates/buyer/buyer_list.html:13
+#, fuzzy
+msgid "Browse and manage buyer companies for Bangladesh Engineering Workshop."
+msgstr "বাংলাদেশ ইঞ্জিনিয়ারিং ওয়ার্কশপ"
+
+#: templates/buyer/buyer_list.html:30
+#, fuzzy
+msgid "Search..."
+msgstr "খুঁজুন"
+
+#: templates/buyer/buyer_list.html:58 templates/buyer/buyer_list.html:77
+#: templates/shop/shop_list.html:60 templates/shop/shop_list.html:87
+msgid "No"
+msgstr "নং"
+
+#: templates/buyer/buyer_list.html:67 templates/buyer/buyer_list.html:87
+msgid "Contacts"
+msgstr "যোগাযোগ"
+
+#: templates/buyer/buyer_list.html:70 templates/buyer/buyer_list.html:103
+#: templates/purchase/purchase_list.html:72
+#: templates/purchase/purchase_list.html:105 templates/sales/sale_list.html:47
+#: templates/sales/sale_list.html:64
+#: templates/work_orders/work_order_list.html:63
+#: templates/work_orders/work_order_list.html:92
+msgid "Actions"
+msgstr "কার্যক্রম"
+
+#: templates/buyer/buyer_list.html:108
+msgid "Are you sure you want to delete this buyer?"
+msgstr ""
+
+#: templates/buyer/buyer_list.html:124
+#, fuzzy
+msgid "No buyers found."
+msgstr "কোনো দোকান পাওয়া যায়নি।"
+
+#: templates/components/_modals.html:19
+#: templates/work_orders/work_order_detail.html:316
+#, fuzzy
+msgid "View Full"
+msgstr "দেখুন"
+
+#: templates/components/_modals.html:56
+msgid "Confirm"
+msgstr ""
+
+#: templates/components/_navigation.html:27
+msgid "Breadcrumb"
+msgstr ""
+
+#: templates/components/_pagination.html:14
+#: templates/components/_pagination.html:18
+#: templates/components/_pagination.html:49
+msgid "Previous"
+msgstr "আগের"
+
+#: templates/components/_pagination.html:24
+#: templates/components/_pagination.html:28
+#: templates/components/_pagination.html:76
+msgid "Next"
+msgstr "পরের"
+
+#: templates/components/_pagination.html:36
+msgid "Showing"
+msgstr ""
+
+#: templates/components/_pagination.html:38
+#, fuzzy
+msgid "to"
 msgstr "প্রতি"
 
-#: templates/sales/sale_detail.html:37
-msgid "Item / Material"
-msgstr "আইটেম / উপাদান"
+#: templates/components/_pagination.html:40
+msgid "of"
+msgstr ""
 
-#: templates/sales/sale_detail.html:38
-msgid "Source"
-msgstr "উৎস"
+#: templates/components/_pagination.html:42
+#, fuzzy
+msgid "results"
+msgstr "অনুসন্ধান ফলাফল"
 
-#: templates/sales/sale_detail.html:39
+#: templates/errors/404.html:3
+msgid "Page Not Found"
+msgstr "পৃষ্ঠা পাওয়া যায়নি"
+
+#: templates/errors/404.html:7
+msgid "Sorry, this page could not be found."
+msgstr "দুঃখিত, এই পৃষ্ঠাটি খুঁজে পাওয়া যায়নি।"
+
+#: templates/errors/404.html:8 templates/errors/500.html:8
+msgid "Return to Homepage"
+msgstr "হোমপেজে ফিরে যান"
+
+#: templates/errors/500.html:3
+msgid "Internal Server Error"
+msgstr "সার্ভার ত্রুটি"
+
+#: templates/errors/500.html:7
+msgid "Sorry, an internal server error has occurred."
+msgstr "দুঃখিত, সার্ভারে একটি অভ্যন্তরীণ ত্রুটি ঘটেছে।"
+
+#: templates/inventory/inventory_form.html:6
+#, fuzzy
+msgid "Add Inventory"
+msgstr "ইনভেন্টরিতে যোগ করুন"
+
+#: templates/inventory/inventory_form.html:10
+#: templates/inventory/inventory_form.html:26
+msgid "Add Inventory Item"
+msgstr "কোনো ক্রেতা পাওয়া যায়নি।"
+
+#: templates/inventory/inventory_form.html:11
+#, fuzzy
+msgid "Add raw materials to inventory for Bangladesh Engineering Workshop."
+msgstr "বাংলাদেশ ইঞ্জিনিয়ারিং ওয়ার্কশপ"
+
+#: templates/inventory/inventory_form.html:45
+#: templates/inventory/inventory_list.html:47
+msgid "Source Shop"
+msgstr "পণ্যর দোকান"
+
+#: templates/inventory/inventory_form.html:48
+msgid "Select Shop"
+msgstr "দোকান নির্বাচন করুন"
+
+#: templates/inventory/inventory_form.html:56
+#: templates/inventory/inventory_list.html:44
+msgid "Material Name"
+msgstr "উপাদানের নাম"
+
+#: templates/inventory/inventory_form.html:59
+msgid "e.g. Steel Pipe 2 inch"
+msgstr ""
+
+#: templates/inventory/inventory_form.html:63
+#: templates/purchase/purchase_form.html:78
+msgid "Purchase Date"
+msgstr "ক্রয়ের তারিখ"
+
+#: templates/inventory/inventory_form.html:74
+#: templates/inventory/inventory_list.html:50 templates/sales/sale_form.html:76
+msgid "Quantity"
+msgstr "পরিমাণ"
+
+#: templates/inventory/inventory_form.html:77
+#: templates/purchase/purchase_detail.html:81
+#: templates/purchase/purchase_form.html:160
+#: templates/sales/sale_detail.html:56
+#: templates/work_orders/work_order_detail.html:241
 #: templates/work_orders/work_order_form.html:186
-#: templates/work_orders/work_order_form.html:256
-#: templates/work_orders/work_order_form.html:338
+msgid "Qty"
+msgstr "পরিমাণ"
+
+#: templates/inventory/inventory_form.html:81
+#: templates/inventory/inventory_list.html:53
+msgid "Cost"
+msgstr "খরচ"
+
+#: templates/inventory/inventory_form.html:84
+#: templates/work_orders/work_order_form.html:237
+#: templates/work_orders/work_order_list.html:57
+#: templates/work_orders/work_order_list.html:86
+msgid "Total Cost"
+msgstr "মোট খরচ"
+
+#: templates/inventory/inventory_form.html:88
+#: templates/inventory/inventory_list.html:56 templates/shop/shop_form.html:230
+#: templates/shop/shop_list.html:78 templates/shop/shop_list.html:143
+msgid "Tags"
+msgstr "ট্যাগ"
+
+#: templates/inventory/inventory_form.html:91
+msgid "e.g. Steel, Heavy, Grade-A"
+msgstr ""
+
+#: templates/inventory/inventory_list.html:11
+#, fuzzy
+msgid "Raw Materials Inventory"
+msgstr "ইনভেন্টরিতে যোগ করুন"
+
+#: templates/inventory/inventory_list.html:12
+#, fuzzy
+msgid "Raw material stock list for Bangladesh Engineering Workshop."
+msgstr "বাংলাদেশ ইঞ্জিনিয়ারিং ওয়ার্কশপ"
+
+#: templates/inventory/inventory_list.html:23
+#: templates/inventory/inventory_list.html:89
+msgid "Add Material"
+msgstr "যোগ করুন"
+
+#: templates/inventory/inventory_list.html:28
+#, fuzzy
+msgid "Raw Materials"
+msgstr "যোগ করুন"
+
+#: templates/inventory/inventory_list.html:88
+msgid "No inventory items found."
+msgstr "কোনো ইনভেন্টরি আইটেম পাওয়া যায়নি।"
+
+#: templates/purchase/purchase_detail.html:6
+#: templates/purchase/purchase_detail.html:10
+#: templates/purchase/purchase_detail.html:26
+msgid "Purchase"
+msgstr "ক্রয়"
+
+#: templates/purchase/purchase_detail.html:11
+msgid "Purchase voucher details for"
+msgstr ""
+
+#: templates/purchase/purchase_detail.html:29
+#: templates/purchase/purchase_form.html:64
+#: templates/purchase/purchase_list.html:48
+#: templates/purchase/purchase_list.html:80
+#: templates/work_orders/work_order_detail.html:240
+#: templates/work_orders/work_order_form.html:216
+msgid "Supplier"
+msgstr "সরবরাহকারী"
+
+#: templates/purchase/purchase_detail.html:51
+#: templates/purchase/purchase_list.html:54
+#: templates/purchase/purchase_list.html:92
+msgid "Voucher No"
+msgstr "ভাউচার নং"
+
+#: templates/purchase/purchase_detail.html:52
+#: templates/purchase/purchase_list.html:60
+#: templates/purchase/purchase_list.html:94
+msgid "Payment"
+msgstr "পেমেন্ট"
+
+#: templates/purchase/purchase_detail.html:53
+#: templates/purchase/purchase_form.html:98
+msgid "Paid Amount"
+msgstr "পরিশোধিত অর্থ"
+
+#: templates/purchase/purchase_detail.html:54 templates/sales/sale_list.html:38
+#: templates/sales/sale_list.html:57
+msgid "Total Amount"
+msgstr "মোট পরিমাণ"
+
+#: templates/purchase/purchase_detail.html:69
+#: templates/purchase/purchase_form.html:117
+msgid "Notes"
+msgstr "নোট"
+
+#: templates/purchase/purchase_detail.html:79
+msgid "Item"
+msgstr "আইটেম"
+
+#: templates/purchase/purchase_detail.html:80
+msgid "Spec"
+msgstr "বিবরণ"
+
+#: templates/purchase/purchase_detail.html:82
+#: templates/purchase/purchase_form.html:184
+#: templates/purchase/purchase_form.html:187
+#: templates/work_orders/work_order_form.html:201
+#: templates/work_orders/work_order_form.html:203
+msgid "Unit"
+msgstr "ইউনিট"
+
+#: templates/purchase/purchase_detail.html:83
+#: templates/purchase/purchase_form.html:168
+msgid "Rate"
+msgstr "দর"
+
+#: templates/purchase/purchase_detail.html:84
+#: templates/purchase/purchase_form.html:194
+#: templates/purchase/purchase_list.html:57
+#: templates/purchase/purchase_list.html:93 templates/sales/sale_detail.html:58
+#: templates/shop/shop_list.html:42
+msgid "Total"
+msgstr "মোট"
+
+#: templates/purchase/purchase_detail.html:85
+msgid "Stock"
+msgstr "স্টক"
+
+#: templates/purchase/purchase_detail.html:109
+#: templates/purchase/purchase_list.html:69
+#: templates/purchase/purchase_list.html:97 templates/sales/sale_list.html:44
+#: templates/sales/sale_list.html:59
+#: templates/work_orders/work_order_detail.html:249
+#: templates/work_orders/work_order_detail.html:262
+#: templates/work_orders/work_order_form.html:208
+msgid "Voucher"
+msgstr "ভাউচার"
+
+#: templates/purchase/purchase_detail.html:118
+#: templates/sales/sale_detail.html:103
+msgid "Click to view full size"
+msgstr "পূর্ণ সাইজ দেখতে ক্লিক করুন"
+
+#: templates/purchase/purchase_detail.html:120
+msgid "No voucher uploaded for this purchase."
+msgstr "এই ক্রয়ের জন্য কোনো ভাউচার আপলোড করা হয়নি।"
+
+#: templates/purchase/purchase_form.html:7
+#: templates/purchase/purchase_form.html:12
+#: templates/purchase/purchase_form.html:28
+#: templates/purchase/purchase_list.html:27
+#: templates/purchase/purchase_list.html:127 templates/shop/shop_detail.html:43
+msgid "New Purchase"
+msgstr "নতুন ক্রয়"
+
+#: templates/purchase/purchase_form.html:7
+#: templates/purchase/purchase_form.html:12
+#: templates/purchase/purchase_form.html:28
+msgid "Edit Purchase"
+msgstr "ক্রয় সম্পাদনা"
+
+#: templates/purchase/purchase_form.html:13
+#, fuzzy
+msgid "Manage purchase entries for Bangladesh Engineering Workshop."
+msgstr "বাংলাদেশ ইঞ্জিনিয়ারিং ওয়ার্কশপ"
+
+#: templates/purchase/purchase_form.html:35
+#: templates/work_orders/work_order_form.html:22
+msgid "Kg"
+msgstr ""
+
+#: templates/purchase/purchase_form.html:36
+#: templates/work_orders/work_order_form.html:21
+msgid "Pcs"
+msgstr ""
+
+#: templates/purchase/purchase_form.html:37
+#: templates/work_orders/work_order_form.html:24
+#, fuzzy
+msgid "Meter"
+msgstr "উপাদান"
+
+#: templates/purchase/purchase_form.html:38
+#: templates/work_orders/work_order_form.html:23
+#, fuzzy
+msgid "Ton"
+msgstr "প্রতি"
+
+#: templates/purchase/purchase_form.html:39
+#: templates/work_orders/work_order_form.html:25
+#, fuzzy
+msgid "Feet"
+msgstr "মুছে ফেলুন"
+
+#: templates/purchase/purchase_form.html:40
+#: templates/work_orders/work_order_form.html:26
+msgid "Inch"
+msgstr ""
+
+#: templates/purchase/purchase_form.html:41
+#: templates/work_orders/work_order_form.html:29
+msgid "Ltr"
+msgstr ""
+
+#: templates/purchase/purchase_form.html:42
+#: templates/work_orders/work_order_form.html:27
+msgid "Set"
+msgstr ""
+
+#: templates/purchase/purchase_form.html:43
+#: templates/work_orders/work_order_form.html:30
+#, fuzzy
+msgid "Nos"
+msgstr "নং"
+
+#: templates/purchase/purchase_form.html:44
+msgid "Box"
+msgstr ""
+
+#: templates/purchase/purchase_form.html:45
+msgid "Roll"
+msgstr ""
+
+#: templates/purchase/purchase_form.html:46
+msgid "Sheet"
+msgstr ""
+
+#: templates/purchase/purchase_form.html:47
+#: templates/work_orders/work_order_form.html:32
+#, fuzzy
+msgid "Coil"
+msgstr "মোবাইল"
+
+#: templates/purchase/purchase_form.html:67
+msgid "Select Supplier"
+msgstr "সরবরাহকারী নির্বাচন করুন"
+
+#: templates/purchase/purchase_form.html:85
+msgid "Payment Status"
+msgstr "পেমেন্ট স্ট্যাটাস"
+
+#: templates/purchase/purchase_form.html:88
+msgid "Pending"
+msgstr "অপেক্ষমান"
+
+#: templates/purchase/purchase_form.html:89
+msgid "Done"
+msgstr "সম্পন্ন"
+
+#: templates/purchase/purchase_form.html:105
+msgid "Voucher File"
+msgstr "ভাউচার ফাইল"
+
+#: templates/purchase/purchase_form.html:112 templates/sales/sale_form.html:46
+#: templates/work_orders/work_order_form.html:112
+#: templates/work_orders/work_order_form.html:212
+#, fuzzy
+msgid "View Current"
+msgstr "বর্তমান ভাউচার দেখুন"
+
+#: templates/purchase/purchase_form.html:119
+msgid "Optional remarks..."
+msgstr ""
+
+#: templates/purchase/purchase_form.html:130
+#: templates/purchase/purchase_list.html:66
+#: templates/purchase/purchase_list.html:96 templates/sales/sale_list.html:41
+#: templates/sales/sale_list.html:58
+msgid "Items"
+msgstr "আইটেম সমূহ"
+
+#: templates/purchase/purchase_form.html:134 templates/sales/sale_form.html:60
+#: templates/work_orders/work_order_form.html:123
+#, fuzzy
+msgid "Add Item"
+msgstr "আইটেম"
+
+#: templates/purchase/purchase_form.html:144
+#, fuzzy
+msgid "Product"
+msgstr "পণ্যের নাম"
+
+#: templates/purchase/purchase_form.html:152
+#: templates/work_orders/work_order_detail.html:239
+#: templates/work_orders/work_order_form.html:182
+msgid "Measurement"
+msgstr "পরিমাপ"
+
+#: templates/purchase/purchase_form.html:176
+#: templates/sales/sale_detail.html:55
+#: templates/work_orders/work_order_detail.html:242
+#: templates/work_orders/work_order_form.html:197
 msgid "Weight"
 msgstr "ওজন"
 
-#: templates/sales/sale_detail.html:41 templates/sales/sale_form.html:89
+#: templates/purchase/purchase_form.html:204
+msgid "Remove Item"
+msgstr ""
+
+#: templates/purchase/purchase_list.html:12
+#, fuzzy
+msgid "Purchase records for Bangladesh Engineering Workshop."
+msgstr "বাংলাদেশ ইঞ্জিনিয়ারিং ওয়ার্কশপ"
+
+#: templates/purchase/purchase_list.html:63
+#: templates/purchase/purchase_list.html:95
+msgid "Paid"
+msgstr "পরিশোধিত"
+
+#: templates/purchase/purchase_list.html:111
+msgid "Are you sure you want to delete this purchase?"
+msgstr ""
+
+#: templates/purchase/purchase_list.html:126
+msgid "No purchase records found."
+msgstr "কোনো ক্রয়ের রেকর্ড পাওয়া যায়নি।"
+
+#: templates/sales/sale_detail.html:6
+#, fuzzy
+msgid "Sale Detail"
+msgstr "বিক্রয়ের তারিখ"
+
+#: templates/sales/sale_detail.html:9
+#, fuzzy
+msgid "Sale"
+msgstr "বিক্রয় সমূহ"
+
+#: templates/sales/sale_detail.html:9
+#, fuzzy
+msgid "Sale record for"
+msgstr "বিক্রয় রেকর্ড"
+
+#: templates/sales/sale_detail.html:21
+msgid "Sale Record"
+msgstr "বিক্রয় রেকর্ড"
+
+#: templates/sales/sale_detail.html:25 templates/sales/sale_form.html:6
+#: templates/sales/sale_form.html:9
+#, fuzzy
+msgid "Edit Sale"
+msgstr "নতুন বিক্রয়"
+
+#: templates/sales/sale_detail.html:53
+msgid "Material"
+msgstr "উপাদান"
+
+#: templates/sales/sale_detail.html:54 templates/sales/sale_form.html:84
+msgid "Source"
+msgstr "উৎস"
+
+#: templates/sales/sale_detail.html:57 templates/sales/sale_form.html:80
 msgid "Unit Price"
 msgstr "একক মূল্য"
 
-#: templates/sales/sale_detail.html:74
+#: templates/sales/sale_detail.html:68
+msgid "LINK"
+msgstr ""
+
+#: templates/sales/sale_detail.html:83
+#: templates/work_orders/work_order_detail.html:133
+#: templates/work_orders/work_order_detail.html:291
 msgid "Grand Total"
 msgstr "সর্বমোট"
 
-#: templates/sales/sale_detail.html:87
+#: templates/sales/sale_detail.html:95 templates/sales/sale_form.html:43
 msgid "Voucher / Bill"
 msgstr "ভাউচার / বিল"
 
-#: templates/sales/sale_form.html:8
+#: templates/sales/sale_detail.html:105
+#, fuzzy
+msgid "No voucher uploaded for this sale."
+msgstr "এই ক্রয়ের জন্য কোনো ভাউচার আপলোড করা হয়নি।"
+
+#: templates/sales/sale_form.html:9
+msgid "Manage sale entries."
+msgstr ""
+
+#: templates/sales/sale_form.html:18
+#, fuzzy
+msgid "Edit Sale Record"
+msgstr "নতুন বিক্রয় রেকর্ড"
+
+#: templates/sales/sale_form.html:18
 msgid "New Sale Record"
 msgstr "নতুন বিক্রয় রেকর্ড"
 
-#: templates/sales/sale_form.html:17
+#: templates/sales/sale_form.html:30
 msgid "Select Buyer Company"
 msgstr "কোম্পানি(ক্রেতা) নির্বাচন করুন"
 
-#: templates/sales/sale_form.html:20
+#: templates/sales/sale_form.html:32
 msgid "Select Buyer"
 msgstr "ক্রেতা নির্বাচন করুন"
 
-#: templates/sales/sale_form.html:28
+#: templates/sales/sale_form.html:39
 msgid "Sale Date"
 msgstr "বিক্রয়ের তারিখ"
 
-#: templates/sales/sale_form.html:35
-msgid "Upload Voucher / Bill Image"
-msgstr "ভাউচার আপলোড করুন"
-
-#: templates/sales/sale_form.html:44
+#: templates/sales/sale_form.html:56
 msgid "ITEMS"
 msgstr "আইটেম সমূহ"
 
-#: templates/sales/sale_form.html:59
-msgid "Save Sale Record"
-msgstr "বিক্রয় রেকর্ড সংরক্ষণ করুন"
+#: templates/sales/sale_form.html:68
+msgid "Product Name"
+msgstr "পণ্যের নাম"
 
-#: templates/sales/sale_form.html:81
+#: templates/sales/sale_form.html:69
+#, fuzzy
+msgid "Item Name"
+msgstr "পার্টসের নাম"
+
+#: templates/sales/sale_form.html:72
 msgid "Weight (kg)"
 msgstr "ওজন (কেজি)"
 
-#: templates/sales/sale_form.html:102
-msgid "No Source Linked"
-msgstr "কোনো লিঙ্ক যুক্ত নেই"
+#: templates/sales/sale_form.html:86
+#, fuzzy
+msgid "None"
+msgstr "সম্পন্ন"
 
-#: templates/sales/sale_form.html:108
-msgid "Select raw material used for this item."
-msgstr "কাঁচামাল নির্বাচন করুন।"
+#: templates/sales/sale_list.html:10
+#, fuzzy
+msgid "Sales records for Bangladesh Engineering Workshop."
+msgstr "বাংলাদেশ ইঞ্জিনিয়ারিং ওয়ার্কশপ"
 
-#: templates/sales/sale_list.html:7
+#: templates/sales/sale_list.html:20
 msgid "Sales / Orders"
 msgstr "বিক্রয় / অর্ডার"
 
-#: templates/sales/sale_list.html:9
-msgid "New Sale"
-msgstr "নতুন বিক্রয়"
-
-#: templates/sales/sale_list.html:21
+#: templates/sales/sale_list.html:35 templates/sales/sale_list.html:56
 msgid "Buyer"
 msgstr "ক্রেতা"
 
+#: templates/sales/sale_list.html:58
+#, fuzzy
+msgid "items"
+msgstr "আইটেম সমূহ"
 
-#: templates/sales/sale_list.html:67
+#: templates/sales/sale_list.html:69
+msgid "Are you sure you want to delete this sale?"
+msgstr ""
+
+#: templates/sales/sale_list.html:84
 msgid "No sales records found."
 msgstr "কোনো বিক্রয় রেকর্ড পাওয়া যায়নি।"
 
-#: templates/service/service_detail.html:28
+#: templates/service/service_detail.html:15 templates/service/services.html:13
+#: templates/service_page/crane-repair-and-maintenance.html:13
+#: templates/service_page/earthmoving-repair.html:13
+#: templates/service_page/ewp-repair.html:13
+#: templates/service_page/heavy_engineering.html:13
+#: templates/service_page/material-handling-repairs.html:13
+#: templates/service_page/metal_components.html:13
+#: templates/service_page/truck-repair.html:13
+#, fuzzy
+msgid "Services"
+msgstr "সার্ভিস সমূহে ফিরে যান"
+
+#: templates/service/service_detail.html:45
 msgid "Back to All Services"
 msgstr "সকল সার্ভিসে ফিরে যান"
 
-#: templates/service/services.html:162
+#: templates/service/services.html:6
+#, fuzzy
+msgid "Our Services"
+msgstr "সার্ভিস সমূহে ফিরে যান"
+
+#: templates/service/services.html:9
+#, fuzzy
+msgid "Our Services - Bangladesh Engineering Workshop"
+msgstr "বাংলাদেশ ইঞ্জিনিয়ারিং ওয়ার্কশপ"
+
+#: templates/service/services.html:64
 msgid "Call Our Workshop Today"
 msgstr "আমাদের ওয়ার্কশপে কল করুন"
 
-#: templates/service_page/crane-repair-and-maintenance.html:62
-#: templates/service_page/earthmoving-repair.html:62
-#: templates/service_page/ewp-repair.html:60
-#: templates/service_page/heavy_engineering.html:54
-#: templates/service_page/material-handling-repairs.html:62
-#: templates/service_page/metal_components.html:59
-#: templates/service_page/truck-repair.html:59
+#: templates/service_page/crane-repair-and-maintenance.html:50
+#: templates/service_page/earthmoving-repair.html:57
+#: templates/service_page/ewp-repair.html:49
+#: templates/service_page/heavy_engineering.html:50
+#: templates/service_page/material-handling-repairs.html:50
+#: templates/service_page/metal_components.html:48
+#: templates/service_page/truck-repair.html:46
 msgid "Contact Us"
 msgstr "আমাদের সাথে যোগাযোগ করুন"
 
-#: templates/service_page/crane-repair-and-maintenance.html:65
-#: templates/service_page/earthmoving-repair.html:65
-#: templates/service_page/ewp-repair.html:63
-#: templates/service_page/heavy_engineering.html:57
-#: templates/service_page/material-handling-repairs.html:65
-#: templates/service_page/metal_components.html:62
-#: templates/service_page/truck-repair.html:62
+#: templates/service_page/crane-repair-and-maintenance.html:51
+#: templates/service_page/earthmoving-repair.html:58
+#: templates/service_page/ewp-repair.html:50
+#: templates/service_page/heavy_engineering.html:51
+#: templates/service_page/material-handling-repairs.html:51
+#: templates/service_page/metal_components.html:49
+#: templates/service_page/truck-repair.html:47
 msgid "Back to Services"
 msgstr "সার্ভিস সমূহে ফিরে যান"
 
-#: templates/shop/shop_detail.html:15 templates/shop/shop_list.html:27
+#: templates/shop/shop_detail.html:11
+msgid "Shop details for"
+msgstr ""
+
+#: templates/shop/shop_detail.html:37
+msgid "Shop Profile"
+msgstr ""
+
+#: templates/shop/shop_detail.html:46
+msgid "Are you sure you want to delete this shop?"
+msgstr ""
+
+#: templates/shop/shop_detail.html:48
+msgid "Delete"
+msgstr "মুছে ফেলুন"
+
+#: templates/shop/shop_detail.html:64 templates/shop/shop_list.html:63
+#: templates/shop/shop_list.html:92
 msgid "Institution"
 msgstr "প্রতিষ্ঠান"
 
-#: templates/shop/shop_detail.html:27
+#: templates/shop/shop_detail.html:85
 msgid "Not specified"
 msgstr "তথ্য নেই"
 
-#: templates/shop/shop_detail.html:35
+#: templates/shop/shop_detail.html:93 templates/shop/shop_form.html:63
 msgid "Visiting Card"
 msgstr "ভিজিটিং কার্ড"
 
-#: templates/shop/shop_detail.html:42
+#: templates/shop/shop_detail.html:96
+#, fuzzy
+msgid "Visiting Card for"
+msgstr "ভিজিটিং কার্ড"
+
+#: templates/shop/shop_detail.html:103
 #, fuzzy
 msgid "No Card Found"
 msgstr "কোনো কার্ড পাওয়া যায়নি"
 
-#: templates/shop/shop_detail.html:53 templates/shop/shop_form.html:117
+#: templates/shop/shop_detail.html:116 templates/shop/shop_form.html:278
 msgid "Products List"
 msgstr "পণ্য তালিকা"
 
-#: templates/shop/shop_detail.html:55
+#: templates/shop/shop_detail.html:119
 msgid "No products list available"
 msgstr "কোনো পণ্যের তালিকা নেই"
 
-#: templates/shop/shop_detail.html:63
+#: templates/shop/shop_detail.html:127
 msgid "Contact Information"
 msgstr "যোগাযোগের তথ্য"
 
-#: templates/shop/shop_detail.html:87
+#: templates/shop/shop_detail.html:157 templates/shop/shop_form.html:196
 msgid "Online Transaction"
 msgstr "অনলাইন লেনদেন"
 
-#: templates/shop/shop_detail.html:106 templates/shop/shop_form.html:91
-msgid "WhatsApp"
-msgstr "হোয়াটসএপ"
-
-#: templates/shop/shop_detail.html:123 templates/shop/shop_form.html:107
+#: templates/shop/shop_detail.html:177 templates/shop/shop_form.html:215
 msgid "Email/Web"
 msgstr "ইমেইল/ওয়েব"
 
-#: templates/shop/shop_detail.html:140
+#: templates/shop/shop_detail.html:198
 msgid "Google Map"
 msgstr "গুগল ম্যাপ"
 
-#: templates/shop/shop_detail.html:143
+#: templates/shop/shop_detail.html:202
 msgid "Google Map Integration (Coming Soon)"
 msgstr "গুগল ম্যাপ ইন্টিগ্রেশন (শীঘ্রই আসছে)"
 
-#: templates/shop/shop_form.html:3 templates/shop/shop_form.html:10
+#: templates/shop/shop_form.html:7 templates/shop/shop_form.html:12
+#: templates/shop/shop_form.html:28
 msgid "Add New Shop"
 msgstr "নতুন দোকান যোগ করুন"
 
-#: templates/shop/shop_form.html:3 templates/shop/shop_form.html:12
+#: templates/shop/shop_form.html:7 templates/shop/shop_form.html:12
+#: templates/shop/shop_form.html:28
 msgid "Edit Shop"
 msgstr "দোকান সম্পাদনা করুন"
 
-#: templates/shop/shop_form.html:22
+#: templates/shop/shop_form.html:13
+#, fuzzy
+msgid "Manage shop entries for Bangladesh Engineering Workshop."
+msgstr "বাংলাদেশ ইঞ্জিনিয়ারিং ওয়ার্কশপ"
+
+#: templates/shop/shop_form.html:47
 msgid "Shop Name"
 msgstr "প্রতিষ্ঠানের নাম"
 
-#: templates/shop/shop_form.html:24
+#: templates/shop/shop_form.html:51
 msgid "Enter shop name"
 msgstr "প্রতিষ্ঠানের নাম লিখুন"
 
-#: templates/shop/shop_form.html:41
+#: templates/shop/shop_form.html:87
+#, fuzzy
+msgid "Current Card"
+msgstr "বর্তমান ভাউচার দেখুন"
 
+#: templates/shop/shop_form.html:90
+#: templates/work_orders/work_order_detail.html:312
 msgid "Preview"
 msgstr "প্রিভিউ"
 
-#: templates/shop/shop_form.html:50 templates/shop/shop_list.html:28
+#: templates/shop/shop_form.html:104 templates/shop/shop_list.html:66
+#: templates/shop/shop_list.html:101
 msgid "Proprietor"
 msgstr "মালিক"
 
-#: templates/shop/shop_form.html:53
+#: templates/shop/shop_form.html:108
 msgid "Proprietor Name"
 msgstr "মালিকের নাম"
 
-#: templates/shop/shop_form.html:57 templates/shop/shop_list.html:31
-msgid "Category"
-msgstr "ক্যাটেগরি"
-
-#: templates/shop/shop_form.html:60
-msgid "Select Category"
-msgstr "ক্যাটেগরি নির্বাচন করুন"
-
-#: templates/shop/shop_form.html:66
-msgid "Add New Category"
-msgstr "নতুন ক্যাটেগরি যোগ করুন"
-
-#: templates/shop/shop_form.html:69
-msgid "Enter new category name"
-msgstr "নতুন ক্যাটেগরির নাম লিখুন"
-
-#: templates/shop/shop_form.html:78
+#: templates/shop/shop_form.html:123
 msgid "Shop Address"
 msgstr "দোকানের ঠিকানা"
 
-#: templates/shop/shop_form.html:84
+#: templates/shop/shop_form.html:134 templates/shop/shop_list.html:75
+#: templates/shop/shop_list.html:127
+msgid "Category"
+msgstr "ক্যাটেগরি"
+
+#: templates/shop/shop_form.html:141
+msgid "Select Category"
+msgstr "ক্যাটেগরি নির্বাচন করুন"
+
+#: templates/shop/shop_form.html:147
+msgid "Add New Category"
+msgstr "নতুন ক্যাটেগরি যোগ করুন"
+
+#: templates/shop/shop_form.html:152
+msgid "Enter new category name"
+msgstr "নতুন ক্যাটেগরির নাম লিখুন"
+
+#: templates/shop/shop_form.html:170
 msgid "e.g. 017XX-XXXXXX"
 msgstr "যেমন: ০১৭XX-XXXXXX"
 
-#: templates/shop/shop_form.html:93
+#: templates/shop/shop_form.html:185
 msgid "WhatsApp Number"
 msgstr "হোয়াটসএপ নম্বর"
 
-#: templates/shop/shop_form.html:97
-msgid "Online Transaction"
-msgstr "অনলাইন লেনদেন"
-
-#: templates/shop/shop_form.html:100
+#: templates/shop/shop_form.html:200
 msgid "e.g. Bkash 018XX-XXXXXX"
 msgstr "যেমন: বিকাশ ০১৮XX-XXXXXX"
 
-#: templates/shop/shop_form.html:110
+#: templates/shop/shop_form.html:219
 msgid "Email or Website"
 msgstr "ইমেইল বা ওয়েবসাইট"
 
-#: templates/shop/shop_form.html:120
-msgid "Products available in this shop..."
-msgstr "এই দোকানে যেসব পণ্য পাওয়া যায়..."
+#: templates/shop/shop_form.html:231
+msgid "comma separated"
+msgstr ""
 
-#: templates/shop/shop_form.html:129
-msgid "separate with comma"
-msgstr "কমা দিয়ে আলাদা করুন"
+#: templates/shop/shop_form.html:239
+msgid "e.g. Lathe"
+msgstr ""
 
-#: templates/shop/shop_form.html:150
-msgid "e.g. Lathe, Shaft, Bush, লেদ"
-msgstr "যেমন: লেদ, শ্যাফট, বুশ"
+#: templates/shop/shop_form.html:267
+msgid "Remove tag"
+msgstr ""
 
-#: templates/shop/shop_form.html:152
-msgid "Add Tag"
-msgstr "ট্যাগ যোগ করুন"
+#: templates/shop/shop_form.html:281
+msgid "List products..."
+msgstr ""
 
-#: templates/shop/shop_form.html:161
+#: templates/shop/shop_form.html:292
 msgid "Add Shop"
 msgstr "দোকান যোগ করুন"
 
-#: templates/shop/shop_form.html:163
-msgid "Save"
-msgstr "সংরক্ষণ করুন"
+#: templates/shop/shop_form.html:332
+msgid "Enter tag name"
+msgstr "ট্যাগের নাম লিখুন"
 
-#: templates/shop/shop_list.html:90
-msgid "Previous"
-msgstr "আগের"
+#: templates/shop/shop_form.html:394 templates/shop/shop_form.html:397
+msgid "Error removing tag"
+msgstr "ট্যাগ সরাতে সমস্যা হয়েছে"
 
-#: templates/shop/shop_list.html:93
-msgid "Page"
-msgstr "পৃষ্ঠা"
+#: templates/shop/shop_list.html:19
+msgid "Browse all supplier shops and vendors at Bangladesh Engineering Workshop."
+msgstr ""
 
-#: templates/shop/shop_list.html:95
-msgid "Next"
-msgstr "পরের"
+#: templates/shop/shop_list.html:43
+#, fuzzy
+msgid "New Search"
+msgstr "খুঁজুন"
 
-#: templates/shop/shop_list.html:103
+#: templates/shop/shop_list.html:176
 msgid "Back to Home"
 msgstr "হোমে ফিরুন"
 
-#: templates/work_orders/work_order_detail.html:8
-msgid "Order"
-msgstr "অর্ডার"
+#: templates/work_orders/work_order_detail.html:7
+#: templates/work_orders/work_order_detail.html:12
+#: templates/work_orders/work_order_detail.html:32
+#: templates/work_orders/work_order_detail.html:144
+#: templates/work_orders/work_order_detail.html:148
+#, fuzzy
+msgid "Work Order"
+msgstr "কাজের আদেশ"
 
-#: templates/work_orders/work_order_detail.html:10
-#: templates/work_orders/work_order_form.html:21
-#: templates/work_orders/work_order_list.html:21
-msgid "Company"
-msgstr "কোম্পানি"
-
-#: templates/work_orders/work_order_detail.html:38
-#: templates/work_orders/work_order_form.html:41
-msgid "Job Name"
-msgstr "কাজের নাম"
-
-#: templates/work_orders/work_order_detail.html:48
-#: templates/work_orders/work_order_form.html:48
-msgid "Delivery Date"
-msgstr "ডেলিভারির তারিখ"
-
-#: templates/work_orders/work_order_detail.html:61
-msgid "Quoted Price"
+#: templates/work_orders/work_order_detail.html:52
+#, fuzzy
+msgid "QUOTED PRICE"
 msgstr "উদ্ধৃত মূল্য"
 
-#: templates/work_orders/work_order_detail.html:66
-#: templates/work_orders/work_order_form.html:107
-msgid "Total Cost"
+#: templates/work_orders/work_order_detail.html:57
+#, fuzzy
+msgid "TOTAL COST"
 msgstr "মোট খরচ"
 
-#: templates/work_orders/work_order_detail.html:79
-#: templates/work_orders/work_order_form.html:124
-msgid "Pending Amount"
-msgstr "অপেক্ষমান পরিমাণ"
+#: templates/work_orders/work_order_detail.html:62
+msgid "PROFIT / LOSS"
+msgstr ""
 
-#: templates/work_orders/work_order_detail.html:87
+#: templates/work_orders/work_order_detail.html:71
+#, fuzzy
+msgid "STATUS"
+msgstr "অবস্থা"
+
+#: templates/work_orders/work_order_detail.html:91
+#: templates/work_orders/work_order_form.html:86
 msgid "Job Description"
 msgstr "কাজের বিবরণ"
 
-#: templates/work_orders/work_order_detail.html:101
-msgid "Parts Used"
-msgstr "ব্যবহৃত পার্টস"
+#: templates/work_orders/work_order_detail.html:103
+msgid "Schedule"
+msgstr ""
 
-#: templates/work_orders/work_order_detail.html:108
-msgid "Part"
-msgstr "পার্ট"
-
-#: templates/work_orders/work_order_detail.html:113
-#: templates/work_orders/work_order_form.html:194
-#: templates/work_orders/work_order_form.html:263
-#: templates/work_orders/work_order_form.html:345
-msgid "Price"
-msgstr "মূল্য"
-
-#: templates/work_orders/work_order_detail.html:132
-msgid "View"
-msgstr "দেখুন"
-
-#: templates/work_orders/work_order_detail.html:149
-msgid "No parts added."
-msgstr "কোনো পার্টস যোগ করা হয়নি।"
-
-#: templates/work_orders/work_order_detail.html:156
-msgid "Cost Summary"
-msgstr "খরচের সারাংশ"
-
-#: templates/work_orders/work_order_detail.html:158
-msgid "Labor"
-msgstr "মজুরি"
-
-#: templates/work_orders/work_order_detail.html:160
-msgid "Material"
-msgstr "উপাদান"
-
-#: templates/work_orders/work_order_detail.html:162
-msgid "Parts Total"
-msgstr "মোট পার্টস"
-
-#: templates/work_orders/work_order_form.html:10
-#: templates/work_orders/work_order_list.html:9
-msgid "Add Order"
-msgstr "যোগ করুন"
-
-#: templates/work_orders/work_order_form.html:12
-msgid "Edit Order"
-msgstr "অর্ডার সম্পাদনা করুন"
-
-#: templates/work_orders/work_order_form.html:24
-msgid "Select Company"
-msgstr "কোম্পানি নির্বাচন করুন"
-
-#: templates/work_orders/work_order_form.html:33
+#: templates/work_orders/work_order_detail.html:107
+#: templates/work_orders/work_order_form.html:75
 msgid "Job Date"
 msgstr "কাজের তারিখ"
 
-#: templates/work_orders/work_order_form.html:55
-msgid "Job Description"
-msgstr "কাজের বিবরণ"
+#: templates/work_orders/work_order_detail.html:111
+#: templates/work_orders/work_order_form.html:79
+msgid "Delivery Date"
+msgstr "ডেলিভারির তারিখ"
 
-#: templates/work_orders/work_order_form.html:73
-msgid "Payment Status"
-msgstr "পেমেন্ট স্ট্যাটাস"
+#: templates/work_orders/work_order_detail.html:121
+msgid "Cost Breakdown"
+msgstr ""
 
-#: templates/work_orders/work_order_form.html:84
-msgid "Quoted Price"
-msgstr "উদ্ধৃত মূল্য"
-
-#: templates/work_orders/work_order_form.html:93
-msgid "Labor Cost"
+#: templates/work_orders/work_order_detail.html:125
+#, fuzzy
+msgid "Labor Charges"
 msgstr "মজুরি খরচ"
 
-#: templates/work_orders/work_order_form.html:100
+#: templates/work_orders/work_order_detail.html:129
+#: templates/work_orders/work_order_form.html:98
 msgid "Material Cost"
 msgstr "উপাদান খরচ"
 
-#: templates/work_orders/work_order_form.html:138
-#: templates/work_orders/work_order_list.html:32
-msgid "Parts"
-msgstr "পার্টস"
+#: templates/work_orders/work_order_detail.html:160
+msgid "Loading preview..."
+msgstr ""
 
-#: templates/work_orders/work_order_form.html:154
-#: templates/work_orders/work_order_form.html:228
-#: templates/work_orders/work_order_form.html:310
+#: templates/work_orders/work_order_detail.html:173
+#, fuzzy
+msgid "Production Notes"
+msgstr "পণ্যের নাম"
+
+#: templates/work_orders/work_order_detail.html:188
+#, fuzzy
+msgid "Parts Gallery"
+msgstr "মোট পার্টস"
+
+#: templates/work_orders/work_order_detail.html:193
+msgid "Document"
+msgstr ""
+
+#: templates/work_orders/work_order_detail.html:216
+#, fuzzy
+msgid "No description"
+msgstr "কাজের বিবরণ"
+
+#: templates/work_orders/work_order_detail.html:229
+#, fuzzy
+msgid "Raw Materials & Parts"
+msgstr "যোগ করুন"
+
+#: templates/work_orders/work_order_detail.html:238
+#: templates/work_orders/work_order_form.html:178
 msgid "Part Name"
 msgstr "পার্টসের নাম"
 
-#: templates/work_orders/work_order_form.html:181
-#: templates/work_orders/work_order_form.html:252
-#: templates/work_orders/work_order_form.html:334
-msgid "Measurement"
-msgstr "পরিমাপ"
+#: templates/work_orders/work_order_detail.html:301
+#, fuzzy
+msgid "No parts or materials recorded for this order."
+msgstr "কাঁচামাল নির্বাচন করুন।"
 
-#: templates/work_orders/work_order_form.html:204
-#: templates/work_orders/work_order_form.html:271
-#: templates/work_orders/work_order_form.html:353
-msgid "Voucher File"
-msgstr "ভাউচার ফাইল"
+#: templates/work_orders/work_order_form.html:6
+#: templates/work_orders/work_order_form.html:9
+#: templates/work_orders/work_order_form.html:18
+msgid "Edit Order"
+msgstr "অর্ডার সম্পাদনা করুন"
 
-#: templates/work_orders/work_order_form.html:280
-msgid "Add Another Part"
-msgstr "আরও পার্টস যোগ করুন"
+#: templates/work_orders/work_order_form.html:9
+#, fuzzy
+msgid "Manage work orders."
+msgstr "কাজের আদেশ"
 
-#: templates/work_orders/work_order_form.html:288
-msgid "Save Order"
-msgstr "অর্ডার সংরক্ষণ করুন"
-
-#: templates/work_orders/work_order_list.html:7
-msgid "Work Orders"
-msgstr "ওয়ার্ক অর্ডার"
-
-#: templates/work_orders/work_order_list.html:23
+#: templates/work_orders/work_order_form.html:28
+#: templates/work_orders/work_order_list.html:45
+#: templates/work_orders/work_order_list.html:71
 msgid "Job"
 msgstr "কাজ"
 
-#: templates/work_orders/work_order_list.html:27
-msgid "Quoted"
-msgstr "উদ্ধৃত"
+#: templates/work_orders/work_order_form.html:31
+msgid "Bag"
+msgstr ""
 
-#: templates/work_orders/work_order_list.html:28
-msgid "Total Cost"
-msgstr "মোট খরচ"
+#: templates/work_orders/work_order_form.html:47
+msgid "Order Details"
+msgstr ""
 
-#: templates/work_orders/work_order_list.html:72
+#: templates/work_orders/work_order_form.html:55
+#, fuzzy
+msgid "Closed"
+msgstr "খরচ"
+
+#: templates/work_orders/work_order_form.html:55
+msgid "Open"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:62
+msgid "Job Name"
+msgstr "কাজের নাম"
+
+#: templates/work_orders/work_order_form.html:63
+#, fuzzy
+msgid "Enter job name"
+msgstr "প্রতিষ্ঠানের নাম লিখুন"
+
+#: templates/work_orders/work_order_form.html:66
+#: templates/work_orders/work_order_list.html:51
+#: templates/work_orders/work_order_list.html:79
+msgid "Company"
+msgstr "কোম্পানি"
+
+#: templates/work_orders/work_order_form.html:68
+msgid "Select Company"
+msgstr "কোম্পানি নির্বাচন করুন"
+
+#: templates/work_orders/work_order_form.html:90
+#: templates/work_orders/work_order_list.html:54
+#: templates/work_orders/work_order_list.html:83
+msgid "Quoted Price"
+msgstr "উদ্ধৃত মূল্য"
+
+#: templates/work_orders/work_order_form.html:94
+msgid "Labor Cost"
+msgstr "মজুরি খরচ"
+
+#: templates/work_orders/work_order_form.html:107
+#, fuzzy
+msgid "Work Order (Scan/Photo)"
+msgstr "কাজের আদেশ"
+
+#: templates/work_orders/work_order_form.html:120
+msgid "Document Gallery"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:129
+#, fuzzy
+msgid "Remove"
+msgstr "প্রিভিউ"
+
+#: templates/work_orders/work_order_form.html:134
+#, fuzzy
+msgid "Document File"
+msgstr "ভাউচার ফাইল"
+
+#: templates/work_orders/work_order_form.html:140
+msgid "Document Type"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:142
+msgid "Technical Drawing"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:143
+#, fuzzy
+msgid "Production Photo"
+msgstr "পণ্য তালিকা"
+
+#: templates/work_orders/work_order_form.html:144
+#, fuzzy
+msgid "External Voucher"
+msgstr "বর্তমান ভাউচার দেখুন"
+
+#: templates/work_orders/work_order_form.html:145
+#, fuzzy
+msgid "Other"
+msgstr "ভাউচার"
+
+#: templates/work_orders/work_order_form.html:150
+#, fuzzy
+msgid "Short description"
+msgstr "কাজের বিবরণ"
+
+#: templates/work_orders/work_order_form.html:162
+#, fuzzy
+msgid "Parts & Materials"
+msgstr "যোগ করুন"
+
+#: templates/work_orders/work_order_form.html:165
+#, fuzzy
+msgid "Add Part"
+msgstr "পার্ট"
+
+#: templates/work_orders/work_order_form.html:171
+msgid "Remove Part"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:179
+msgid "Name of the part/service"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:190
+msgid "Price"
+msgstr "মূল্য"
+
+#: templates/work_orders/work_order_list.html:13
+#, fuzzy
+msgid "Production job orders for Bangladesh Engineering Workshop."
+msgstr "বাংলাদেশ ইঞ্জিনিয়ারিং ওয়ার্কশপ"
+
+#: templates/work_orders/work_order_list.html:98
+msgid "Are you sure you want to delete this work order?"
+msgstr ""
+
+#: templates/work_orders/work_order_list.html:113
 msgid "No work orders found."
 msgstr "কোনো ওয়ার্ক অর্ডার পাওয়া যায়নি।"
 
@@ -982,15 +1664,101 @@ msgstr "কোনো ওয়ার্ক অর্ডার পাওয়া �
 #~ msgstr "সকল দোকান"
 
 #~ msgid "Industrial Machinery & Tools Partner"
-#~ msgstr ""
-
+#~ msgstr "ইন্ডাস্ট্রিয়াল মেশিনারিজ এবং টুলস পার্টনার"
 
 #~ msgid "Where was this material purchased from?"
-#~ msgstr ""
+#~ msgstr "এই উপাদানটি কোথা থেকে কেনা হয়েছে?"
 
 #~ msgid "Purchase Date\"          "
 #~ msgstr "ক্রয়ের তারিখ"
 
 #~ msgid "Material Name\"                  "
 #~ msgstr ""
+
+#~ msgid "Type"
+#~ msgstr "প্রকার"
+
+#~ msgid "Add Contact"
+#~ msgstr "যোগাযোগ যোগ করুন"
+
+#~ msgid "Save Changes"
+#~ msgstr "সংরক্ষণ করুন"
+
+#~ msgid "Inventory (Raw Materials)"
+#~ msgstr "ইনভেন্টরি কাঁচামাল"
+
+#~ msgid "Specification"
+#~ msgstr "স্পেসিফিকেশন"
+
+#~ msgid "Stock Status"
+#~ msgstr "স্টক স্ট্যাটাস"
+
+#~ msgid "IN STOCK"
+#~ msgstr "স্টকে আছে"
+
+#~ msgid "OUT OF STOCK"
+#~ msgstr "স্টক আউট"
+
+#~ msgid "Add Another Item"
+#~ msgstr "আরও আইটেম যোগ করুন"
+
+#~ msgid "Save Purchase"
+#~ msgstr "ক্রয় সংরক্ষণ করুন"
+
+#~ msgid "Back to List"
+#~ msgstr "ফিরে যান"
+
+#~ msgid "Item / Material"
+#~ msgstr "আইটেম / উপাদান"
+
+#~ msgid "Upload Voucher / Bill Image"
+#~ msgstr "ভাউচার আপলোড করুন"
+
+#~ msgid "Save Sale Record"
+#~ msgstr "বিক্রয় রেকর্ড সংরক্ষণ করুন"
+
+#~ msgid "No Source Linked"
+#~ msgstr "কোনো লিঙ্ক যুক্ত নেই"
+
+#~ msgid "Products available in this shop..."
+#~ msgstr "এই দোকানে যেসব পণ্য পাওয়া যায়..."
+
+#~ msgid "separate with comma"
+#~ msgstr "কমা দিয়ে আলাদা করুন"
+
+#~ msgid "e.g. Lathe, Shaft, Bush, লেদ"
+#~ msgstr "যেমন: লেদ, শ্যাফট, বুশ"
+
+#~ msgid "Add Tag"
+#~ msgstr "ট্যাগ যোগ করুন"
+
+#~ msgid "Page"
+#~ msgstr "পৃষ্ঠা"
+
+#~ msgid "Order"
+#~ msgstr "অর্ডার"
+
+#~ msgid "Pending Amount"
+#~ msgstr "অপেক্ষমান পরিমাণ"
+
+#~ msgid "Parts Used"
+#~ msgstr "ব্যবহৃত পার্টস"
+
+#~ msgid "No parts added."
+#~ msgstr "কোনো পার্টস যোগ করা হয়নি।"
+
+#~ msgid "Cost Summary"
+#~ msgstr "খরচের সারাংশ"
+
+#~ msgid "Labor"
+#~ msgstr "মজুরি"
+
+#~ msgid "Parts"
+#~ msgstr "পার্টস"
+
+#~ msgid "Add Another Part"
+#~ msgstr "আরও পার্টস যোগ করুন"
+
+#~ msgid "Quoted"
+#~ msgstr "উদ্ধৃত"
 

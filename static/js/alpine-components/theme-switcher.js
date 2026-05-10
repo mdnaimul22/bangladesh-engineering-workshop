@@ -11,9 +11,9 @@ document.addEventListener('alpine:init', () => {
 
         options: [
             'light', 'dark', 'matrix', 
-            'pure-white', 'matte-white', 'cream', 
+            'cream', 
             'matte-black', 'black-brown', 'jam-black', 
-            'jam-navy', 'block-white'
+            'jam-navy'
         ],
 
         init() {
@@ -37,14 +37,11 @@ document.addEventListener('alpine:init', () => {
                 light: 'light_mode', 
                 dark: 'dark_mode', 
                 matrix: 'terminal',
-                'pure-white': 'cloud',
-                'matte-white': 'auto_awesome',
                 'cream': 'local_cafe',
                 'matte-black': 'developer_mode',
                 'black-brown': 'bloodtype',
                 'jam-black': 'space_dashboard',
-                'jam-navy': 'waves',
-                'block-white': 'category'
+                'jam-navy': 'waves'
             };
             return icons[this.current] || 'palette';
         },
@@ -54,14 +51,11 @@ document.addEventListener('alpine:init', () => {
                 light: 'Light', 
                 dark: 'Dark', 
                 matrix: 'Matrix',
-                'pure-white': 'Pure White',
-                'matte-white': 'Matte White',
                 'cream': 'Cream',
                 'matte-black': 'Matte Black',
                 'black-brown': 'Black Brown',
                 'jam-black': 'Jam Black',
-                'jam-navy': 'Jam Navy',
-                'block-white': 'Block White'
+                'jam-navy': 'Jam Navy'
             };
             return labels[this.current] || 'Custom';
         }

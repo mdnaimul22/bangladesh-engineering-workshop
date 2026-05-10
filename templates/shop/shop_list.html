@@ -1,15 +1,15 @@
 {% from 'components/_pagination.html' import render_pagination %}
 {% extends 'base.html' %}
-{% from 'components/_navigation.html' import page_header, pagination, breadcrumb with context %}
+{% from 'components/_navigation.html' import page_header, breadcrumb with context %}
 {% from 'components/_badges.html' import badge with context %}
 {% from 'components/_buttons.html' import btn with context %}
 {% from 'components/_seo.html' import meta_tags, og_tags, breadcrumb_schema with context %}
 
 {% block title %}
 {%- if current_category -%}
-{{ current_category.name }} - বাংলাদেশ ইঞ্জিনিয়ারিং ওয়ার্কশপ
+{{ current_category.name }} - {{ _('Bangladesh Engineering Workshop') }}
 {%- else -%}
-সকল দোকান - বাংলাদেশ ইঞ্জিনিয়ারিং ওয়ার্কশপ
+{{ _('All Shops') }} - {{ _('Bangladesh Engineering Workshop') }}
 {%- endif -%}
 {% endblock %}
 
@@ -24,6 +24,7 @@
 {% block content %}
 
 {# ── Breadcrumb ──────────────────────────────────────────── #}
+{% set crumbs = [] %}
 {% if current_category %}
 {% set _void = crumbs.append({'label': _('All Shops'), 'url': url_for('shops.shop_list')}) %}
 {% set _void = crumbs.append({'label': current_category.name, 'url': ''}) %}
@@ -84,7 +85,7 @@
                 {# Row Number #}
                 <td class="px-3 py-3 text-center text-[var(--color-text-muted)] text-sm tabular-nums"
                     data-label="{{ _('No') }}">
-                    {{ loop.index + ((page-1) * 20) }}
+                    {{ loop.index + ((meta.page - 1) * meta.per_page) }}
                 </td>
 
                 {# Shop Name #}
@@ -163,39 +164,7 @@
             {{ render_pagination(meta, 'shops.shop_list', search_query) }}
 </div>
 
-{# ── Pagination ──────────────────────────────────────────── #}
-{% if total_pages > 1 %}
-<nav class="flex justify-center items-center gap-4 mt-8 py-4"
-     role="navigation" aria-label="{{ _('Pagination') }}">
-    {% if page > 1 %}
-    <a href="?page={{ page - 1 }}"
-       class="inline-flex items-center gap-1 px-4 py-2 rounded-[var(--radius-sm)]
-              bg-[var(--color-surface)] border border-[var(--color-border)]
-              text-[var(--color-text-muted)] text-sm font-medium no-underline
-              hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]
-              hover:scale-105 transition-all duration-300 shadow-sm">
-        <span class="material-icons text-lg">chevron_left</span>
-        {{ _('Previous') }}
-    </a>
-    {% endif %}
 
-    <span class="text-[var(--color-text-muted)] font-medium text-sm tabular-nums">
-        {{ _('Page') }} {{ page }} / {{ total_pages }}
-    </span>
-
-    {% if page < total_pages %}
-    <a href="?page={{ page + 1 }}"
-       class="inline-flex items-center gap-1 px-4 py-2 rounded-[var(--radius-sm)]
-              bg-[var(--color-surface)] border border-[var(--color-border)]
-              text-[var(--color-text-muted)] text-sm font-medium no-underline
-              hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]
-              hover:scale-105 transition-all duration-300 shadow-sm">
-        {{ _('Next') }}
-        <span class="material-icons text-lg">chevron_right</span>
-    </a>
-    {% endif %}
-</nav>
-{% endif %}
 
 {% else %}
 {# ── Empty State ─────────────────────────────────────────── #}

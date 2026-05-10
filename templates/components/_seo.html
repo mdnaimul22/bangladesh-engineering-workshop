@@ -1,7 +1,7 @@
 {# ── SEO Macros ─── #}
 
 {% macro meta_tags(title, description, canonical='') %}
-<title>{{ title }} | বাংলাদেশ ইঞ্জিনিয়ারিং ওয়ার্কশপ</title>
+<title>{{ title }} | {{ _('Bangladesh Engineering Workshop') }}</title>
 <meta name="description" content="{{ description }}">
 {% if canonical %}<link rel="canonical" href="{{ canonical }}">{% endif %}
 {% endmacro %}

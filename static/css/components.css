@@ -10,7 +10,10 @@
    If you can write it as Tailwind classes, DO NOT put it here.
    ═══════════════════════════════════════════════════════════════ */
 
-/* ── 1. Alpine.js Cloak ────────────────────────────────────── */
+/* ── 1. Base Elements ────────────────────────────────────────── */
+html { scroll-behavior: smooth; }
+
+/* ── 2. Alpine.js Cloak ────────────────────────────────────── */
 [x-cloak] { display: none !important; }
 
 /* ── 2. Responsive Table → Card Layout (Mobile) ───────────── */

@@ -61,13 +61,20 @@ def category_shops(category_id):
     """List shops in a category"""
     shops, categories, current_category = shop_svc.list_by_category(category_id)
 
+    meta = {
+        'page': 1,
+        'total_pages': 1,
+        'total': len(shops),
+        'per_page': len(shops) if shops else 20,
+        'has_prev': False,
+        'has_next': False
+    }
+
     return render_template('shop/shop_list.html',
                            shops=shops,
                            categories=categories,
                            current_category=current_category,
-                           page=1,
-                           total_pages=1,
-                           total=len(shops))
+                           meta=meta)
 
 
 @shops_bp.route('/shops/<int:shop_id>')

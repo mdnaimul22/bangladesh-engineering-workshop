@@ -10,180 +10,197 @@
     /* ── 1. COLOR TOKENS ─────────────────────────────────────── */
 
     /* Brand */
-    --color-primary:        #2563eb;
-    --color-primary-dark:   #1e40af;
-    --color-primary-light:  #dbeafe;
+    --color-primary: #2563eb;
+    --color-primary-dark: #1e40af;
+    --color-primary-light: #dbeafe;
 
     /* Semantic */
-    --color-success:        #10b981;
-    --color-success-light:  rgba(16, 185, 129, 0.1);
-    --color-warning:        #f59e0b;
-    --color-warning-light:  rgba(245, 158, 11, 0.1);
-    --color-danger:         #ef4444;
-    --color-danger-light:   rgba(239, 68, 68, 0.1);
-    --color-info:           #0ea5e9;
+    --color-success: #10b981;
+    --color-success-light: rgba(16, 185, 129, 0.1);
+    --color-warning: #f59e0b;
+    --color-warning-light: rgba(245, 158, 11, 0.1);
+    --color-danger: #ef4444;
+    --color-danger-light: rgba(239, 68, 68, 0.1);
+    --color-info: #0ea5e9;
 
     /* Neutral (Surfaces) */
-    --color-bg:             #f1f5f9;
-    --color-surface:        #ffffff;
-    --color-card:           #ffffff;
-    --color-input:          #ffffff;
-    --color-footer:         rgba(255, 255, 255, 0.7);
+    --color-bg: #f1f5f9;
+    --color-surface: #ffffff;
+    --color-card: #ffffff;
+    --color-input: #ffffff;
+    --color-footer: rgba(255, 255, 255, 0.7);
 
     /* Neutral (Text) */
-    --color-text:           #0f172a;
-    --color-text-muted:     #475569;
-    --color-text-inverse:   #f8fafc;
+    --color-text: #0f172a;
+    --color-text-muted: #475569;
+    --color-text-inverse: #f8fafc;
 
     /* Neutral (Borders) */
-    --color-border:         #e2e8f0;
-    --color-border-hover:   #cbd5e1;
-    --color-border-subtle:  #f1f5f9;
+    --color-border: #e2e8f0;
+    --color-border-hover: #cbd5e1;
+    --color-border-subtle: #f1f5f9;
 
     /* Interactive (Buttons) */
-    --color-btn-primary:    #3b82f6;
-    --color-btn-danger:     #ef4444;
-    --color-btn-orange:     #ea580c;
-    --color-btn-secondary:  var(--color-surface);
-    --color-btn-text:       #f8fafc;
-    --color-btn-hover:      rgba(0, 0, 0, 0.04);
+    --color-btn-primary: #3b82f6;
+    --color-btn-danger: #ef4444;
+    --color-btn-orange: #ea580c;
+    --color-btn-secondary: var(--color-surface);
+    --color-btn-text: #f8fafc;
+    --color-btn-hover: rgba(0, 0, 0, 0.04);
 
     /* ── 2. TYPOGRAPHY TOKENS ────────────────────────────────── */
 
-    --font-primary:   'Noto Sans Bengali', system-ui, -apple-system, sans-serif;
-    --font-display:   'Inter', 'Noto Sans Bengali', sans-serif;
-    --font-mono:      'JetBrains Mono', 'Fira Code', monospace;
+    --font-primary: 'Noto Sans Bengali', system-ui, -apple-system, sans-serif;
+    --font-display: 'Inter', 'Noto Sans Bengali', sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
-    --text-xs:    0.8rem;      /* 12.8px */
-    --text-sm:    0.92rem;     /* 14.7px */
-    --text-base:  1.05rem;     /* 16.8px */
-    --text-lg:    1.18rem;     /* 18.8px */
-    --text-xl:    1.35rem;     /* 21.6px */
-    --text-2xl:   1.6rem;      /* 25.6px */
-    --text-3xl:   2.1rem;      /* 33.6px */
+    --text-xs: 0.85rem;
+    /* 12.8px */
+    --text-sm: 0.92rem;
+    /* 14.7px */
+    --text-base: 1.05rem;
+    /* 16.8px */
+    --text-lg: 1.18rem;
+    /* 18.8px */
+    --text-xl: 1.35rem;
+    /* 21.6px */
+    --text-2xl: 1.6rem;
+    /* 25.6px */
+    --text-3xl: 2.1rem;
+    /* 33.6px */
 
-    --leading-tight:    1.25;
-    --leading-normal:   1.5;
-    --leading-relaxed:  1.625;
+    --leading-tight: 1.25;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.625;
 
-    --weight-normal:  400;
-    --weight-medium:  500;
-    --weight-semi:    600;
-    --weight-bold:    700;
-    --weight-black:   800;
+    --weight-normal: 400;
+    --weight-medium: 500;
+    --weight-semi: 600;
+    --weight-bold: 700;
+    --weight-black: 800;
 
     /* ── 3. SPACING TOKENS (4px base grid) ───────────────────── */
 
-    --space-0:   0;
-    --space-1:   0.25rem;    /*  4px */
-    --space-2:   0.5rem;     /*  8px */
-    --space-3:   0.75rem;    /* 12px */
-    --space-4:   1rem;       /* 16px */
-    --space-5:   1.25rem;    /* 20px */
-    --space-6:   1.5rem;     /* 24px */
-    --space-8:   2rem;       /* 32px */
-    --space-10:  2.5rem;     /* 40px */
-    --space-12:  3rem;       /* 48px */
-    --space-16:  4rem;       /* 64px */
+    --space-0: 0;
+    --space-1: 0.25rem;
+    /*  4px */
+    --space-2: 0.5rem;
+    /*  8px */
+    --space-3: 0.75rem;
+    /* 12px */
+    --space-4: 1rem;
+    /* 16px */
+    --space-5: 1.25rem;
+    /* 20px */
+    --space-6: 1.5rem;
+    /* 24px */
+    --space-8: 2rem;
+    /* 32px */
+    --space-10: 2.5rem;
+    /* 40px */
+    --space-12: 3rem;
+    /* 48px */
+    --space-16: 4rem;
+    /* 64px */
 
     /* ── 4. LAYOUT TOKENS ────────────────────────────────────── */
 
-    --header-height:     80px;
-    --sidebar-width:     280px;
-    --container-max:     1280px;
-    --content-max:       960px;
+    --header-height: 80px;
+    --sidebar-width: 280px;
+    --container-max: 1280px;
+    --content-max: 960px;
 
     /* Grid gaps */
-    --gap-sm:  0.75rem;
-    --gap-md:  1.5rem;
-    --gap-lg:  2rem;
-    --gap-xl:  3rem;
+    --gap-sm: 0.75rem;
+    --gap-md: 1.5rem;
+    --gap-lg: 2rem;
+    --gap-xl: 3rem;
 
     /* ── 5. BORDER RADIUS TOKENS ─────────────────────────────── */
 
-    --radius-sm:    6px;
-    --radius:       8px;
-    --radius-lg:    12px;
-    --radius-xl:    16px;
-    --radius-full:  9999px;
+    --radius-sm: 6px;
+    --radius: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-full: 9999px;
 
     /* ── 6. SHADOW TOKENS ────────────────────────────────────── */
 
-    --shadow-xs:   0 1px 2px 0 rgba(0, 0, 0, 0.03);
-    --shadow-sm:   0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    --shadow:      0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
-    --shadow-md:   0 6px 12px -2px rgba(0, 0, 0, 0.1), 0 3px 6px -3px rgba(0, 0, 0, 0.08);
-    --shadow-lg:   0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    --shadow-xl:   0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-    --ring:        0 0 0 3px rgba(37, 99, 235, 0.3);
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 6px 12px -2px rgba(0, 0, 0, 0.1), 0 3px 6px -3px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+    --ring: 0 0 0 3px rgba(37, 99, 235, 0.3);
 
     /* ── 7. Z-INDEX SCALE (Strict — No Ad-Hoc Values) ────────── */
 
-    --z-base:       1;
-    --z-dropdown:   10;
-    --z-sticky:     20;
-    --z-overlay:    900;
-    --z-sidebar:    950;
-    --z-header:     1000;
-    --z-popover:    1010;
-    --z-modal:      1100;
-    --z-toast:      1200;
-    --z-tooltip:    1300;
+    --z-base: 1;
+    --z-dropdown: 10;
+    --z-sticky: 20;
+    --z-overlay: 900;
+    --z-sidebar: 950;
+    --z-header: 1000;
+    --z-popover: 1010;
+    --z-modal: 1100;
+    --z-toast: 1200;
+    --z-tooltip: 1300;
 
     /* ── 8. ANIMATION TOKENS ─────────────────────────────────── */
 
-    --duration-fast:     150ms;
-    --duration-normal:   200ms;
-    --duration-slow:     300ms;
-    --duration-slower:   500ms;
+    --duration-fast: 150ms;
+    --duration-normal: 200ms;
+    --duration-slow: 300ms;
+    --duration-slower: 500ms;
 
-    --ease-default:  cubic-bezier(0.4, 0, 0.2, 1);
-    --ease-in:       cubic-bezier(0.4, 0, 1, 1);
-    --ease-out:      cubic-bezier(0, 0, 0.2, 1);
-    --ease-bounce:   cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
 
-    --transition:      all var(--duration-normal) var(--ease-default);
-    --transition-fast:  all var(--duration-fast) var(--ease-default);
-    --transition-btn:   all var(--duration-slow) var(--ease-bounce);
+    --transition: all var(--duration-normal) var(--ease-default);
+    --transition-fast: all var(--duration-fast) var(--ease-default);
+    --transition-btn: all var(--duration-slow) var(--ease-bounce);
 
     /* Button specific */
-    --btn-scale:   1.05;
-    --btn-radius:  var(--radius);
+    --btn-scale: 1.05;
+    --btn-radius: var(--radius);
 
     /* ── 9. LEGACY ALIASES (DO NOT ADD NEW ONES) ─────────────── */
     /* These map old variable names → new tokens so existing CSS
        and Tailwind classes continue to work during migration.
        Remove each alias when all references are migrated. */
-    --primary:       var(--color-primary);
-    --primary-dark:  var(--color-primary-dark);
-    --secondary:     var(--color-text-muted);
-    --success:       var(--color-success);
-    --warning:       var(--color-warning);
-    --danger:        var(--color-danger);
-    --background:    var(--color-bg);
-    --surface:       var(--color-surface);
-    --card-bg:       var(--color-card);
-    --input-bg:      var(--color-input);
-    --footer-bg:     var(--color-footer);
-    --text-main:     var(--color-text);
-    --text-muted:    var(--color-text-muted);
-    --text-inverse:  var(--color-text-inverse);
-    --border:        var(--color-border);
-    --border-hover:  var(--color-border-hover);
-    --btn-primary:   var(--color-btn-primary);
-    --btn-navy:      var(--color-btn-primary);
-    --btn-danger:    var(--color-btn-danger);
-    --btn-red:       var(--color-btn-danger);
-    --btn-orange:    var(--color-btn-orange);
+    --primary: var(--color-primary);
+    --primary-dark: var(--color-primary-dark);
+    --secondary: var(--color-text-muted);
+    --success: var(--color-success);
+    --warning: var(--color-warning);
+    --danger: var(--color-danger);
+    --background: var(--color-bg);
+    --surface: var(--color-surface);
+    --card-bg: var(--color-card);
+    --input-bg: var(--color-input);
+    --footer-bg: var(--color-footer);
+    --text-main: var(--color-text);
+    --text-muted: var(--color-text-muted);
+    --text-inverse: var(--color-text-inverse);
+    --border: var(--color-border);
+    --border-hover: var(--color-border-hover);
+    --btn-primary: var(--color-btn-primary);
+    --btn-navy: var(--color-btn-primary);
+    --btn-danger: var(--color-btn-danger);
+    --btn-red: var(--color-btn-danger);
+    --btn-orange: var(--color-btn-orange);
     --btn-secondary: var(--color-btn-secondary);
-    --btn-text-light:var(--color-btn-text);
-    --btn-hover-bg:  var(--color-btn-hover);
-    --btn-transition:var(--transition-btn);
-    --font-main:     var(--font-primary);
-    --font-inter:    var(--font-display);
-    --dark:          var(--color-text);
-    --light:         var(--color-bg);
-    --text-color:    var(--color-text);
+    --btn-text-light: var(--color-btn-text);
+    --btn-hover-bg: var(--color-btn-hover);
+    --btn-transition: var(--transition-btn);
+    --font-main: var(--font-primary);
+    --font-inter: var(--font-display);
+    --dark: var(--color-text);
+    --light: var(--color-bg);
+    --text-color: var(--color-text);
 }
 
 /* ── Mobile overrides ──────────────────────────────────────── */
@@ -200,52 +217,64 @@
 
 /* ── DARK THEME ──────────────────────────────────────────────── */
 [data-theme='dark'] {
-    --color-primary:        #3b82f6;
-    --color-primary-dark:   #2563eb;
-    --color-primary-light:  rgba(59, 130, 246, 0.15);
+    --color-primary: #3b82f6;
+    --color-primary-dark: #2563eb;
+    --color-primary-light: rgba(59, 130, 246, 0.15);
 
-    --color-success:        #34d399;
-    --color-warning:        #fbbf24;
-    --color-danger:         #f87171;
+    --color-success: #34d399;
+    --color-warning: #fbbf24;
+    --color-danger: #f87171;
 
-    --color-bg:             #0f172a;
-    --color-surface:        #1e293b;
-    --color-card:           #1e293b;
-    --color-input:          #0f172a;
-    --color-footer:         rgba(15, 23, 42, 0.9);
+    --color-bg: #0f172a;
+    --color-surface: #1e293b;
+    --color-card: #1e293b;
+    --color-input: #0f172a;
+    --color-footer: rgba(15, 23, 42, 0.9);
 
-    --color-text:           #f8fafc;
-    --color-text-muted:     #94a3b8;
-    --color-text-inverse:   #0f172a;
+    --color-text: #f8fafc;
+    --color-text-muted: #94a3b8;
+    --color-text-inverse: #0f172a;
 
-    --color-border:         #334155;
-    --color-border-hover:   #475569;
-    --color-border-subtle:  #1e293b;
+    --color-border: #334155;
+    --color-border-hover: #475569;
+    --color-border-subtle: #1e293b;
 
-    --color-btn-primary:    #3b82f6;
-    --color-btn-danger:     #f87171;
-    --color-btn-orange:     #fb923c;
-    --color-btn-secondary:  #334155;
-    --color-btn-hover:      rgba(255, 255, 255, 0.08);
+    --color-btn-primary: #3b82f6;
+    --color-btn-danger: #f87171;
+    --color-btn-orange: #fb923c;
+    --color-btn-secondary: #334155;
+    --color-btn-hover: rgba(255, 255, 255, 0.08);
 
-    --shadow-sm:   0 1px 2px 0 rgba(0, 0, 0, 0.3);
-    --shadow:      0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
-    --shadow-lg:   0 20px 25px -5px rgba(0, 0, 0, 0.5);
-    --ring:        0 0 0 3px rgba(59, 130, 246, 0.4);
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    --ring: 0 0 0 3px rgba(59, 130, 246, 0.4);
 
     /* Legacy aliases */
-    --primary: var(--color-primary); --primary-dark: var(--color-primary-dark);
-    --secondary: var(--color-text-muted); --success: var(--color-success);
-    --warning: var(--color-warning); --danger: var(--color-danger);
-    --background: var(--color-bg); --surface: var(--color-surface);
-    --card-bg: var(--color-card); --input-bg: var(--color-input);
-    --footer-bg: var(--color-footer); --text-main: var(--color-text);
-    --text-muted: var(--color-text-muted); --text-inverse: var(--color-text-inverse);
-    --border: var(--color-border); --border-hover: var(--color-border-hover);
-    --btn-primary: var(--color-btn-primary); --btn-danger: var(--color-btn-danger);
-    --btn-orange: var(--color-btn-orange); --btn-secondary: var(--color-btn-secondary);
-    --btn-text-light: var(--color-btn-text); --btn-hover-bg: var(--color-btn-hover);
-    --btn-navy: var(--color-btn-primary); --btn-red: var(--color-btn-danger);
+    --primary: var(--color-primary);
+    --primary-dark: var(--color-primary-dark);
+    --secondary: var(--color-text-muted);
+    --success: var(--color-success);
+    --warning: var(--color-warning);
+    --danger: var(--color-danger);
+    --background: var(--color-bg);
+    --surface: var(--color-surface);
+    --card-bg: var(--color-card);
+    --input-bg: var(--color-input);
+    --footer-bg: var(--color-footer);
+    --text-main: var(--color-text);
+    --text-muted: var(--color-text-muted);
+    --text-inverse: var(--color-text-inverse);
+    --border: var(--color-border);
+    --border-hover: var(--color-border-hover);
+    --btn-primary: var(--color-btn-primary);
+    --btn-danger: var(--color-btn-danger);
+    --btn-orange: var(--color-btn-orange);
+    --btn-secondary: var(--color-btn-secondary);
+    --btn-text-light: var(--color-btn-text);
+    --btn-hover-bg: var(--color-btn-hover);
+    --btn-navy: var(--color-btn-primary);
+    --btn-red: var(--color-btn-danger);
 }
 
 
@@ -280,77 +309,6 @@
 }
 
 
-/* ── 2. Pure White — GitHub Light (github.com theme) ──────────── */
-[data-theme="pure-white"] {
-    --bg-root: #ffffff;
-    --bg-sidebar: #f6f8fa;
-    --bg-card: #ffffff;
-    --bg-hover: #eaeef2;
-    --bg-active: rgba(9, 105, 218, .06);
-    --bg-input: #ffffff;
-    --accent: #0969da;
-    /* GitHub blue */
-    --accent-light: #218bff;
-    --accent-glow: rgba(9, 105, 218, .1);
-    --accent-dim: rgba(9, 105, 218, .35);
-    --text-1: #1f2328;
-    --text-2: #24292f;
-    --text-3: #57606a;
-    --text-label: #6e7781;
-    --text-muted: #8c959f;
-    --text-value: #1f2328;
-    --border: #d0d7de;
-    --border-h: #0969da;
-    --success: #1a7f37;
-    --warning: #9a6700;
-    --danger: #d1242f;
-    --cat-header-bg: rgba(9, 105, 218, .04);
-    --cat-header-border: #d0d7de;
-    --btn-fg: #ffffff;
-    --toggle-thumb: #8c959f;
-}
-
-
-/* ── 3. Matte White — Solarized Light ─────────────────────────── */
-[data-theme="matte-white"] {
-    --bg-root: #fdf6e3;
-    /* solarized base3 */
-    --bg-sidebar: #eee8d5;
-    /* solarized base2 */
-    --bg-card: #fdf6e3;
-    --bg-hover: #e5dcc8;
-    --bg-active: rgba(38, 139, 210, .07);
-    --bg-input: #fdf6e3;
-    --accent: #268bd2;
-    /* solarized blue */
-    --accent-light: #2aa198;
-    /* solarized cyan */
-    --accent-glow: rgba(38, 139, 210, .12);
-    --accent-dim: rgba(38, 139, 210, .4);
-    --text-1: #073642;
-    /* solarized base03 */
-    --text-2: #586e75;
-    /* solarized base01 */
-    --text-3: #657b83;
-    /* solarized base00 */
-    --text-label: #839496;
-    /* solarized base0 */
-    --text-muted: #93a1a1;
-    /* solarized base1 */
-    --text-value: #073642;
-    --border: #d3c9b0;
-    --border-h: #268bd2;
-    --success: #859900;
-    /* solarized green */
-    --warning: #b58900;
-    /* solarized yellow */
-    --danger: #dc322f;
-    /* solarized red */
-    --cat-header-bg: rgba(38, 139, 210, .05);
-    --cat-header-border: #d3c9b0;
-    --btn-fg: #fdf6e3;
-    --toggle-thumb: #93a1a1;
-}
 
 
 /* ── 4. Cream — Monokai ───────────────────────────────────────── */
@@ -548,65 +506,19 @@
 }
 
 
-/* ── 9. Block White — Catppuccin Latte (light) ─────────────────── */
-[data-theme="block-white"] {
-    --bg-root: #eff1f5;
-    /* catppuccin latte base */
-    --bg-sidebar: #1e2030;
-    /* catppuccin macchiato - dark sidebar */
-    --bg-card: #ffffff;
-    --bg-hover: #e6e9ef;
-    /* catppuccin crust */
-    --bg-active: rgba(30, 102, 245, .07);
-    --bg-input: #ffffff;
-    --accent: #1e66f5;
-    /* catppuccin blue */
-    --accent-light: #209fb5;
-    /* catppuccin sapphire */
-    --accent-glow: rgba(30, 102, 245, .1);
-    --accent-dim: rgba(30, 102, 245, .35);
-    --text-1: #4c4f69;
-    /* catppuccin text */
-    --text-2: #5c5f77;
-    /* catppuccin subtext1 */
-    --text-3: #6c6f85;
-    /* catppuccin subtext0 */
-    --text-label: #7c7f93;
-    /* catppuccin overlay2 */
-    --text-muted: #9ca0b0;
-    /* catppuccin overlay0 */
-    --text-value: #4c4f69;
-    --border: #ccd0da;
-    /* catppuccin surface2 */
-    --border-h: #1e66f5;
-    --success: #40a02b;
-    /* catppuccin green */
-    --warning: #df8e1d;
-    /* catppuccin yellow */
-    --danger: #d20f39;
-    /* catppuccin red */
-    --cat-header-bg: rgba(30, 102, 245, .04);
-    --cat-header-border: #ccd0da;
-    --btn-fg: #ffffff;
-    --toggle-thumb: #9ca0b0;
-}
-
 /* ═══════════════════════════════════════════════════════════════
    THEME MAPPING (Maps new generic theme tokens to BEW system)
    ═══════════════════════════════════════════════════════════════ */
 [data-theme="matrix"],
-[data-theme="pure-white"],
-[data-theme="matte-white"],
 [data-theme="cream"],
 [data-theme="matte-black"],
 [data-theme="black-brown"],
 [data-theme="jam-black"],
-[data-theme="jam-navy"],
-[data-theme="block-white"] {
+[data-theme="jam-navy"] {
     --color-primary: var(--accent);
     --color-primary-dark: var(--accent-light);
     --color-primary-light: var(--accent-glow);
-    
+
     --color-success: var(--success);
     --color-warning: var(--warning);
     --color-danger: var(--danger);
@@ -635,18 +547,30 @@
     --ring: 0 0 0 3px var(--accent-glow);
 
     /* Legacy aliases */
-    --primary: var(--color-primary); --primary-dark: var(--color-primary-dark);
-    --secondary: var(--color-text-muted); --success: var(--color-success);
-    --warning: var(--color-warning); --danger: var(--color-danger);
-    --background: var(--color-bg); --surface: var(--color-surface);
-    --card-bg: var(--color-card); --input-bg: var(--color-input);
-    --footer-bg: var(--color-footer); --text-main: var(--color-text);
-    --text-muted: var(--color-text-muted); --text-inverse: var(--color-text-inverse);
-    --border: var(--color-border); --border-hover: var(--color-border-hover);
-    --btn-primary: var(--color-btn-primary); --btn-danger: var(--color-btn-danger);
-    --btn-orange: var(--color-btn-orange); --btn-secondary: var(--color-btn-secondary);
-    --btn-text-light: var(--color-btn-text); --btn-hover-bg: var(--color-btn-hover);
-    --btn-navy: var(--color-btn-primary); --btn-red: var(--color-btn-danger);
+    --primary: var(--color-primary);
+    --primary-dark: var(--color-primary-dark);
+    --secondary: var(--color-text-muted);
+    --success: var(--color-success);
+    --warning: var(--color-warning);
+    --danger: var(--color-danger);
+    --background: var(--color-bg);
+    --surface: var(--color-surface);
+    --card-bg: var(--color-card);
+    --input-bg: var(--color-input);
+    --footer-bg: var(--color-footer);
+    --text-main: var(--color-text);
+    --text-muted: var(--color-text-muted);
+    --text-inverse: var(--color-text-inverse);
+    --border: var(--color-border);
+    --border-hover: var(--color-border-hover);
+    --btn-primary: var(--color-btn-primary);
+    --btn-danger: var(--color-btn-danger);
+    --btn-orange: var(--color-btn-orange);
+    --btn-secondary: var(--color-btn-secondary);
+    --btn-text-light: var(--color-btn-text);
+    --btn-hover-bg: var(--color-btn-hover);
+    --btn-navy: var(--color-btn-primary);
+    --btn-red: var(--color-btn-danger);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -654,24 +578,38 @@
    ═══════════════════════════════════════════════════════════════ */
 
 /* ── Theme-Aware Form Elements ─────────────────────────────── */
-input, select, textarea {
+input,
+select,
+textarea {
     background-color: var(--color-input);
     color: var(--color-text);
     border-color: var(--color-border);
 }
 
-input::placeholder, textarea::placeholder {
+input::placeholder,
+textarea::placeholder {
     color: var(--color-text-muted);
     opacity: 0.7;
 }
 
 /* ── Theme-Aware Tables ────────────────────────────────────── */
-th { color: var(--color-text-muted); }
-td { color: var(--color-text); border-color: var(--color-border); }
+th {
+    color: var(--color-text-muted);
+}
+
+td {
+    color: var(--color-text);
+    border-color: var(--color-border);
+}
 
 /* ── Theme-Aware Links ─────────────────────────────────────── */
-a { color: var(--color-primary); }
-hr { border-color: var(--color-border); }
+a {
+    color: var(--color-primary);
+}
+
+hr {
+    border-color: var(--color-border);
+}
 
 /* ── Dark/Matrix Select Fix ────────────────────────────────── */
 [data-theme='dark'] select option,

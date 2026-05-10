@@ -32,9 +32,10 @@
 
 {# ── Form ────────────────────────────────────────────────── #}
 <section class="mt-4">
-    <form method="POST" enctype="multipart/form-data"
+    <form action="{% if action == 'add' %}{{ url_for('shops.new_shop') }}{% else %}{{ url_for('shops.edit_shop', shop_id=shop_id) }}{% endif %}" method="POST" enctype="multipart/form-data" 
           class="bg-[var(--color-surface)] p-5 md:p-6 rounded-[var(--radius-lg)]
-                 shadow-[var(--shadow)] border border-[var(--color-border)]">
+                 shadow-[var(--shadow)] border border-[var(--color-border)]"
+          x-data="shopForm()">
 
         {# ── Row 1: Shop Name, Visiting Card, Preview ──── #}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
@@ -62,7 +63,7 @@
                     {{ _('Visiting Card') }}
                 </label>
                 <input type="file" name="visiting_card" id="visiting_card" accept="image/*"
-                       onchange="previewImage(this)"
+                       @change="handleImageUpload"
                        class="form-control w-full text-sm border border-[var(--color-border)] rounded-md
                               bg-[var(--color-input)] file:mr-3 file:py-1 file:px-3 file:rounded-md
                               file:border file:border-[var(--color-border)] file:bg-[var(--color-bg)]
@@ -77,12 +78,19 @@
                             border border-[var(--color-border)] rounded-[var(--radius)]
                             flex items-center justify-center overflow-hidden
                             shadow-md relative z-10">
-                    {% if shop.visiting_card %}
-                    <img src="/shop_img/{{ shop.visiting_card }}" alt="{{ _('Current Card') }}"
-                         class="w-full h-full object-cover rounded">
-                    {% else %}
-                    <span class="text-[var(--color-text-muted)] text-xs">{{ _('Preview') }}</span>
-                    {% endif %}
+                    <template x-if="imageUrl">
+                        <img :src="imageUrl" alt="Preview" class="w-full h-full object-cover rounded">
+                    </template>
+                    <template x-if="!imageUrl">
+                        <div>
+                            {% if shop.visiting_card %}
+                            <img src="/shop_img/{{ shop.visiting_card }}" alt="{{ _('Current Card') }}"
+                                 class="w-full h-full object-cover rounded">
+                            {% else %}
+                            <span class="text-[var(--color-text-muted)] text-xs">{{ _('Preview') }}</span>
+                            {% endif %}
+                        </div>
+                    </template>
                 </div>
             </div>
         </div>
@@ -119,31 +127,33 @@
                               outline-none transition-all">
             </div>
 
-            <div>
+            <div x-data="{ category: '{{ shop.category_id or '' }}' }">
                 <label for="category_id"
                        class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
                     <span class="material-icons text-sm">category</span>
                     {{ _('Category') }}
                 </label>
-                <select name="category_id" id="category_id"
+                <select name="category_id" id="category_id" x-model="category"
                         class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
                                bg-[var(--color-input)] text-[var(--color-text)] text-sm
                                focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
                                outline-none transition-all">
                     <option value="">-- {{ _('Select Category') }} --</option>
                     {% for cat in categories %}
-                    <option value="{{ cat.id }}" {% if shop.category_id==cat.id %}selected{% endif %}>
+                    <option value="{{ cat.id }}">
                         {{ cat.name }} ({{ cat.name_english }})
                     </option>
                     {% endfor %}
                     <option value="new">+ {{ _('Add New Category') }}</option>
                 </select>
                 <input type="text" name="new_category_name" id="new_category_name"
+                       x-show="category === 'new'" x-cloak
+                       :required="category === 'new'"
                        placeholder="{{ _('Enter new category name') }}"
                        class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
                               bg-[var(--color-input)] text-[var(--color-text)] text-sm mt-2
                               focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
-                              outline-none transition-all hidden">
+                              outline-none transition-all">
             </div>
         </div>
 
@@ -224,11 +234,13 @@
                 {# Tag Input Row #}
                 <div class="flex gap-1 mb-2">
                     <input type="text" id="new-tag-input"
+                           x-model="newTagInput"
+                           @keydown.enter.prevent="addTag()"
                            placeholder="{{ _('e.g. Lathe') }}"
                            class="form-control flex-1 px-3 py-1 border border-[var(--color-border)] rounded-md
                                   bg-[var(--color-input)] text-[var(--color-text)] text-sm h-8
                                   focus:border-[var(--color-primary)] outline-none transition-all">
-                    <button type="button" id="btn-add-tag"
+                    <button type="button" @click="addTag()"
                             class="w-9 h-8 min-w-[36px] flex items-center justify-center
                                    bg-[var(--color-btn-primary)] text-white rounded-md
                                    hover:opacity-90 hover:scale-105 transition-all shrink-0">
@@ -236,28 +248,25 @@
                     </button>
                 </div>
 
-                <input type="hidden" name="tags" id="hidden_tags">
+                <input type="hidden" name="tags" :value="tags.map(t => t.name).join(',')">
 
                 {# Tags Container #}
                 <div id="tags-container"
                      class="max-h-[100px] overflow-y-auto flex flex-wrap gap-1.5">
-                    {% if action == 'edit' and shop.tags %}
-                    {% for tag in shop.tags %}
-                    <div class="tag-item flex items-center gap-1.5 px-3 py-1.5
-                                bg-gradient-to-br from-sky-100 to-sky-200 rounded-lg max-w-[400px]"
-                         data-tag-id="{{ tag.id }}">
-                        <span class="tag-label flex-1 text-sky-600 font-medium text-sm flex items-center gap-1">
-                            <span class="material-icons text-sm">local_offer</span>
-                            <span class="tag-text">{{ tag.name }}</span>
-                        </span>
-                        <button type="button"
-                                class="btn-remove-tag w-5 h-5 flex items-center justify-center
-                                       bg-red-100 text-red-600 border-none rounded-full text-xs
-                                       cursor-pointer hover:bg-red-200 hover:scale-110 transition-all"
-                                data-tag-id="{{ tag.id }}" title="{{ _('Remove tag') }}">×</button>
-                    </div>
-                    {% endfor %}
-                    {% endif %}
+                    <template x-for="tag in tags" :key="tag.id">
+                        <div class="tag-item flex items-center gap-1.5 px-3 py-1.5
+                                    bg-gradient-to-br from-sky-100 to-sky-200 rounded-lg max-w-[400px]">
+                            <span class="tag-label flex-1 text-sky-600 font-medium text-sm flex items-center gap-1">
+                                <span class="material-icons text-sm">local_offer</span>
+                                <span class="tag-text" x-text="tag.name"></span>
+                            </span>
+                            <button type="button" @click="removeTag(tag.id)"
+                                    class="btn-remove-tag w-5 h-5 flex items-center justify-center
+                                           bg-red-100 text-red-600 border-none rounded-full text-xs
+                                           cursor-pointer hover:bg-red-200 hover:scale-110 transition-all"
+                                    title="{{ _('Remove tag') }}">×</button>
+                        </div>
+                    </template>
                 </div>
             </div>
 
@@ -292,128 +301,103 @@
 
 {% block extra_js %}
 <script>
-    // Shop ID for edit mode (null for add mode)
-    const SHOP_ID = {% if action == 'edit' and shop_id %}{{ shop_id }}{% else %}null{% endif %};
-    const IS_EDIT_MODE = SHOP_ID !== null;
+document.addEventListener('alpine:init', () => {
+    Alpine.data('shopForm', () => ({
+        shopId: {{ shop_id if action == 'edit' and shop_id else 'null' }},
+        isEditMode: {{ 'true' if action == 'edit' else 'false' }},
+        imageUrl: '',
+        newTagInput: '',
+        tags: [
+            {% if shop.tags %}
+            {% for tag in shop.tags %}
+            { id: '{{ tag.id }}', name: '{{ tag.name|escape }}' }{{ ',' if not loop.last }}
+            {% endfor %}
+            {% endif %}
+        ],
 
-    function previewImage(input) {
-        const preview = document.getElementById('imagePreview');
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                preview.innerHTML = '<img src="' + e.target.result + '" alt="Preview" class="w-full h-full object-cover rounded">';
+        handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.imageUrl = e.target.result;
+                };
+                reader.readAsDataURL(file);
             }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
+        },
 
-    // Handle new category input
-    document.getElementById('category_id').addEventListener('change', function () {
-        var newCatInput = document.getElementById('new_category_name');
-        if (this.value === 'new') {
-            newCatInput.classList.remove('hidden');
-            newCatInput.focus();
-        } else {
-            newCatInput.classList.add('hidden');
-        }
-    });
+        async addTag() {
+            const rawInput = this.newTagInput.trim();
+            if (!rawInput) {
+                alert("{{ _('Enter tag name') }}");
+                return;
+            }
 
-    // ==================== TAG MANAGEMENT ====================
+            const inputTags = rawInput.split(',').map(t => t.trim()).filter(t => t);
 
-    function addTagToContainer(tagId, tagName) {
-        const container = document.getElementById('tags-container');
-        const tagItem = document.createElement('div');
-        tagItem.className = 'tag-item flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-br from-sky-100 to-sky-200 rounded-lg max-w-[400px]';
-        tagItem.dataset.tagId = tagId;
-        tagItem.innerHTML = `
-            <span class="tag-label flex-1 text-sky-600 font-medium text-sm flex items-center gap-1">
-                <span class="material-icons text-sm">local_offer</span>
-                <span class="tag-text">${tagName}</span>
-            </span>
-            <button type="button"
-                    class="btn-remove-tag w-5 h-5 flex items-center justify-center bg-red-100 text-red-600 border-none rounded-full text-xs cursor-pointer hover:bg-red-200 hover:scale-110 transition-all"
-                    data-tag-id="${tagId}" title="ট্যাগ সরান">×</button>
-        `;
-        container.appendChild(tagItem);
-        tagItem.querySelector('.btn-remove-tag').addEventListener('click', handleRemoveTag);
-    }
-
-    document.getElementById('btn-add-tag').addEventListener('click', async function () {
-        const input = document.getElementById('new-tag-input');
-        const rawInput = input.value.trim();
-        if (!rawInput) { alert('ট্যাগের নাম লিখুন'); return; }
-
-        const tags = rawInput.split(',').map(t => t.trim()).filter(t => t);
-
-        if (!IS_EDIT_MODE) {
-            tags.forEach(tagName => {
-                const tempId = 'temp_' + Math.random().toString(36).substr(2, 9);
-                addTagToContainer(tempId, tagName);
-            });
-            updateHiddenTags();
-            input.value = '';
-            input.focus();
-            return;
-        }
-
-        // Edit Mode: API calls
-        for (const tagName of tags) {
-            try {
-                const createResponse = await fetch('/api/tag/add', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: tagName, name_bn: '' })
+            if (!this.isEditMode) {
+                inputTags.forEach(tagName => {
+                    const tempId = 'temp_' + Math.random().toString(36).substr(2, 9);
+                    this.tags.push({ id: tempId, name: tagName });
                 });
-                if (!createResponse.ok) { console.error('Failed to create tag: ' + tagName); continue; }
-                const tagData = await createResponse.json();
+                this.newTagInput = '';
+                return;
+            }
 
-                const addResponse = await fetch(`/api/shop/${SHOP_ID}/tag/add`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ tag_id: tagData.id })
-                });
-                if (addResponse.ok) {
-                    const existing = document.querySelector(`.tag-item[data-tag-id="${tagData.id}"]`);
-                    if (!existing) { addTagToContainer(tagData.id, tagName); }
+            // Edit Mode: API calls
+            for (const tagName of inputTags) {
+                try {
+                    const createResponse = await fetch('/api/tag/add', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name: tagName, name_bn: '' })
+                    });
+                    if (!createResponse.ok) {
+                        console.error('Failed to create tag: ' + tagName);
+                        continue;
+                    }
+                    const tagData = await createResponse.json();
+
+                    const addResponse = await fetch(`/api/shop/${this.shopId}/tag/add`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ tag_id: tagData.id })
+                    });
+                    
+                    if (addResponse.ok) {
+                        if (!this.tags.find(t => t.id == tagData.id)) {
+                            this.tags.push({ id: tagData.id, name: tagName });
+                        }
+                    }
+                } catch (err) {
+                    console.error('Error adding tag: ' + tagName, err);
                 }
-            } catch (err) { console.error('Error adding tag: ' + tagName, err); }
+            }
+            this.newTagInput = '';
+        },
+
+        async removeTag(tagId) {
+            if (!this.isEditMode) {
+                this.tags = this.tags.filter(t => t.id !== tagId);
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/shop/${this.shopId}/tag/remove`, {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tag_id: tagId })
+                });
+                if (response.ok) {
+                    this.tags = this.tags.filter(t => t.id !== tagId);
+                } else {
+                    alert("{{ _('Error removing tag') }}");
+                }
+            } catch (err) {
+                alert("{{ _('Error removing tag') }}");
+            }
         }
-        input.value = '';
-        input.focus();
-    });
-
-    document.getElementById('new-tag-input').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') { e.preventDefault(); document.getElementById('btn-add-tag').click(); }
-    });
-
-    async function handleRemoveTag(e) {
-        const tagId = e.target.dataset.tagId || e.target.closest('.btn-remove-tag').dataset.tagId;
-        const tagItem = e.target.closest('.tag-item');
-        if (!IS_EDIT_MODE) { tagItem.remove(); updateHiddenTags(); return; }
-        try {
-            const response = await fetch(`/api/shop/${SHOP_ID}/tag/remove`, {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ tag_id: tagId })
-            });
-            if (response.ok) { tagItem.remove(); }
-            else { alert('ট্যাগ সরাতে সমস্যা হয়েছে'); }
-        } catch (err) { alert('ট্যাগ সরাতে সমস্যা হয়েছে'); }
-    }
-
-    function updateHiddenTags() {
-        const items = document.querySelectorAll('.tag-item .tag-text');
-        const tags = Array.from(items).map(span => span.innerText.trim());
-        document.getElementById('hidden_tags').value = tags.join(',');
-    }
-
-    document.querySelectorAll('.btn-remove-tag').forEach(btn => {
-        btn.addEventListener('click', handleRemoveTag);
-    });
-
-    // Run on load for edit mode
-    if (document.getElementById('category_id').value === 'new') {
-        document.getElementById('new_category_name').classList.remove('hidden');
-    }
+    }));
+});
 </script>
 {% endblock %}

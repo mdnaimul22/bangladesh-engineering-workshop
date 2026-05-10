@@ -69,8 +69,10 @@
             </div>
         </div>
 
+        </div>
+
         {# ── Contact Persons Section ─────────────────────── #}
-        <div class="p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)] mb-5">
+        <div x-data="buyerForm()" class="p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)] mb-5">
             <h3 class="text-base font-semibold m-0 mb-4 pb-2 border-b-2 border-slate-200
                        flex items-center gap-2 text-[var(--color-text)]">
                 <span class="material-icons text-lg">people</span>
@@ -78,121 +80,101 @@
             </h3>
 
             <div id="contacts-container" class="space-y-3">
-                {# Macro for a single contact row #}
-                {% macro contact_row(contact=None, idx=0) %}
-                <div class="contact-row bg-[var(--color-surface)] p-3 rounded-[var(--radius)] border border-[var(--color-border)] shadow-sm">
-                    <div class="grid grid-cols-1 lg:grid-cols-[1fr_1fr_1fr_1fr_1fr_50px_50px] gap-2.5">
-                        {# Name #}
-                        <div>
-                            <label class="flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Name') }}</label>
-                            <input type="text" name="contact_name" placeholder="{{ _('Name') }}"
-                                   value="{{ contact.name if contact else '' }}"
-                                   class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md
-                                          bg-[var(--color-input)] text-[var(--color-text)] text-sm
-                                          focus:border-[var(--color-primary)] outline-none transition-all">
-                        </div>
-                        {# Designation #}
-                        <div>
-                            <label class="flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Designation') }}</label>
-                            <input type="text" name="contact_designation" placeholder="{{ _('Designation') }}"
-                                   value="{{ contact.designation if contact else '' }}"
-                                   class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md
-                                          bg-[var(--color-input)] text-[var(--color-text)] text-sm
-                                          focus:border-[var(--color-primary)] outline-none transition-all">
-                        </div>
-                        {# Mobile Numbers #}
-                        <div>
-                            <label class="flex items-center justify-between text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase w-full">
-                                <span>{{ _('Mobile Numbers') }}</span>
-                                <div class="flex gap-1 ml-2">
-                                    <button type="button"
-                                            class="btn-add-mobile w-5 h-5 flex items-center justify-center
-                                                   bg-[var(--color-btn-primary)] text-white rounded text-xs
-                                                   hover:opacity-90 transition-all">
-                                        <span class="material-icons text-sm">add</span>
-                                    </button>
-                                    <button type="button"
-                                            class="btn-remove-mobile w-5 h-5 flex items-center justify-center
-                                                   bg-red-500 text-white rounded text-xs
-                                                   hover:opacity-90 transition-all">
-                                        <span class="material-icons text-sm">close</span>
-                                    </button>
-                                </div>
-                            </label>
-                            <div class="mobiles-container space-y-1">
-                                {% if contact and contact.mobiles %}
-                                {% for mob in contact.mobiles %}
-                                <div class="mobile-row">
-                                    <input type="text" name="contact_mobiles_{{ idx }}[]" placeholder="{{ _('No.') }}"
-                                           value="{{ mob }}"
-                                           class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md
-                                                  bg-[var(--color-input)] text-[var(--color-text)] text-sm
-                                                  focus:border-[var(--color-primary)] outline-none transition-all">
-                                </div>
-                                {% endfor %}
-                                {% else %}
-                                <div class="mobile-row">
-                                    <input type="text" name="contact_mobiles_{{ idx }}[]" placeholder="{{ _('No.') }}"
-                                           class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md
-                                                  bg-[var(--color-input)] text-[var(--color-text)] text-sm
-                                                  focus:border-[var(--color-primary)] outline-none transition-all">
-                                </div>
-                                {% endif %}
+                <template x-for="(contact, idx) in contacts" :key="idx">
+                    <div class="contact-row bg-[var(--color-surface)] p-3 rounded-[var(--radius)] border border-[var(--color-border)] shadow-sm">
+                        <div class="grid grid-cols-1 lg:grid-cols-[1fr_1fr_1fr_1fr_1fr_50px_50px] gap-2.5">
+                            {# Name #}
+                            <div>
+                                <label class="flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Name') }}</label>
+                                <input type="text" name="contact_name" placeholder="{{ _('Name') }}"
+                                       x-model="contact.name"
+                                       class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md
+                                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
+                                              focus:border-[var(--color-primary)] outline-none transition-all">
                             </div>
-                        </div>
-                        {# WhatsApp #}
-                        <div>
-                            <label class="flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('WhatsApp') }}</label>
-                            <input type="text" name="contact_whatsapp" placeholder="{{ _('WhatsApp') }}"
-                                   value="{{ contact.whatsapp if contact else '' }}"
-                                   class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md
-                                          bg-[var(--color-input)] text-[var(--color-text)] text-sm
-                                          focus:border-[var(--color-primary)] outline-none transition-all">
-                        </div>
-                        {# Email #}
-                        <div>
-                            <label class="flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Email') }}</label>
-                            <input type="email" name="contact_email" placeholder="{{ _('Email') }}"
-                                   value="{{ contact.email if contact else '' }}"
-                                   class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md
-                                          bg-[var(--color-input)] text-[var(--color-text)] text-sm
-                                          focus:border-[var(--color-primary)] outline-none transition-all">
-                        </div>
-                        {# Primary Radio #}
-                        <div class="flex flex-col items-center">
-                            <label class="text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Primary') }}</label>
-                            <div class="h-[38px] flex items-center justify-center">
-                                <input type="radio" name="primary_contact_index" value="{{ idx }}"
-                                       class="w-5 h-5 cursor-pointer accent-[var(--color-primary)]"
-                                       {% if contact %}
-                                         {% if contact.is_primary %}checked{% endif %}
-                                       {% elif idx == 0 %}checked{% endif %}>
+                            {# Designation #}
+                            <div>
+                                <label class="flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Designation') }}</label>
+                                <input type="text" name="contact_designation" placeholder="{{ _('Designation') }}"
+                                       x-model="contact.designation"
+                                       class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md
+                                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
+                                              focus:border-[var(--color-primary)] outline-none transition-all">
                             </div>
-                        </div>
-                        {# Delete #}
-                        <div class="flex flex-col items-center">
-                            <label class="text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Action') }}</label>
-                            <button type="button"
-                                    class="btn-remove-contact w-[38px] h-[38px] flex items-center justify-center
-                                           bg-red-500 text-white rounded-md hover:bg-red-600 transition-all">
-                                <span class="material-icons text-lg">delete</span>
-                            </button>
+                            {# Mobile Numbers #}
+                            <div>
+                                <label class="flex items-center justify-between text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase w-full">
+                                    <span>{{ _('Mobile Numbers') }}</span>
+                                    <div class="flex gap-1 ml-2">
+                                        <button type="button" @click="addMobile(idx)"
+                                                class="w-5 h-5 flex items-center justify-center
+                                                       bg-[var(--color-btn-primary)] text-white rounded text-xs
+                                                       hover:opacity-90 transition-all">
+                                            <span class="material-icons text-sm">add</span>
+                                        </button>
+                                        <button type="button" @click="removeMobile(idx)"
+                                                class="w-5 h-5 flex items-center justify-center
+                                                       bg-red-500 text-white rounded text-xs
+                                                       hover:opacity-90 transition-all">
+                                            <span class="material-icons text-sm">close</span>
+                                        </button>
+                                    </div>
+                                </label>
+                                <div class="mobiles-container space-y-1">
+                                    <template x-for="(mob, mIdx) in contact.mobiles" :key="mIdx">
+                                        <div class="mobile-row">
+                                            <input type="text" :name="`contact_mobiles_${idx}[]`" placeholder="{{ _('No.') }}"
+                                                   x-model="contact.mobiles[mIdx]"
+                                                   class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md
+                                                          bg-[var(--color-input)] text-[var(--color-text)] text-sm
+                                                          focus:border-[var(--color-primary)] outline-none transition-all">
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                            {# WhatsApp #}
+                            <div>
+                                <label class="flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('WhatsApp') }}</label>
+                                <input type="text" name="contact_whatsapp" placeholder="{{ _('WhatsApp') }}"
+                                       x-model="contact.whatsapp"
+                                       class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md
+                                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
+                                              focus:border-[var(--color-primary)] outline-none transition-all">
+                            </div>
+                            {# Email #}
+                            <div>
+                                <label class="flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Email') }}</label>
+                                <input type="email" name="contact_email" placeholder="{{ _('Email') }}"
+                                       x-model="contact.email"
+                                       class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md
+                                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
+                                              focus:border-[var(--color-primary)] outline-none transition-all">
+                            </div>
+                            {# Primary Radio #}
+                            <div class="flex flex-col items-center">
+                                <label class="text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Primary') }}</label>
+                                <div class="h-[38px] flex items-center justify-center">
+                                    <input type="radio" name="primary_contact_index" :value="idx"
+                                           class="w-5 h-5 cursor-pointer accent-[var(--color-primary)]"
+                                           :checked="contact.is_primary"
+                                           @change="setPrimary(idx)">
+                                </div>
+                            </div>
+                            {# Delete #}
+                            <div class="flex flex-col items-center">
+                                <label class="text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Action') }}</label>
+                                <button type="button" @click="removeContact(idx)"
+                                        class="w-[38px] h-[38px] flex items-center justify-center
+                                               bg-red-500 text-white rounded-md hover:bg-red-600 transition-all">
+                                    <span class="material-icons text-lg">delete</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                {% endmacro %}
-
-                {# Render existing or default #}
-                {% if buyer.contacts %}
-                    {% for contact in buyer.contacts %}
-                    {{ contact_row(contact, loop.index0) }}
-                    {% endfor %}
-                {% else %}
-                    {{ contact_row(idx=0) }}
-                {% endif %}
+                </template>
             </div>
 
-            <button type="button" id="btn-add-contact"
+            <button type="button" @click="addContact()"
                     class="mt-3 inline-flex items-center gap-1.5 px-4 py-2
                            bg-[var(--color-bg)] border border-[var(--color-border)] rounded-md
                            text-[var(--color-text)] text-sm font-medium
@@ -213,127 +195,60 @@
 
 {% block extra_js %}
 <script>
-    function updateIndices() {
-        document.querySelectorAll('.contact-row').forEach((block, index) => {
-            block.querySelectorAll('.mobiles-container input').forEach(input => {
-                input.name = `contact_mobiles_${index}[]`;
+function buyerForm() {
+    const serverContacts = {{ buyer.contacts | tojson if buyer and buyer.contacts else '[]' }};
+    
+    const initialContacts = serverContacts.length > 0 ? serverContacts.map(c => ({
+        name: c.name || '',
+        designation: c.designation || '',
+        mobiles: (c.mobiles && c.mobiles.length > 0) ? c.mobiles : [''],
+        whatsapp: c.whatsapp || '',
+        email: c.email || '',
+        is_primary: c.is_primary || false
+    })) : [{ name: '', designation: '', mobiles: [''], whatsapp: '', email: '', is_primary: true }];
+    
+    if (!initialContacts.some(c => c.is_primary)) {
+        initialContacts[0].is_primary = true;
+    }
+
+    return {
+        contacts: initialContacts,
+        
+        setPrimary(index) {
+            this.contacts.forEach((c, i) => {
+                c.is_primary = (i === index);
             });
-            const radio = block.querySelector('input[type="radio"]');
-            if (radio) radio.value = index;
-        });
-    }
-
-    function attachMobileHandlers(block) {
-        const addBtn = block.querySelector('.btn-add-mobile');
-        const removeBtn = block.querySelector('.btn-remove-mobile');
-
-        if (addBtn) {
-            addBtn.onclick = function () {
-                const container = block.querySelector('.mobiles-container');
-                const rows = document.querySelectorAll('.contact-row');
-                let index = 0;
-                rows.forEach((r, i) => { if (r === block) index = i; });
-                const row = document.createElement('div');
-                row.className = 'mobile-row';
-                row.innerHTML = `<input type="text" name="contact_mobiles_${index}[]" placeholder="{{ _('No.') }}"
-                    class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md
-                           bg-[var(--color-input)] text-[var(--color-text)] text-sm
-                           focus:border-[var(--color-primary)] outline-none transition-all">`;
-                container.appendChild(row);
-            };
-        }
-
-        if (removeBtn) {
-            removeBtn.onclick = function () {
-                const container = block.querySelector('.mobiles-container');
-                const mobileRows = container.querySelectorAll('.mobile-row');
-                if (mobileRows.length > 1) {
-                    mobileRows[mobileRows.length - 1].remove();
+        },
+        
+        addContact() {
+            this.contacts.push({ name: '', designation: '', mobiles: [''], whatsapp: '', email: '', is_primary: false });
+            if (this.contacts.length === 1) {
+                this.contacts[0].is_primary = true;
+            }
+        },
+        
+        removeContact(index) {
+            if (this.contacts.length > 1) {
+                const wasPrimary = this.contacts[index].is_primary;
+                this.contacts.splice(index, 1);
+                if (wasPrimary && this.contacts.length > 0) {
+                    this.contacts[0].is_primary = true;
                 }
-            };
+            } else {
+                this.contacts[0] = { name: '', designation: '', mobiles: [''], whatsapp: '', email: '', is_primary: true };
+            }
+        },
+        
+        addMobile(contactIndex) {
+            this.contacts[contactIndex].mobiles.push('');
+        },
+        
+        removeMobile(contactIndex) {
+            if (this.contacts[contactIndex].mobiles.length > 1) {
+                this.contacts[contactIndex].mobiles.pop();
+            }
         }
-    }
-
-    function attachContactHandlers(block) {
-        const removeBtn = block.querySelector('.btn-remove-contact');
-        if (removeBtn) {
-            removeBtn.onclick = function () {
-                if (document.querySelectorAll('.contact-row').length > 1) {
-                    block.remove();
-                    updateIndices();
-                } else {
-                    block.querySelectorAll('input:not([type="radio"])').forEach(i => i.value = '');
-                }
-            };
-        }
-        attachMobileHandlers(block);
-    }
-
-    document.getElementById('btn-add-contact').addEventListener('click', function () {
-        const container = document.getElementById('contacts-container');
-        const nextIndex = document.querySelectorAll('.contact-row').length;
-        const div = document.createElement('div');
-        div.className = 'contact-row bg-[var(--color-surface)] p-3 rounded-[var(--radius)] border border-[var(--color-border)] shadow-sm';
-        div.innerHTML = `
-            <div class="grid grid-cols-1 lg:grid-cols-[1fr_1fr_1fr_1fr_1fr_50px_50px] gap-2.5">
-                <div>
-                    <label class="flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Name') }}</label>
-                    <input type="text" name="contact_name" placeholder="{{ _('Name') }}"
-                           class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:border-[var(--color-primary)] outline-none transition-all">
-                </div>
-                <div>
-                    <label class="flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Designation') }}</label>
-                    <input type="text" name="contact_designation" placeholder="{{ _('Designation') }}"
-                           class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:border-[var(--color-primary)] outline-none transition-all">
-                </div>
-                <div>
-                    <label class="flex items-center justify-between text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase w-full">
-                        <span>{{ _('Mobile Numbers') }}</span>
-                        <div class="flex gap-1 ml-2">
-                            <button type="button" class="btn-add-mobile w-5 h-5 flex items-center justify-center bg-[var(--color-btn-primary)] text-white rounded text-xs hover:opacity-90 transition-all">
-                                <span class="material-icons text-sm">add</span>
-                            </button>
-                            <button type="button" class="btn-remove-mobile w-5 h-5 flex items-center justify-center bg-red-500 text-white rounded text-xs hover:opacity-90 transition-all">
-                                <span class="material-icons text-sm">close</span>
-                            </button>
-                        </div>
-                    </label>
-                    <div class="mobiles-container space-y-1">
-                        <div class="mobile-row">
-                            <input type="text" name="contact_mobiles_${nextIndex}[]" placeholder="{{ _('No.') }}"
-                                   class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:border-[var(--color-primary)] outline-none transition-all">
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <label class="flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('WhatsApp') }}</label>
-                    <input type="text" name="contact_whatsapp" placeholder="{{ _('WhatsApp') }}"
-                           class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:border-[var(--color-primary)] outline-none transition-all">
-                </div>
-                <div>
-                    <label class="flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Email') }}</label>
-                    <input type="email" name="contact_email" placeholder="{{ _('Email') }}"
-                           class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:border-[var(--color-primary)] outline-none transition-all">
-                </div>
-                <div class="flex flex-col items-center">
-                    <label class="text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Primary') }}</label>
-                    <div class="h-[38px] flex items-center justify-center">
-                        <input type="radio" name="primary_contact_index" value="${nextIndex}" class="w-5 h-5 cursor-pointer accent-[var(--color-primary)]">
-                    </div>
-                </div>
-                <div class="flex flex-col items-center">
-                    <label class="text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Action') }}</label>
-                    <button type="button" class="btn-remove-contact w-[38px] h-[38px] flex items-center justify-center bg-red-500 text-white rounded-md hover:bg-red-600 transition-all">
-                        <span class="material-icons text-lg">delete</span>
-                    </button>
-                </div>
-            </div>
-        `;
-        container.appendChild(div);
-        attachContactHandlers(div);
-    });
-
-    // Initialize handlers for existing rows
-    document.querySelectorAll('.contact-row').forEach(block => attachContactHandlers(block));
+    };
+}
 </script>
 {% endblock %}

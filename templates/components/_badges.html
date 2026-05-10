@@ -14,9 +14,9 @@
 {% endmacro %}
 
 {% macro status_badge(status) %}
-{% if status|lower == 'closed' or status|lower == 'completed' %}
+{% if status|lower == 'closed' or status|lower == 'completed' or status|lower == 'paid' %}
 {{ badge(_(status|title), 'success') }}
-{% elif status|lower == 'open' or status|lower == 'pending' %}
+{% elif status|lower in ['open', 'pending', 'in progress', 'on hold'] %}
 {{ badge(_(status|title), 'warning') }}
 {% elif status|lower == 'cancelled' %}
 {{ badge(_(status|title), 'danger') }}

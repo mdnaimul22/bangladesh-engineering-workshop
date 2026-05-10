@@ -8,192 +8,442 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-01-31 14:45+0000\n"
+"POT-Creation-Date: 2026-05-10 06:11+0600\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.17.0\n"
+"Generated-By: Babel 2.18.0\n"
 
-#: templates/about.html:43 templates/about.html:55 templates/about.html:67
-#: templates/about.html:80 templates/about.html:92 templates/about.html:105
-#: templates/about.html:116
-msgid "Learn More"
+#: main.py:98
+msgid "Too many requests. Please wait a moment."
 msgstr ""
 
-#: templates/base.html:37
-msgid "Home"
+#: src/routers/buyers.py:30
+msgid "Buyer added successfully!"
 msgstr ""
 
-#: templates/base.html:42
-msgid "ERP"
+#: src/routers/buyers.py:45 src/routers/buyers.py:56 src/routers/buyers.py:84
+msgid "Buyer not found!"
 msgstr ""
 
-#: templates/base.html:48
-msgid "Buyers"
+#: src/routers/buyers.py:62
+msgid "Buyer updated successfully!"
 msgstr ""
 
-#: templates/base.html:52 templates/purchase/purchase_list.html:8
-#: templates/purchase/purchase_list.html:10 templates/shop/shop_detail.html:152
-msgid "Purchases"
+#: src/routers/buyers.py:80
+msgid "Buyer deleted successfully!"
 msgstr ""
 
-#: templates/base.html:56
-msgid "Inventory"
+#: src/routers/buyers.py:82
+msgid "Cannot delete buyer with existing orders. Delete orders first."
 msgstr ""
 
-#: templates/base.html:59
-msgid ""
-"Work\n"
-"                            Orders"
+#: src/routers/buyers.py:86
+msgid "Error deleting buyer!"
 msgstr ""
 
-#: templates/base.html:64
-msgid "Sales"
+#: src/routers/inventory.py:31
+msgid "Inventory added successfully!"
 msgstr ""
 
-#: templates/base.html:70 templates/shop/shop_list.html:12
-msgid "All Shops"
+#: src/routers/inventory.py:46
+msgid "Inventory item deleted successfully!"
 msgstr ""
 
-#: templates/base.html:74
-msgid "New Shop"
+#: src/routers/inventory.py:48
+msgid "Error deleting inventory item!"
 msgstr ""
 
-#: templates/base.html:90
-msgid "Categories"
+#: src/routers/purchases.py:28 src/routers/shops.py:79 src/routers/shops.py:108
+msgid "দোকান খুঁজে পাওয়া যায়নি!"
 msgstr ""
 
-#: templates/base.html:130
-msgid "Quick Links"
+#: src/routers/purchases.py:46
+msgid "Purchase saved successfully!"
 msgstr ""
 
-#: templates/base.html:132
-msgid ""
-"About\n"
-"                            Us"
+#: src/routers/purchases.py:62 src/routers/purchases.py:72
+msgid "Purchase not found!"
 msgstr ""
 
-#: templates/base.html:134
-msgid ""
-"All\n"
-"                            Shops"
+#: src/routers/purchases.py:80
+msgid "Purchase updated successfully!"
 msgstr ""
 
-#: templates/base.html:143 templates/base.html:177
-#: templates/shop/shop_form.html:4
+#: src/routers/purchases.py:95
+msgid "Purchase deleted successfully!"
+msgstr ""
+
+#: src/routers/purchases.py:97
+msgid "Error deleting purchase!"
+msgstr ""
+
+#: src/routers/sales.py:32
+msgid "Sale created successfully!"
+msgstr ""
+
+#: src/routers/sales.py:49
+msgid "Sale record not found!"
+msgstr ""
+
+#: src/routers/sales.py:58
+msgid "Sale record updated successfully!"
+msgstr ""
+
+#: src/routers/sales.py:72
+msgid "Sale not found!"
+msgstr ""
+
+#: src/routers/sales.py:83
+msgid "Sale deleted successfully!"
+msgstr ""
+
+#: src/routers/sales.py:85
+msgid "Error deleting sale!"
+msgstr ""
+
+#: src/routers/shops.py:93
+msgid "দোকান সফলভাবে যোগ করা হয়েছে!"
+msgstr ""
+
+#: src/routers/shops.py:116
+msgid "দোকানের তথ্য সফলভাবে আপডেট করা হয়েছে!"
+msgstr ""
+
+#: src/routers/shops.py:131
+msgid "দোকান সফলভাবে মুছে ফেলা হয়েছে!"
+msgstr ""
+
+#: src/routers/shops.py:133
+msgid "দোকান মুছে ফেলতে সমস্যা হয়েছে!"
+msgstr ""
+
+#: src/routers/work_orders.py:35
+msgid "Work order created successfully!"
+msgstr ""
+
+#: src/routers/work_orders.py:51 src/routers/work_orders.py:61
+msgid "Work order not found!"
+msgstr ""
+
+#: src/routers/work_orders.py:70
+msgid "Work order updated successfully!"
+msgstr ""
+
+#: src/routers/work_orders.py:85
+msgid "Work order deleted successfully!"
+msgstr ""
+
+#: src/routers/work_orders.py:87
+msgid "Error deleting work order!"
+msgstr ""
+
+#: templates/about.html:6 templates/about.html:13 templates/base.html:307
+msgid "About Us"
+msgstr ""
+
+#: templates/about.html:6 templates/base.html:9 templates/base.html:130
+#: templates/base.html:328 templates/base.html:385
+#: templates/buyer/buyer_form.html:7 templates/buyer/buyer_list.html:8
+#: templates/components/_seo.html:4 templates/index.html:5
+#: templates/inventory/inventory_form.html:6
+#: templates/inventory/inventory_list.html:7
+#: templates/purchase/purchase_detail.html:6
+#: templates/purchase/purchase_form.html:7
+#: templates/purchase/purchase_list.html:7 templates/sales/sale_form.html:6
+#: templates/sales/sale_list.html:7 templates/service/service_detail.html:6
+#: templates/service/services.html:6
+#: templates/service_page/crane-repair-and-maintenance.html:6
+#: templates/service_page/earthmoving-repair.html:6
+#: templates/service_page/ewp-repair.html:6
+#: templates/service_page/heavy_engineering.html:6
+#: templates/service_page/material-handling-repairs.html:6
+#: templates/service_page/metal_components.html:6
+#: templates/service_page/truck-repair.html:6 templates/shop/shop_detail.html:6
+#: templates/shop/shop_form.html:7 templates/shop/shop_list.html:10
+#: templates/shop/shop_list.html:12
+#: templates/work_orders/work_order_form.html:6
+#: templates/work_orders/work_order_list.html:8
 msgid "Bangladesh Engineering Workshop"
 msgstr ""
 
-#: templates/base.html:145
-msgid ""
-"Your trusted partner for heavy machinery repair, precision machining, and"
-"\n"
-"                    engineering solutions since years."
+#: templates/about.html:9
+msgid "About Us - Bangladesh Engineering Workshop"
 msgstr ""
 
-#: templates/base.html:157
+#: templates/about.html:13 templates/base.html:138 templates/index.html:5
+#: templates/service/service_detail.html:14 templates/service/services.html:13
+#: templates/service_page/crane-repair-and-maintenance.html:13
+#: templates/service_page/earthmoving-repair.html:13
+#: templates/service_page/ewp-repair.html:13
+#: templates/service_page/heavy_engineering.html:13
+#: templates/service_page/material-handling-repairs.html:13
+#: templates/service_page/metal_components.html:13
+#: templates/service_page/truck-repair.html:13
+msgid "Home"
+msgstr ""
+
+#: templates/about.html:63
+msgid "Learn More"
+msgstr ""
+
+#: templates/base.html:115
+msgid "Main Navigation"
+msgstr ""
+
+#: templates/base.html:122
+msgid "Toggle sidebar"
+msgstr ""
+
+#: templates/base.html:146
+msgid "ERP"
+msgstr ""
+
+#: templates/base.html:158
+msgid "Buyers"
+msgstr ""
+
+#: templates/base.html:163 templates/purchase/purchase_list.html:7
+#: templates/purchase/purchase_list.html:11
+#: templates/purchase/purchase_list.html:32 templates/shop/shop_detail.html:42
+msgid "Purchases"
+msgstr ""
+
+#: templates/base.html:168 templates/inventory/inventory_list.html:7
+msgid "Inventory"
+msgstr ""
+
+#: templates/base.html:173 templates/sales/sale_list.html:7
+#: templates/sales/sale_list.html:10
+msgid "Sales"
+msgstr ""
+
+#: templates/base.html:178 templates/work_orders/work_order_list.html:8
+#: templates/work_orders/work_order_list.html:12
+#: templates/work_orders/work_order_list.html:29
+msgid "Work Orders"
+msgstr ""
+
+#: templates/base.html:185 templates/base.html:316
+#: templates/shop/shop_list.html:12 templates/shop/shop_list.html:18
+#: templates/shop/shop_list.html:29 templates/shop/shop_list.html:32
+#: templates/shop/shop_list.html:38
+msgid "All Shops"
+msgstr ""
+
+#: templates/base.html:189
+msgid "New Shop"
+msgstr ""
+
+#: templates/base.html:209
+msgid "Toggle Theme"
+msgstr ""
+
+#: templates/base.html:219 templates/base.html:227
+msgid "Categories"
+msgstr ""
+
+#: templates/base.html:230
+msgid "Close sidebar"
+msgstr ""
+
+#: templates/base.html:244
+msgid "Loading categories..."
+msgstr ""
+
+#: templates/base.html:272 templates/components/_alerts.html:21
+#: templates/components/_alerts.html:41 templates/components/_modals.html:23
+msgid "Close"
+msgstr ""
+
+#: templates/base.html:298
+msgid "Quick Links"
+msgstr ""
+
+#: templates/base.html:332
+msgid ""
+"Your trusted partner for heavy machinery repair, precision machining, and"
+" engineering solutions since years."
+msgstr ""
+
+#: templates/base.html:358
 msgid "Contact Info"
 msgstr ""
 
-#: templates/base.html:170
+#: templates/base.html:375
 msgid "City Bypass, Mostofar Mor, Horintana, Khulna"
 msgstr ""
 
-#: templates/index.html:7
+#: templates/index.html:9 templates/index.html:33
 msgid "Hardware & Mechanical Supplier Directory"
 msgstr ""
 
-#: templates/index.html:8
+#: templates/index.html:10 templates/index.html:36
 msgid "Information of Engineering Workshops, Suppliers and Sellers"
 msgstr ""
 
-#: templates/index.html:13
+#: templates/index.html:48
 msgid "Search by product, category, mobile number or shop name..."
 msgstr ""
 
-#: templates/index.html:16
+#: templates/index.html:52
+msgid "Search shops"
+msgstr ""
+
+#: templates/index.html:59
 msgid "Search"
 msgstr ""
 
-#: templates/index.html:25
+#: templates/index.html:69
 msgid "Search Results"
 msgstr ""
 
-#: templates/index.html:40 templates/shop/shop_detail.html:27
+#: templates/index.html:99 templates/shop/shop_detail.html:83
 msgid "Owner"
 msgstr ""
 
-#: templates/index.html:44 templates/shop/shop_detail.html:73
-#: templates/shop/shop_form.html:82 templates/shop/shop_list.html:30
+#: templates/index.html:105 templates/shop/shop_detail.html:145
+#: templates/shop/shop_form.html:166 templates/shop/shop_list.html:72
+#: templates/shop/shop_list.html:112
 msgid "Mobile"
 msgstr ""
 
-#: templates/index.html:54 templates/shop/shop_list.html:102
+#: templates/index.html:119 templates/shop/shop_list.html:175
 msgid "No shops found."
 msgstr ""
 
-#: templates/index.html:60
+#: templates/buyer/buyer_list.html:36 templates/index.html:124
 msgid "Clear"
 msgstr ""
 
-#: templates/buyer/buyer_detail.html:11
-msgid ""
-"Industrial\n"
-"            Machinery & Tools Partner"
+#: templates/buyer/buyer_detail.html:7 templates/buyer/buyer_detail.html:40
+msgid "Buyer Profile"
 msgstr ""
 
-#: templates/buyer/buyer_detail.html:19
-#: templates/purchase/purchase_detail.html:20
-#: templates/shop/shop_detail.html:158
-#: templates/work_orders/work_order_detail.html:19
+#: templates/buyer/buyer_detail.html:12
+msgid "Buyer profile for"
+msgstr ""
+
+#: templates/buyer/buyer_detail.html:46
+#: templates/purchase/purchase_detail.html:37
+#: templates/shop/shop_detail.html:44
+#: templates/work_orders/work_order_detail.html:42
 msgid "Edit"
 msgstr ""
 
-#: templates/buyer/buyer_detail.html:23
-#: templates/purchase/purchase_detail.html:29
-#: templates/purchase/purchase_list.html:19 templates/shop/shop_detail.html:168
-#: templates/work_orders/work_order_detail.html:28
+#: templates/buyer/buyer_detail.html:47 templates/buyer/buyer_form.html:25
+#: templates/inventory/inventory_form.html:22
+#: templates/inventory/inventory_list.html:24
+#: templates/purchase/purchase_detail.html:38
+#: templates/purchase/purchase_form.html:24
+#: templates/purchase/purchase_list.html:28 templates/sales/sale_detail.html:26
+#: templates/sales/sale_form.html:16 templates/sales/sale_list.html:18
+#: templates/shop/shop_detail.html:50 templates/shop/shop_form.html:24
+#: templates/work_orders/work_order_detail.html:43
+#: templates/work_orders/work_order_form.html:16
+#: templates/work_orders/work_order_list.html:25
 msgid "Back"
 msgstr ""
 
-#: templates/buyer/buyer_detail.html:109
-#: templates/inventory/inventory_list.html:20
-#: templates/purchase/purchase_detail.html:13
-#: templates/purchase/purchase_list.html:31 templates/sales/sale_detail.html:28
-#: templates/sales/sale_list.html:20
-#: templates/work_orders/work_order_detail.html:12
-#: templates/work_orders/work_order_list.html:20
+#: templates/buyer/buyer_detail.html:54
+msgid "TOTAL SALES"
+msgstr ""
+
+#: templates/buyer/buyer_detail.html:56
+msgid "ACTIVE ORDERS"
+msgstr ""
+
+#: templates/buyer/buyer_detail.html:57
+msgid "SALES COUNT"
+msgstr ""
+
+#: templates/buyer/buyer_detail.html:58
+msgid "SINCE"
+msgstr ""
+
+#: templates/buyer/buyer_detail.html:58
+msgid "N/A"
+msgstr ""
+
+#: templates/buyer/buyer_detail.html:79 templates/buyer/buyer_form.html:79
+msgid "Contact Persons"
+msgstr ""
+
+#: templates/buyer/buyer_detail.html:150
+msgid "No contact persons recorded"
+msgstr ""
+
+#: templates/buyer/buyer_detail.html:161
+msgid "Transaction History"
+msgstr ""
+
+#: templates/buyer/buyer_detail.html:164
+#: templates/work_orders/work_order_form.html:6
+#: templates/work_orders/work_order_form.html:9
+#: templates/work_orders/work_order_form.html:18
+#: templates/work_orders/work_order_list.html:24
+#: templates/work_orders/work_order_list.html:114
+msgid "Add Order"
+msgstr ""
+
+#: templates/buyer/buyer_detail.html:166 templates/sales/sale_form.html:6
+#: templates/sales/sale_form.html:9 templates/sales/sale_list.html:17
+#: templates/sales/sale_list.html:85
+msgid "New Sale"
+msgstr ""
+
+#: templates/buyer/buyer_detail.html:177 templates/buyer/buyer_detail.html:196
+#: templates/inventory/inventory_list.html:41
+#: templates/purchase/purchase_detail.html:33
+#: templates/purchase/purchase_list.html:45
+#: templates/purchase/purchase_list.html:79 templates/sales/sale_list.html:29
+#: templates/sales/sale_list.html:54
+#: templates/work_orders/work_order_list.html:42
+#: templates/work_orders/work_order_list.html:70
 msgid "Date"
 msgstr ""
 
-#: templates/buyer/buyer_detail.html:110
-msgid "Transaction ID"
+#: templates/buyer/buyer_detail.html:180 templates/buyer/buyer_detail.html:198
+#: templates/sales/sale_list.html:32 templates/sales/sale_list.html:55
+msgid "ID"
 msgstr ""
 
-#: templates/buyer/buyer_detail.html:111
-msgid "Type"
+#: templates/buyer/buyer_detail.html:183
+msgid "Transaction Details"
 msgstr ""
 
-#: templates/buyer/buyer_detail.html:112
+#: templates/buyer/buyer_detail.html:186 templates/buyer/buyer_detail.html:211
+#: templates/work_orders/work_order_detail.html:243
 msgid "Amount"
 msgstr ""
 
-#: templates/buyer/buyer_detail.html:113
-#: templates/work_orders/work_order_detail.html:43
-#: templates/work_orders/work_order_form.html:63
-#: templates/work_orders/work_order_list.html:24
+#: templates/buyer/buyer_detail.html:189 templates/buyer/buyer_detail.html:214
+#: templates/work_orders/work_order_list.html:60
+#: templates/work_orders/work_order_list.html:89
 msgid "Status"
 msgstr ""
 
-#: templates/buyer/buyer_detail.html:154
+#: templates/buyer/buyer_detail.html:200
+msgid "Details"
+msgstr ""
+
+#: templates/buyer/buyer_detail.html:223
 msgid "No transaction records found"
 msgstr ""
 
-#: templates/buyer/buyer_form.html:10 templates/buyer/buyer_form.html:61
-#: templates/buyer/buyer_list.html:9
+#: templates/buyer/buyer_form.html:7 templates/buyer/buyer_form.html:29
+msgid "Add New Buyer"
+msgstr ""
+
+#: templates/buyer/buyer_form.html:7 templates/buyer/buyer_form.html:29
+msgid "Edit Buyer Company"
+msgstr ""
+
+#: templates/buyer/buyer_form.html:12 templates/buyer/buyer_list.html:41
+#: templates/buyer/buyer_list.html:125
 msgid "Add Buyer"
 msgstr ""
 
@@ -201,815 +451,1101 @@ msgstr ""
 msgid "Edit Buyer"
 msgstr ""
 
-#: templates/buyer/buyer_form.html:19
+#: templates/buyer/buyer_form.html:13
+msgid "Manage buyer entries for Bangladesh Engineering Workshop."
+msgstr ""
+
+#: templates/buyer/buyer_form.html:46 templates/buyer/buyer_list.html:61
+#: templates/buyer/buyer_list.html:78
 msgid "Company Name"
 msgstr ""
 
-#: templates/buyer/buyer_form.html:26 templates/buyer/buyer_list.html:22
-#: templates/shop/shop_detail.html:67 templates/shop/shop_form.html:76
-#: templates/shop/shop_list.html:29
+#: templates/buyer/buyer_form.html:50
+msgid "Enter company name"
+msgstr ""
+
+#: templates/buyer/buyer_form.html:60 templates/buyer/buyer_list.html:64
+#: templates/buyer/buyer_list.html:84 templates/shop/shop_detail.html:141
+#: templates/shop/shop_form.html:119 templates/shop/shop_list.html:69
+#: templates/shop/shop_list.html:107
 msgid "Address"
 msgstr ""
 
-#: templates/buyer/buyer_form.html:32
-msgid "Contact Persons"
+#: templates/buyer/buyer_form.html:64
+msgid "Enter address"
 msgstr ""
 
-#: templates/buyer/buyer_form.html:54
-msgid "Add Contact"
+#: templates/buyer/buyer_form.html:88 templates/buyer/buyer_form.html:89
+#: templates/work_orders/work_order_form.html:149
+msgid "Name"
 msgstr ""
 
-#: templates/buyer/buyer_form.html:63 templates/purchase/purchase_form.html:207
-#: templates/work_orders/work_order_form.html:290
-msgid "Save Changes"
+#: templates/buyer/buyer_form.html:97 templates/buyer/buyer_form.html:98
+msgid "Designation"
 msgstr ""
 
-#: templates/buyer/buyer_form.html:67
-#: templates/inventory/inventory_form.html:66
-#: templates/purchase/purchase_form.html:211 templates/sales/sale_form.html:62
-#: templates/shop/shop_form.html:167
-#: templates/work_orders/work_order_form.html:294
-msgid "Cancel"
+#: templates/buyer/buyer_form.html:107
+msgid "Mobile Numbers"
 msgstr ""
 
-#: templates/buyer/buyer_list.html:7
-msgid "Buyer Companies"
+#: templates/buyer/buyer_form.html:126
+msgid "No."
 msgstr ""
 
-#: templates/buyer/buyer_list.html:19 templates/shop/shop_list.html:26
-msgid "No"
-msgstr ""
-
-#: templates/buyer/buyer_list.html:20
-msgid ""
-"Company\n"
-"                        Name"
-msgstr ""
-
-#: templates/buyer/buyer_list.html:24
-msgid "Contacts"
-msgstr ""
-
-#: templates/buyer/buyer_list.html:26
-msgid "Actions"
-msgstr ""
-
-#: templates/buyer/buyer_list.html:82
-msgid "No buyers found."
-msgstr ""
-
-#: templates/inventory/inventory_form.html:8
-msgid "Add Inventory Item"
-msgstr ""
-
-#: templates/inventory/inventory_form.html:15
-msgid "Source Shop"
-msgstr ""
-
-#: templates/inventory/inventory_form.html:17
-msgid "Select Shop"
-msgstr ""
-
-#: templates/inventory/inventory_form.html:22
-msgid ""
-"Where was this material purchased\n"
-"                from?"
-msgstr ""
-
-#: templates/inventory/inventory_form.html:29
-msgid "Material Name"
-msgstr ""
-
-#: templates/inventory/inventory_form.html:37
-#: templates/purchase/purchase_form.html:36
-msgid "Purchase Date"
-msgstr ""
-
-#: templates/inventory/inventory_form.html:45
-#: templates/inventory/inventory_list.html:25 templates/sales/sale_form.html:85
-msgid "Quantity"
-msgstr ""
-
-#: templates/inventory/inventory_form.html:50
-#: templates/inventory/inventory_list.html:27
-msgid "Cost"
-msgstr ""
-
-#: templates/inventory/inventory_form.html:56
-#: templates/inventory/inventory_list.html:29 templates/shop/shop_form.html:127
-#: templates/shop/shop_list.html:32
-msgid "Tags"
-msgstr ""
-
-#: templates/inventory/inventory_form.html:63
-msgid "Add to Inventory"
-msgstr ""
-
-#: templates/inventory/inventory_list.html:7
-msgid "Inventory (Raw Materials)"
-msgstr ""
-
-#: templates/inventory/inventory_list.html:9
-msgid "Add Material"
-msgstr ""
-
-#: templates/inventory/inventory_list.html:21
-msgid ""
-"Material\n"
-"                        Name"
-msgstr ""
-
-#: templates/inventory/inventory_list.html:23
-msgid ""
-"Source\n"
-"                        Shop"
-msgstr ""
-
-#: templates/inventory/inventory_list.html:64
-msgid "No inventory items found."
-msgstr ""
-
-#: templates/purchase/purchase_detail.html:8
-msgid "Purchase"
-msgstr ""
-
-#: templates/purchase/purchase_detail.html:10
-#: templates/purchase/purchase_form.html:21
-#: templates/purchase/purchase_list.html:33
-#: templates/work_orders/work_order_detail.html:109
-#: templates/work_orders/work_order_form.html:159
-#: templates/work_orders/work_order_form.html:232
-#: templates/work_orders/work_order_form.html:314
-msgid "Supplier"
-msgstr ""
-
-#: templates/purchase/purchase_detail.html:25
-#: templates/shop/shop_detail.html:164
-#: templates/work_orders/work_order_detail.html:24
-msgid "Delete"
-msgstr ""
-
-#: templates/purchase/purchase_detail.html:39
-#: templates/purchase/purchase_form.html:44
-#: templates/purchase/purchase_list.html:34
-#: templates/work_orders/work_order_form.html:199
-#: templates/work_orders/work_order_form.html:267
-#: templates/work_orders/work_order_form.html:349
-msgid "Voucher No"
-msgstr ""
-
-#: templates/purchase/purchase_detail.html:44
-#: templates/purchase/purchase_list.html:38
-#: templates/work_orders/work_order_list.html:30
-msgid "Payment"
-msgstr ""
-
-#: templates/purchase/purchase_detail.html:49
-#: templates/purchase/purchase_form.html:65
-#: templates/work_orders/work_order_detail.html:74
-#: templates/work_orders/work_order_form.html:116
-msgid "Paid Amount"
-msgstr ""
-
-#: templates/purchase/purchase_detail.html:54
-msgid "Total Amount"
-msgstr ""
-
-#: templates/purchase/purchase_detail.html:62
-#: templates/purchase/purchase_form.html:85
-#: templates/work_orders/work_order_detail.html:95
-#: templates/work_orders/work_order_form.html:131
-msgid "Notes"
-msgstr ""
-
-#: templates/purchase/purchase_detail.html:71
-msgid "Item"
-msgstr ""
-
-#: templates/purchase/purchase_detail.html:72
-msgid "Spec"
-msgstr ""
-
-#: templates/purchase/purchase_detail.html:73
-#: templates/purchase/purchase_form.html:116
-#: templates/purchase/purchase_form.html:166
-#: templates/purchase/purchase_form.html:233
-#: templates/sales/sale_detail.html:40
-#: templates/work_orders/work_order_detail.html:111
-#: templates/work_orders/work_order_form.html:172
-#: templates/work_orders/work_order_form.html:244
-#: templates/work_orders/work_order_form.html:326
-msgid "Qty"
-msgstr ""
-
-#: templates/purchase/purchase_detail.html:74
-#: templates/purchase/purchase_form.html:121
-#: templates/purchase/purchase_form.html:170
-#: templates/purchase/purchase_form.html:237
-#: templates/work_orders/work_order_detail.html:112
-#: templates/work_orders/work_order_form.html:177
-#: templates/work_orders/work_order_form.html:248
-#: templates/work_orders/work_order_form.html:330
-msgid "Unit"
-msgstr ""
-
-#: templates/purchase/purchase_detail.html:75
-#: templates/purchase/purchase_form.html:128
-#: templates/purchase/purchase_form.html:176
-#: templates/purchase/purchase_form.html:243
-msgid "Rate"
-msgstr ""
-
-#: templates/purchase/purchase_detail.html:76
-#: templates/purchase/purchase_form.html:133
-#: templates/purchase/purchase_form.html:181
-#: templates/purchase/purchase_form.html:247
-#: templates/purchase/purchase_list.html:36 templates/sales/sale_detail.html:42
-#: templates/shop/shop_list.html:16
-#: templates/work_orders/work_order_detail.html:166
-msgid "Total"
-msgstr ""
-
-#: templates/purchase/purchase_detail.html:77
-msgid "Stock"
-msgstr ""
-
-#: templates/purchase/purchase_detail.html:106
-#: templates/purchase/purchase_list.html:43 templates/sales/sale_list.html:27
-#: templates/work_orders/work_order_detail.html:110
-msgid "Voucher"
-msgstr ""
-
-#: templates/purchase/purchase_detail.html:114
-msgid ""
-"Click to view full\n"
-"                size"
-msgstr ""
-
-#: templates/purchase/purchase_detail.html:117
-msgid "No voucher uploaded for this purchase."
-msgstr ""
-
-#: templates/purchase/purchase_form.html:10
-#: templates/purchase/purchase_list.html:16 templates/shop/shop_detail.html:155
-msgid "New Purchase"
-msgstr ""
-
-#: templates/purchase/purchase_form.html:12
-msgid "Edit Purchase"
-msgstr ""
-
-#: templates/purchase/purchase_form.html:24
-msgid "Select Supplier"
-msgstr ""
-
-#: templates/purchase/purchase_form.html:52
-#: templates/work_orders/work_order_detail.html:56
-msgid "Payment Status"
-msgstr ""
-
-#: templates/purchase/purchase_form.html:56
-msgid "Pending"
-msgstr ""
-
-#: templates/purchase/purchase_form.html:58
-msgid "Done"
-msgstr ""
-
-#: templates/purchase/purchase_form.html:72
-msgid ""
-"Voucher\n"
-"                        File"
-msgstr ""
-
-#: templates/purchase/purchase_form.html:78
-#: templates/work_orders/work_order_form.html:210
-msgid "View Current Voucher"
-msgstr ""
-
-#: templates/purchase/purchase_form.html:92
-#: templates/purchase/purchase_list.html:41 templates/sales/sale_list.html:25
-msgid "Items"
-msgstr ""
-
-#: templates/purchase/purchase_form.html:106
-#: templates/purchase/purchase_form.html:158
-#: templates/purchase/purchase_form.html:225 templates/sales/sale_form.html:77
-msgid "Product Name"
-msgstr ""
-
-#: templates/purchase/purchase_form.html:111
-#: templates/purchase/purchase_form.html:162
-#: templates/purchase/purchase_form.html:229
-msgid "Specification"
-msgstr ""
-
-#: templates/purchase/purchase_form.html:138
-#: templates/purchase/purchase_form.html:185
-#: templates/purchase/purchase_form.html:251
-msgid "Stock Status"
-msgstr ""
-
-#: templates/purchase/purchase_form.html:141
-#: templates/purchase/purchase_form.html:187
-#: templates/purchase/purchase_form.html:253
-msgid "IN STOCK"
-msgstr ""
-
-#: templates/purchase/purchase_form.html:143
-#: templates/purchase/purchase_form.html:188
-#: templates/purchase/purchase_form.html:254
-msgid "OUT OF STOCK"
-msgstr ""
-
-#: templates/purchase/purchase_form.html:197 templates/sales/sale_form.html:52
-msgid "Add Another Item"
-msgstr ""
-
-#: templates/purchase/purchase_form.html:205
-msgid "Save Purchase"
-msgstr ""
-
-#: templates/purchase/purchase_list.html:40
-msgid "Paid"
-msgstr ""
-
-#: templates/purchase/purchase_list.html:44 templates/sales/sale_list.html:28
-#: templates/work_orders/work_order_list.html:35
-msgid "Action"
-msgstr ""
-
-#: templates/purchase/purchase_list.html:98
-msgid "No purchase records found."
-msgstr ""
-
-#: templates/sales/sale_detail.html:7
-msgid "Sale Record"
-msgstr ""
-
-#: templates/sales/sale_detail.html:10
-msgid "Back to List"
-msgstr ""
-
-#: templates/sales/sale_detail.html:23
-msgid "To"
-msgstr ""
-
-#: templates/sales/sale_detail.html:37
-msgid "Item / Material"
-msgstr ""
-
-#: templates/sales/sale_detail.html:38
-msgid "Source (Traceability)"
-msgstr ""
-
-#: templates/sales/sale_detail.html:39
-#: templates/work_orders/work_order_form.html:186
-#: templates/work_orders/work_order_form.html:256
-#: templates/work_orders/work_order_form.html:338
-msgid "Weight"
-msgstr ""
-
-#: templates/sales/sale_detail.html:41 templates/sales/sale_form.html:89
-msgid "Unit Price"
-msgstr ""
-
-#: templates/sales/sale_detail.html:74
-msgid "Grand Total"
-msgstr ""
-
-#: templates/sales/sale_detail.html:87
-msgid "Voucher / Bill"
-msgstr ""
-
-#: templates/sales/sale_form.html:8
-msgid "New Sale Record"
-msgstr ""
-
-#: templates/sales/sale_form.html:17
-msgid ""
-"Select Buyer\n"
-"                        Company"
-msgstr ""
-
-#: templates/sales/sale_form.html:20
-msgid "Select Buyer"
-msgstr ""
-
-#: templates/sales/sale_form.html:28
-msgid "Sale Date"
-msgstr ""
-
-#: templates/sales/sale_form.html:35
-msgid ""
-"Upload Voucher\n"
-"                    / Bill Image"
-msgstr ""
-
-#: templates/sales/sale_form.html:44
-msgid "ITEMS"
-msgstr ""
-
-#: templates/sales/sale_form.html:59
-msgid "Save Sale Record"
-msgstr ""
-
-#: templates/sales/sale_form.html:81
-msgid "Weight (kg)"
-msgstr ""
-
-#: templates/sales/sale_form.html:98
-msgid "Traceability Source (Optional)"
-msgstr ""
-
-#: templates/sales/sale_form.html:102
-msgid "No Source Linked"
-msgstr ""
-
-#: templates/sales/sale_form.html:108
-msgid "Select raw material used for this item."
-msgstr ""
-
-#: templates/sales/sale_list.html:7
-msgid "Sales / Orders"
-msgstr ""
-
-#: templates/sales/sale_list.html:9
-msgid "New Sale"
-msgstr ""
-
-#: templates/sales/sale_list.html:21
-msgid "Buyer"
-msgstr ""
-
-#: templates/sales/sale_list.html:23
-msgid ""
-"Total\n"
-"                        Amount"
-msgstr ""
-
-#: templates/sales/sale_list.html:67
-msgid "No sales records found."
-msgstr ""
-
-#: templates/service/service_detail.html:28
-msgid "Back to All Services"
-msgstr ""
-
-#: templates/service/services.html:162
-msgid "Call Our Workshop Today"
-msgstr ""
-
-#: templates/service_page/crane-repair-and-maintenance.html:62
-#: templates/service_page/earthmoving-repair.html:62
-#: templates/service_page/ewp-repair.html:60
-#: templates/service_page/heavy_engineering.html:54
-#: templates/service_page/material-handling-repairs.html:62
-#: templates/service_page/metal_components.html:59
-#: templates/service_page/truck-repair.html:59
-msgid "Contact Us"
-msgstr ""
-
-#: templates/service_page/crane-repair-and-maintenance.html:65
-#: templates/service_page/earthmoving-repair.html:65
-#: templates/service_page/ewp-repair.html:63
-#: templates/service_page/heavy_engineering.html:57
-#: templates/service_page/material-handling-repairs.html:65
-#: templates/service_page/metal_components.html:62
-#: templates/service_page/truck-repair.html:62
-msgid "Back to Services"
-msgstr ""
-
-#: templates/shop/shop_detail.html:15 templates/shop/shop_list.html:27
-msgid "Institution"
-msgstr ""
-
-#: templates/shop/shop_detail.html:27
-msgid "Not specified"
-msgstr ""
-
-#: templates/shop/shop_detail.html:35
-msgid "Visiting Card"
-msgstr ""
-
-#: templates/shop/shop_detail.html:42
-msgid "No Card Found"
-msgstr ""
-
-#: templates/shop/shop_detail.html:53 templates/shop/shop_form.html:117
-msgid "Products List"
-msgstr ""
-
-#: templates/shop/shop_detail.html:55
-msgid "No products list available"
-msgstr ""
-
-#: templates/shop/shop_detail.html:63
-msgid "Contact Information"
-msgstr ""
-
-#: templates/shop/shop_detail.html:87
-msgid "Online Transaction"
-msgstr ""
-
-#: templates/shop/shop_detail.html:106 templates/shop/shop_form.html:91
+#: templates/buyer/buyer_form.html:137 templates/buyer/buyer_form.html:138
+#: templates/shop/shop_detail.html:165 templates/shop/shop_form.html:181
 msgid "WhatsApp"
 msgstr ""
 
-#: templates/shop/shop_detail.html:123 templates/shop/shop_form.html:107
-msgid "Email/Web"
+#: templates/buyer/buyer_form.html:146 templates/buyer/buyer_form.html:147
+msgid "Email"
 msgstr ""
 
-#: templates/shop/shop_detail.html:140
-msgid "Google Map"
+#: templates/buyer/buyer_form.html:155
+msgid "Primary"
 msgstr ""
 
-#: templates/shop/shop_detail.html:143
-msgid "Google Map Integration (Coming Soon)"
+#: templates/buyer/buyer_form.html:165
+msgid "Action"
 msgstr ""
 
-#: templates/shop/shop_form.html:3 templates/shop/shop_form.html:10
-msgid "Add New Shop"
+#: templates/buyer/buyer_form.html:183
+msgid "Add Person"
 msgstr ""
 
-#: templates/shop/shop_form.html:3 templates/shop/shop_form.html:12
-msgid "Edit Shop"
-msgstr ""
-
-#: templates/shop/shop_form.html:22
-msgid "Shop Name"
-msgstr ""
-
-#: templates/shop/shop_form.html:24
-msgid "Enter shop name"
-msgstr ""
-
-#: templates/shop/shop_form.html:41
-msgid "Preview"
-msgstr ""
-
-#: templates/shop/shop_form.html:50 templates/shop/shop_list.html:28
-msgid "Proprietor"
-msgstr ""
-
-#: templates/shop/shop_form.html:53
-msgid "Proprietor Name"
-msgstr ""
-
-#: templates/shop/shop_form.html:57 templates/shop/shop_list.html:31
-msgid "Category"
-msgstr ""
-
-#: templates/shop/shop_form.html:60
-msgid "Select Category"
-msgstr ""
-
-#: templates/shop/shop_form.html:66
-msgid "Add New Category"
-msgstr ""
-
-#: templates/shop/shop_form.html:69
-msgid "Enter new category name"
-msgstr ""
-
-#: templates/shop/shop_form.html:78
-msgid "Shop Address"
-msgstr ""
-
-#: templates/shop/shop_form.html:84
-msgid "e.g. 017XX-XXXXXX"
-msgstr ""
-
-#: templates/shop/shop_form.html:93
-msgid "WhatsApp Number"
-msgstr ""
-
-#: templates/shop/shop_form.html:97
-msgid ""
-"Online\n"
-"                    Transaction"
-msgstr ""
-
-#: templates/shop/shop_form.html:100
-msgid "e.g. Bkash 018XX-XXXXXX"
-msgstr ""
-
-#: templates/shop/shop_form.html:110
-msgid "Email or Website"
-msgstr ""
-
-#: templates/shop/shop_form.html:120
-msgid "Products available in this shop..."
-msgstr ""
-
-#: templates/shop/shop_form.html:129
-msgid "separate with comma"
-msgstr ""
-
-#: templates/shop/shop_form.html:150
-msgid "e.g. Lathe, Shaft, Bush, লেদ"
-msgstr ""
-
-#: templates/shop/shop_form.html:152
-msgid "Add Tag"
-msgstr ""
-
-#: templates/shop/shop_form.html:161
-msgid "Add Shop"
-msgstr ""
-
-#: templates/shop/shop_form.html:163
+#: templates/buyer/buyer_form.html:189
+#: templates/inventory/inventory_form.html:97
+#: templates/purchase/purchase_form.html:218 templates/sales/sale_form.html:106
+#: templates/shop/shop_form.html:294
+#: templates/work_orders/work_order_form.html:233
 msgid "Save"
 msgstr ""
 
-#: templates/shop/shop_list.html:90
+#: templates/buyer/buyer_form.html:190 templates/components/_modals.html:52
+#: templates/inventory/inventory_form.html:98
+#: templates/purchase/purchase_form.html:219 templates/sales/sale_form.html:108
+#: templates/sales/sale_form.html:110 templates/shop/shop_form.html:296
+#: templates/work_orders/work_order_form.html:234
+msgid "Cancel"
+msgstr ""
+
+#: templates/buyer/buyer_list.html:8 templates/buyer/buyer_list.html:12
+#: templates/buyer/buyer_list.html:45
+msgid "Buyer Companies"
+msgstr ""
+
+#: templates/buyer/buyer_list.html:13
+msgid "Browse and manage buyer companies for Bangladesh Engineering Workshop."
+msgstr ""
+
+#: templates/buyer/buyer_list.html:30
+msgid "Search..."
+msgstr ""
+
+#: templates/buyer/buyer_list.html:58 templates/buyer/buyer_list.html:77
+#: templates/shop/shop_list.html:60 templates/shop/shop_list.html:87
+msgid "No"
+msgstr ""
+
+#: templates/buyer/buyer_list.html:67 templates/buyer/buyer_list.html:87
+msgid "Contacts"
+msgstr ""
+
+#: templates/buyer/buyer_list.html:70 templates/buyer/buyer_list.html:103
+#: templates/purchase/purchase_list.html:72
+#: templates/purchase/purchase_list.html:105 templates/sales/sale_list.html:47
+#: templates/sales/sale_list.html:64
+#: templates/work_orders/work_order_list.html:63
+#: templates/work_orders/work_order_list.html:92
+msgid "Actions"
+msgstr ""
+
+#: templates/buyer/buyer_list.html:108
+msgid "Are you sure you want to delete this buyer?"
+msgstr ""
+
+#: templates/buyer/buyer_list.html:124
+msgid "No buyers found."
+msgstr ""
+
+#: templates/components/_modals.html:19
+#: templates/work_orders/work_order_detail.html:316
+msgid "View Full"
+msgstr ""
+
+#: templates/components/_modals.html:56
+msgid "Confirm"
+msgstr ""
+
+#: templates/components/_navigation.html:27
+msgid "Breadcrumb"
+msgstr ""
+
+#: templates/components/_pagination.html:14
+#: templates/components/_pagination.html:18
+#: templates/components/_pagination.html:49
 msgid "Previous"
 msgstr ""
 
-#: templates/shop/shop_list.html:93
-msgid "Page"
-msgstr ""
-
-#: templates/shop/shop_list.html:95
+#: templates/components/_pagination.html:24
+#: templates/components/_pagination.html:28
+#: templates/components/_pagination.html:76
 msgid "Next"
 msgstr ""
 
-#: templates/shop/shop_list.html:103
-msgid "Back to Home"
+#: templates/components/_pagination.html:36
+msgid "Showing"
 msgstr ""
 
-#: templates/work_orders/work_order_detail.html:8
-msgid "Order"
+#: templates/components/_pagination.html:38
+msgid "to"
 msgstr ""
 
-#: templates/work_orders/work_order_detail.html:10
-#: templates/work_orders/work_order_form.html:21
-#: templates/work_orders/work_order_list.html:21
-msgid "Company"
+#: templates/components/_pagination.html:40
+msgid "of"
 msgstr ""
 
-#: templates/work_orders/work_order_detail.html:38
-#: templates/work_orders/work_order_form.html:41
-msgid "Job Name"
+#: templates/components/_pagination.html:42
+msgid "results"
 msgstr ""
 
-#: templates/work_orders/work_order_detail.html:48
-#: templates/work_orders/work_order_form.html:48
-msgid "Delivery Date"
+#: templates/errors/404.html:3
+msgid "Page Not Found"
 msgstr ""
 
-#: templates/work_orders/work_order_detail.html:61
-msgid "Quoted Price"
+#: templates/errors/404.html:7
+msgid "Sorry, this page could not be found."
 msgstr ""
 
-#: templates/work_orders/work_order_detail.html:66
-#: templates/work_orders/work_order_form.html:107
+#: templates/errors/404.html:8 templates/errors/500.html:8
+msgid "Return to Homepage"
+msgstr ""
+
+#: templates/errors/500.html:3
+msgid "Internal Server Error"
+msgstr ""
+
+#: templates/errors/500.html:7
+msgid "Sorry, an internal server error has occurred."
+msgstr ""
+
+#: templates/inventory/inventory_form.html:6
+msgid "Add Inventory"
+msgstr ""
+
+#: templates/inventory/inventory_form.html:10
+#: templates/inventory/inventory_form.html:26
+msgid "Add Inventory Item"
+msgstr ""
+
+#: templates/inventory/inventory_form.html:11
+msgid "Add raw materials to inventory for Bangladesh Engineering Workshop."
+msgstr ""
+
+#: templates/inventory/inventory_form.html:45
+#: templates/inventory/inventory_list.html:47
+msgid "Source Shop"
+msgstr ""
+
+#: templates/inventory/inventory_form.html:48
+msgid "Select Shop"
+msgstr ""
+
+#: templates/inventory/inventory_form.html:56
+#: templates/inventory/inventory_list.html:44
+msgid "Material Name"
+msgstr ""
+
+#: templates/inventory/inventory_form.html:59
+msgid "e.g. Steel Pipe 2 inch"
+msgstr ""
+
+#: templates/inventory/inventory_form.html:63
+#: templates/purchase/purchase_form.html:78
+msgid "Purchase Date"
+msgstr ""
+
+#: templates/inventory/inventory_form.html:74
+#: templates/inventory/inventory_list.html:50 templates/sales/sale_form.html:76
+msgid "Quantity"
+msgstr ""
+
+#: templates/inventory/inventory_form.html:77
+#: templates/purchase/purchase_detail.html:81
+#: templates/purchase/purchase_form.html:160
+#: templates/sales/sale_detail.html:56
+#: templates/work_orders/work_order_detail.html:241
+#: templates/work_orders/work_order_form.html:186
+msgid "Qty"
+msgstr ""
+
+#: templates/inventory/inventory_form.html:81
+#: templates/inventory/inventory_list.html:53
+msgid "Cost"
+msgstr ""
+
+#: templates/inventory/inventory_form.html:84
+#: templates/work_orders/work_order_form.html:237
+#: templates/work_orders/work_order_list.html:57
+#: templates/work_orders/work_order_list.html:86
 msgid "Total Cost"
 msgstr ""
 
-#: templates/work_orders/work_order_detail.html:79
-#: templates/work_orders/work_order_form.html:124
-msgid "Pending Amount"
+#: templates/inventory/inventory_form.html:88
+#: templates/inventory/inventory_list.html:56 templates/shop/shop_form.html:230
+#: templates/shop/shop_list.html:78 templates/shop/shop_list.html:143
+msgid "Tags"
 msgstr ""
 
-#: templates/work_orders/work_order_detail.html:87
-msgid "Job Description"
+#: templates/inventory/inventory_form.html:91
+msgid "e.g. Steel, Heavy, Grade-A"
 msgstr ""
 
-#: templates/work_orders/work_order_detail.html:101
-msgid "Parts Used"
+#: templates/inventory/inventory_list.html:11
+msgid "Raw Materials Inventory"
 msgstr ""
 
-#: templates/work_orders/work_order_detail.html:108
-msgid "Part"
+#: templates/inventory/inventory_list.html:12
+msgid "Raw material stock list for Bangladesh Engineering Workshop."
 msgstr ""
 
-#: templates/work_orders/work_order_detail.html:113
-#: templates/work_orders/work_order_form.html:194
-#: templates/work_orders/work_order_form.html:263
-#: templates/work_orders/work_order_form.html:345
-msgid "Price"
+#: templates/inventory/inventory_list.html:23
+#: templates/inventory/inventory_list.html:89
+msgid "Add Material"
 msgstr ""
 
-#: templates/work_orders/work_order_detail.html:132
-msgid "View"
+#: templates/inventory/inventory_list.html:28
+msgid "Raw Materials"
 msgstr ""
 
-#: templates/work_orders/work_order_detail.html:149
-msgid "No parts added."
+#: templates/inventory/inventory_list.html:88
+msgid "No inventory items found."
 msgstr ""
 
-#: templates/work_orders/work_order_detail.html:156
-msgid "Cost Summary"
+#: templates/purchase/purchase_detail.html:6
+#: templates/purchase/purchase_detail.html:10
+#: templates/purchase/purchase_detail.html:26
+msgid "Purchase"
 msgstr ""
 
-#: templates/work_orders/work_order_detail.html:158
-msgid "Labor"
+#: templates/purchase/purchase_detail.html:11
+msgid "Purchase voucher details for"
 msgstr ""
 
-#: templates/work_orders/work_order_detail.html:160
-msgid "Material"
+#: templates/purchase/purchase_detail.html:29
+#: templates/purchase/purchase_form.html:64
+#: templates/purchase/purchase_list.html:48
+#: templates/purchase/purchase_list.html:80
+#: templates/work_orders/work_order_detail.html:240
+#: templates/work_orders/work_order_form.html:216
+msgid "Supplier"
 msgstr ""
 
-#: templates/work_orders/work_order_detail.html:162
-msgid "Parts Total"
+#: templates/purchase/purchase_detail.html:51
+#: templates/purchase/purchase_list.html:54
+#: templates/purchase/purchase_list.html:92
+msgid "Voucher No"
 msgstr ""
 
-#: templates/work_orders/work_order_form.html:10
-#: templates/work_orders/work_order_list.html:9
-msgid "Add Order"
+#: templates/purchase/purchase_detail.html:52
+#: templates/purchase/purchase_list.html:60
+#: templates/purchase/purchase_list.html:94
+msgid "Payment"
 msgstr ""
 
-#: templates/work_orders/work_order_form.html:12
-msgid "Edit Order"
+#: templates/purchase/purchase_detail.html:53
+#: templates/purchase/purchase_form.html:98
+msgid "Paid Amount"
 msgstr ""
 
+#: templates/purchase/purchase_detail.html:54 templates/sales/sale_list.html:38
+#: templates/sales/sale_list.html:57
+msgid "Total Amount"
+msgstr ""
+
+#: templates/purchase/purchase_detail.html:69
+#: templates/purchase/purchase_form.html:117
+msgid "Notes"
+msgstr ""
+
+#: templates/purchase/purchase_detail.html:79
+msgid "Item"
+msgstr ""
+
+#: templates/purchase/purchase_detail.html:80
+msgid "Spec"
+msgstr ""
+
+#: templates/purchase/purchase_detail.html:82
+#: templates/purchase/purchase_form.html:184
+#: templates/purchase/purchase_form.html:187
+#: templates/work_orders/work_order_form.html:201
+#: templates/work_orders/work_order_form.html:203
+msgid "Unit"
+msgstr ""
+
+#: templates/purchase/purchase_detail.html:83
+#: templates/purchase/purchase_form.html:168
+msgid "Rate"
+msgstr ""
+
+#: templates/purchase/purchase_detail.html:84
+#: templates/purchase/purchase_form.html:194
+#: templates/purchase/purchase_list.html:57
+#: templates/purchase/purchase_list.html:93 templates/sales/sale_detail.html:58
+#: templates/shop/shop_list.html:42
+msgid "Total"
+msgstr ""
+
+#: templates/purchase/purchase_detail.html:85
+msgid "Stock"
+msgstr ""
+
+#: templates/purchase/purchase_detail.html:109
+#: templates/purchase/purchase_list.html:69
+#: templates/purchase/purchase_list.html:97 templates/sales/sale_list.html:44
+#: templates/sales/sale_list.html:59
+#: templates/work_orders/work_order_detail.html:249
+#: templates/work_orders/work_order_detail.html:262
+#: templates/work_orders/work_order_form.html:208
+msgid "Voucher"
+msgstr ""
+
+#: templates/purchase/purchase_detail.html:118
+#: templates/sales/sale_detail.html:103
+msgid "Click to view full size"
+msgstr ""
+
+#: templates/purchase/purchase_detail.html:120
+msgid "No voucher uploaded for this purchase."
+msgstr ""
+
+#: templates/purchase/purchase_form.html:7
+#: templates/purchase/purchase_form.html:12
+#: templates/purchase/purchase_form.html:28
+#: templates/purchase/purchase_list.html:27
+#: templates/purchase/purchase_list.html:127 templates/shop/shop_detail.html:43
+msgid "New Purchase"
+msgstr ""
+
+#: templates/purchase/purchase_form.html:7
+#: templates/purchase/purchase_form.html:12
+#: templates/purchase/purchase_form.html:28
+msgid "Edit Purchase"
+msgstr ""
+
+#: templates/purchase/purchase_form.html:13
+msgid "Manage purchase entries for Bangladesh Engineering Workshop."
+msgstr ""
+
+#: templates/purchase/purchase_form.html:35
+#: templates/work_orders/work_order_form.html:22
+msgid "Kg"
+msgstr ""
+
+#: templates/purchase/purchase_form.html:36
+#: templates/work_orders/work_order_form.html:21
+msgid "Pcs"
+msgstr ""
+
+#: templates/purchase/purchase_form.html:37
 #: templates/work_orders/work_order_form.html:24
-msgid "Select Company"
+msgid "Meter"
 msgstr ""
 
-#: templates/work_orders/work_order_form.html:33
-msgid "Job Date"
+#: templates/purchase/purchase_form.html:38
+#: templates/work_orders/work_order_form.html:23
+msgid "Ton"
 msgstr ""
 
-#: templates/work_orders/work_order_form.html:55
-msgid ""
-"Job\n"
-"                    Description"
+#: templates/purchase/purchase_form.html:39
+#: templates/work_orders/work_order_form.html:25
+msgid "Feet"
 msgstr ""
 
-#: templates/work_orders/work_order_form.html:73
-msgid ""
-"Payment\n"
-"                        Status"
+#: templates/purchase/purchase_form.html:40
+#: templates/work_orders/work_order_form.html:26
+msgid "Inch"
 msgstr ""
 
-#: templates/work_orders/work_order_form.html:84
-msgid ""
-"Quoted\n"
-"                        Price"
+#: templates/purchase/purchase_form.html:41
+#: templates/work_orders/work_order_form.html:29
+msgid "Ltr"
 msgstr ""
 
-#: templates/work_orders/work_order_form.html:93
-msgid "Labor Cost"
+#: templates/purchase/purchase_form.html:42
+#: templates/work_orders/work_order_form.html:27
+msgid "Set"
 msgstr ""
 
-#: templates/work_orders/work_order_form.html:100
-msgid ""
-"Material\n"
-"                        Cost"
+#: templates/purchase/purchase_form.html:43
+#: templates/work_orders/work_order_form.html:30
+msgid "Nos"
 msgstr ""
 
-#: templates/work_orders/work_order_form.html:138
-#: templates/work_orders/work_order_list.html:32
-msgid "Parts"
+#: templates/purchase/purchase_form.html:44
+msgid "Box"
 msgstr ""
 
-#: templates/work_orders/work_order_form.html:154
-#: templates/work_orders/work_order_form.html:228
-#: templates/work_orders/work_order_form.html:310
-msgid "Part Name"
+#: templates/purchase/purchase_form.html:45
+msgid "Roll"
 msgstr ""
 
-#: templates/work_orders/work_order_form.html:181
-#: templates/work_orders/work_order_form.html:252
-#: templates/work_orders/work_order_form.html:334
-msgid "Measurement"
+#: templates/purchase/purchase_form.html:46
+msgid "Sheet"
 msgstr ""
 
-#: templates/work_orders/work_order_form.html:204
-#: templates/work_orders/work_order_form.html:271
-#: templates/work_orders/work_order_form.html:353
+#: templates/purchase/purchase_form.html:47
+#: templates/work_orders/work_order_form.html:32
+msgid "Coil"
+msgstr ""
+
+#: templates/purchase/purchase_form.html:67
+msgid "Select Supplier"
+msgstr ""
+
+#: templates/purchase/purchase_form.html:85
+msgid "Payment Status"
+msgstr ""
+
+#: templates/purchase/purchase_form.html:88
+msgid "Pending"
+msgstr ""
+
+#: templates/purchase/purchase_form.html:89
+msgid "Done"
+msgstr ""
+
+#: templates/purchase/purchase_form.html:105
 msgid "Voucher File"
 msgstr ""
 
-#: templates/work_orders/work_order_form.html:280
-msgid "Add Another Part"
+#: templates/purchase/purchase_form.html:112 templates/sales/sale_form.html:46
+#: templates/work_orders/work_order_form.html:112
+#: templates/work_orders/work_order_form.html:212
+msgid "View Current"
 msgstr ""
 
-#: templates/work_orders/work_order_form.html:288
-msgid "Save Order"
+#: templates/purchase/purchase_form.html:119
+msgid "Optional remarks..."
 msgstr ""
 
-#: templates/work_orders/work_order_list.html:7
-msgid "Work Orders"
+#: templates/purchase/purchase_form.html:130
+#: templates/purchase/purchase_list.html:66
+#: templates/purchase/purchase_list.html:96 templates/sales/sale_list.html:41
+#: templates/sales/sale_list.html:58
+msgid "Items"
 msgstr ""
 
-#: templates/work_orders/work_order_list.html:23
+#: templates/purchase/purchase_form.html:134 templates/sales/sale_form.html:60
+#: templates/work_orders/work_order_form.html:123
+msgid "Add Item"
+msgstr ""
+
+#: templates/purchase/purchase_form.html:144
+msgid "Product"
+msgstr ""
+
+#: templates/purchase/purchase_form.html:152
+#: templates/work_orders/work_order_detail.html:239
+#: templates/work_orders/work_order_form.html:182
+msgid "Measurement"
+msgstr ""
+
+#: templates/purchase/purchase_form.html:176
+#: templates/sales/sale_detail.html:55
+#: templates/work_orders/work_order_detail.html:242
+#: templates/work_orders/work_order_form.html:197
+msgid "Weight"
+msgstr ""
+
+#: templates/purchase/purchase_form.html:204
+msgid "Remove Item"
+msgstr ""
+
+#: templates/purchase/purchase_list.html:12
+msgid "Purchase records for Bangladesh Engineering Workshop."
+msgstr ""
+
+#: templates/purchase/purchase_list.html:63
+#: templates/purchase/purchase_list.html:95
+msgid "Paid"
+msgstr ""
+
+#: templates/purchase/purchase_list.html:111
+msgid "Are you sure you want to delete this purchase?"
+msgstr ""
+
+#: templates/purchase/purchase_list.html:126
+msgid "No purchase records found."
+msgstr ""
+
+#: templates/sales/sale_detail.html:6
+msgid "Sale Detail"
+msgstr ""
+
+#: templates/sales/sale_detail.html:9
+msgid "Sale"
+msgstr ""
+
+#: templates/sales/sale_detail.html:9
+msgid "Sale record for"
+msgstr ""
+
+#: templates/sales/sale_detail.html:21
+msgid "Sale Record"
+msgstr ""
+
+#: templates/sales/sale_detail.html:25 templates/sales/sale_form.html:6
+#: templates/sales/sale_form.html:9
+msgid "Edit Sale"
+msgstr ""
+
+#: templates/sales/sale_detail.html:53
+msgid "Material"
+msgstr ""
+
+#: templates/sales/sale_detail.html:54 templates/sales/sale_form.html:84
+msgid "Source"
+msgstr ""
+
+#: templates/sales/sale_detail.html:57 templates/sales/sale_form.html:80
+msgid "Unit Price"
+msgstr ""
+
+#: templates/sales/sale_detail.html:68
+msgid "LINK"
+msgstr ""
+
+#: templates/sales/sale_detail.html:83
+#: templates/work_orders/work_order_detail.html:133
+#: templates/work_orders/work_order_detail.html:291
+msgid "Grand Total"
+msgstr ""
+
+#: templates/sales/sale_detail.html:95 templates/sales/sale_form.html:43
+msgid "Voucher / Bill"
+msgstr ""
+
+#: templates/sales/sale_detail.html:105
+msgid "No voucher uploaded for this sale."
+msgstr ""
+
+#: templates/sales/sale_form.html:9
+msgid "Manage sale entries."
+msgstr ""
+
+#: templates/sales/sale_form.html:18
+msgid "Edit Sale Record"
+msgstr ""
+
+#: templates/sales/sale_form.html:18
+msgid "New Sale Record"
+msgstr ""
+
+#: templates/sales/sale_form.html:30
+msgid "Select Buyer Company"
+msgstr ""
+
+#: templates/sales/sale_form.html:32
+msgid "Select Buyer"
+msgstr ""
+
+#: templates/sales/sale_form.html:39
+msgid "Sale Date"
+msgstr ""
+
+#: templates/sales/sale_form.html:56
+msgid "ITEMS"
+msgstr ""
+
+#: templates/sales/sale_form.html:68
+msgid "Product Name"
+msgstr ""
+
+#: templates/sales/sale_form.html:69
+msgid "Item Name"
+msgstr ""
+
+#: templates/sales/sale_form.html:72
+msgid "Weight (kg)"
+msgstr ""
+
+#: templates/sales/sale_form.html:86
+msgid "None"
+msgstr ""
+
+#: templates/sales/sale_list.html:10
+msgid "Sales records for Bangladesh Engineering Workshop."
+msgstr ""
+
+#: templates/sales/sale_list.html:20
+msgid "Sales / Orders"
+msgstr ""
+
+#: templates/sales/sale_list.html:35 templates/sales/sale_list.html:56
+msgid "Buyer"
+msgstr ""
+
+#: templates/sales/sale_list.html:58
+msgid "items"
+msgstr ""
+
+#: templates/sales/sale_list.html:69
+msgid "Are you sure you want to delete this sale?"
+msgstr ""
+
+#: templates/sales/sale_list.html:84
+msgid "No sales records found."
+msgstr ""
+
+#: templates/service/service_detail.html:15 templates/service/services.html:13
+#: templates/service_page/crane-repair-and-maintenance.html:13
+#: templates/service_page/earthmoving-repair.html:13
+#: templates/service_page/ewp-repair.html:13
+#: templates/service_page/heavy_engineering.html:13
+#: templates/service_page/material-handling-repairs.html:13
+#: templates/service_page/metal_components.html:13
+#: templates/service_page/truck-repair.html:13
+msgid "Services"
+msgstr ""
+
+#: templates/service/service_detail.html:45
+msgid "Back to All Services"
+msgstr ""
+
+#: templates/service/services.html:6
+msgid "Our Services"
+msgstr ""
+
+#: templates/service/services.html:9
+msgid "Our Services - Bangladesh Engineering Workshop"
+msgstr ""
+
+#: templates/service/services.html:64
+msgid "Call Our Workshop Today"
+msgstr ""
+
+#: templates/service_page/crane-repair-and-maintenance.html:50
+#: templates/service_page/earthmoving-repair.html:57
+#: templates/service_page/ewp-repair.html:49
+#: templates/service_page/heavy_engineering.html:50
+#: templates/service_page/material-handling-repairs.html:50
+#: templates/service_page/metal_components.html:48
+#: templates/service_page/truck-repair.html:46
+msgid "Contact Us"
+msgstr ""
+
+#: templates/service_page/crane-repair-and-maintenance.html:51
+#: templates/service_page/earthmoving-repair.html:58
+#: templates/service_page/ewp-repair.html:50
+#: templates/service_page/heavy_engineering.html:51
+#: templates/service_page/material-handling-repairs.html:51
+#: templates/service_page/metal_components.html:49
+#: templates/service_page/truck-repair.html:47
+msgid "Back to Services"
+msgstr ""
+
+#: templates/shop/shop_detail.html:11
+msgid "Shop details for"
+msgstr ""
+
+#: templates/shop/shop_detail.html:37
+msgid "Shop Profile"
+msgstr ""
+
+#: templates/shop/shop_detail.html:46
+msgid "Are you sure you want to delete this shop?"
+msgstr ""
+
+#: templates/shop/shop_detail.html:48
+msgid "Delete"
+msgstr ""
+
+#: templates/shop/shop_detail.html:64 templates/shop/shop_list.html:63
+#: templates/shop/shop_list.html:92
+msgid "Institution"
+msgstr ""
+
+#: templates/shop/shop_detail.html:85
+msgid "Not specified"
+msgstr ""
+
+#: templates/shop/shop_detail.html:93 templates/shop/shop_form.html:63
+msgid "Visiting Card"
+msgstr ""
+
+#: templates/shop/shop_detail.html:96
+msgid "Visiting Card for"
+msgstr ""
+
+#: templates/shop/shop_detail.html:103
+msgid "No Card Found"
+msgstr ""
+
+#: templates/shop/shop_detail.html:116 templates/shop/shop_form.html:278
+msgid "Products List"
+msgstr ""
+
+#: templates/shop/shop_detail.html:119
+msgid "No products list available"
+msgstr ""
+
+#: templates/shop/shop_detail.html:127
+msgid "Contact Information"
+msgstr ""
+
+#: templates/shop/shop_detail.html:157 templates/shop/shop_form.html:196
+msgid "Online Transaction"
+msgstr ""
+
+#: templates/shop/shop_detail.html:177 templates/shop/shop_form.html:215
+msgid "Email/Web"
+msgstr ""
+
+#: templates/shop/shop_detail.html:198
+msgid "Google Map"
+msgstr ""
+
+#: templates/shop/shop_detail.html:202
+msgid "Google Map Integration (Coming Soon)"
+msgstr ""
+
+#: templates/shop/shop_form.html:7 templates/shop/shop_form.html:12
+#: templates/shop/shop_form.html:28
+msgid "Add New Shop"
+msgstr ""
+
+#: templates/shop/shop_form.html:7 templates/shop/shop_form.html:12
+#: templates/shop/shop_form.html:28
+msgid "Edit Shop"
+msgstr ""
+
+#: templates/shop/shop_form.html:13
+msgid "Manage shop entries for Bangladesh Engineering Workshop."
+msgstr ""
+
+#: templates/shop/shop_form.html:47
+msgid "Shop Name"
+msgstr ""
+
+#: templates/shop/shop_form.html:51
+msgid "Enter shop name"
+msgstr ""
+
+#: templates/shop/shop_form.html:87
+msgid "Current Card"
+msgstr ""
+
+#: templates/shop/shop_form.html:90
+#: templates/work_orders/work_order_detail.html:312
+msgid "Preview"
+msgstr ""
+
+#: templates/shop/shop_form.html:104 templates/shop/shop_list.html:66
+#: templates/shop/shop_list.html:101
+msgid "Proprietor"
+msgstr ""
+
+#: templates/shop/shop_form.html:108
+msgid "Proprietor Name"
+msgstr ""
+
+#: templates/shop/shop_form.html:123
+msgid "Shop Address"
+msgstr ""
+
+#: templates/shop/shop_form.html:134 templates/shop/shop_list.html:75
+#: templates/shop/shop_list.html:127
+msgid "Category"
+msgstr ""
+
+#: templates/shop/shop_form.html:141
+msgid "Select Category"
+msgstr ""
+
+#: templates/shop/shop_form.html:147
+msgid "Add New Category"
+msgstr ""
+
+#: templates/shop/shop_form.html:152
+msgid "Enter new category name"
+msgstr ""
+
+#: templates/shop/shop_form.html:170
+msgid "e.g. 017XX-XXXXXX"
+msgstr ""
+
+#: templates/shop/shop_form.html:185
+msgid "WhatsApp Number"
+msgstr ""
+
+#: templates/shop/shop_form.html:200
+msgid "e.g. Bkash 018XX-XXXXXX"
+msgstr ""
+
+#: templates/shop/shop_form.html:219
+msgid "Email or Website"
+msgstr ""
+
+#: templates/shop/shop_form.html:231
+msgid "comma separated"
+msgstr ""
+
+#: templates/shop/shop_form.html:239
+msgid "e.g. Lathe"
+msgstr ""
+
+#: templates/shop/shop_form.html:267
+msgid "Remove tag"
+msgstr ""
+
+#: templates/shop/shop_form.html:281
+msgid "List products..."
+msgstr ""
+
+#: templates/shop/shop_form.html:292
+msgid "Add Shop"
+msgstr ""
+
+#: templates/shop/shop_form.html:332
+msgid "Enter tag name"
+msgstr ""
+
+#: templates/shop/shop_form.html:394 templates/shop/shop_form.html:397
+msgid "Error removing tag"
+msgstr ""
+
+#: templates/shop/shop_list.html:19
+msgid "Browse all supplier shops and vendors at Bangladesh Engineering Workshop."
+msgstr ""
+
+#: templates/shop/shop_list.html:43
+msgid "New Search"
+msgstr ""
+
+#: templates/shop/shop_list.html:176
+msgid "Back to Home"
+msgstr ""
+
+#: templates/work_orders/work_order_detail.html:7
+#: templates/work_orders/work_order_detail.html:12
+#: templates/work_orders/work_order_detail.html:32
+#: templates/work_orders/work_order_detail.html:144
+#: templates/work_orders/work_order_detail.html:148
+msgid "Work Order"
+msgstr ""
+
+#: templates/work_orders/work_order_detail.html:52
+msgid "QUOTED PRICE"
+msgstr ""
+
+#: templates/work_orders/work_order_detail.html:57
+msgid "TOTAL COST"
+msgstr ""
+
+#: templates/work_orders/work_order_detail.html:62
+msgid "PROFIT / LOSS"
+msgstr ""
+
+#: templates/work_orders/work_order_detail.html:71
+msgid "STATUS"
+msgstr ""
+
+#: templates/work_orders/work_order_detail.html:91
+#: templates/work_orders/work_order_form.html:86
+msgid "Job Description"
+msgstr ""
+
+#: templates/work_orders/work_order_detail.html:103
+msgid "Schedule"
+msgstr ""
+
+#: templates/work_orders/work_order_detail.html:107
+#: templates/work_orders/work_order_form.html:75
+msgid "Job Date"
+msgstr ""
+
+#: templates/work_orders/work_order_detail.html:111
+#: templates/work_orders/work_order_form.html:79
+msgid "Delivery Date"
+msgstr ""
+
+#: templates/work_orders/work_order_detail.html:121
+msgid "Cost Breakdown"
+msgstr ""
+
+#: templates/work_orders/work_order_detail.html:125
+msgid "Labor Charges"
+msgstr ""
+
+#: templates/work_orders/work_order_detail.html:129
+#: templates/work_orders/work_order_form.html:98
+msgid "Material Cost"
+msgstr ""
+
+#: templates/work_orders/work_order_detail.html:160
+msgid "Loading preview..."
+msgstr ""
+
+#: templates/work_orders/work_order_detail.html:173
+msgid "Production Notes"
+msgstr ""
+
+#: templates/work_orders/work_order_detail.html:188
+msgid "Parts Gallery"
+msgstr ""
+
+#: templates/work_orders/work_order_detail.html:193
+msgid "Document"
+msgstr ""
+
+#: templates/work_orders/work_order_detail.html:216
+msgid "No description"
+msgstr ""
+
+#: templates/work_orders/work_order_detail.html:229
+msgid "Raw Materials & Parts"
+msgstr ""
+
+#: templates/work_orders/work_order_detail.html:238
+#: templates/work_orders/work_order_form.html:178
+msgid "Part Name"
+msgstr ""
+
+#: templates/work_orders/work_order_detail.html:301
+msgid "No parts or materials recorded for this order."
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:6
+#: templates/work_orders/work_order_form.html:9
+#: templates/work_orders/work_order_form.html:18
+msgid "Edit Order"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:9
+msgid "Manage work orders."
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:28
+#: templates/work_orders/work_order_list.html:45
+#: templates/work_orders/work_order_list.html:71
 msgid "Job"
 msgstr ""
 
-#: templates/work_orders/work_order_list.html:27
-msgid "Quoted"
+#: templates/work_orders/work_order_form.html:31
+msgid "Bag"
 msgstr ""
 
-#: templates/work_orders/work_order_list.html:28
-msgid ""
-"Total\n"
-"                        Cost"
+#: templates/work_orders/work_order_form.html:47
+msgid "Order Details"
 msgstr ""
 
-#: templates/work_orders/work_order_list.html:72
+#: templates/work_orders/work_order_form.html:55
+msgid "Closed"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:55
+msgid "Open"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:62
+msgid "Job Name"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:63
+msgid "Enter job name"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:66
+#: templates/work_orders/work_order_list.html:51
+#: templates/work_orders/work_order_list.html:79
+msgid "Company"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:68
+msgid "Select Company"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:90
+#: templates/work_orders/work_order_list.html:54
+#: templates/work_orders/work_order_list.html:83
+msgid "Quoted Price"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:94
+msgid "Labor Cost"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:107
+msgid "Work Order (Scan/Photo)"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:120
+msgid "Document Gallery"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:129
+msgid "Remove"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:134
+msgid "Document File"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:140
+msgid "Document Type"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:142
+msgid "Technical Drawing"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:143
+msgid "Production Photo"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:144
+msgid "External Voucher"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:145
+msgid "Other"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:150
+msgid "Short description"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:162
+msgid "Parts & Materials"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:165
+msgid "Add Part"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:171
+msgid "Remove Part"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:179
+msgid "Name of the part/service"
+msgstr ""
+
+#: templates/work_orders/work_order_form.html:190
+msgid "Price"
+msgstr ""
+
+#: templates/work_orders/work_order_list.html:13
+msgid "Production job orders for Bangladesh Engineering Workshop."
+msgstr ""
+
+#: templates/work_orders/work_order_list.html:98
+msgid "Are you sure you want to delete this work order?"
+msgstr ""
+
+#: templates/work_orders/work_order_list.html:113
 msgid "No work orders found."
 msgstr ""
 
