@@ -13,11 +13,12 @@ purchases_bp = Blueprint('purchases', __name__)
 @purchases_bp.route('/purchases')
 def purchase_list():
     """List all supplier purchases"""
-    purchases = purchase_svc.list_all()
+    query = request.args.get('q', '').strip()
+    purchases = purchase_svc.list_all(query)
     page = request.args.get('page', 1, type=int)
     from src.helpers.utils import paginate_list
     purchases, meta = paginate_list(purchases, page, per_page=10)
-    return render_template('purchase/purchase_list.html', purchases=purchases, supplier=None, meta=meta)
+    return render_template('purchase/purchase_list.html', purchases=purchases, supplier=None, meta=meta, search_query=query)
 
 
 @purchases_bp.route('/shops/<int:shop_id>/purchases')

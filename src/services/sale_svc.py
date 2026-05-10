@@ -11,8 +11,20 @@ from src.helpers.auth import verify_delete_password
 logger = setup_logger(Settings.LOG_DIR / "services.log", name="bew.services.sale")
 
 
-def list_all():
-    """Return all sales records."""
+def list_all(query: str = ''):
+    """Return all sales records, optionally filtered."""
+    if query:
+        from src.db.database import Sale, Buyer
+        from sqlalchemy import or_
+        items = Sale.query.join(Buyer, Sale.buyer_id == Buyer.id, isouter=True).filter(
+            or_(
+                Sale.display_id.ilike(f'%{query}%'),
+                Sale.voucher_id.ilike(f'%{query}%'),
+                Buyer.company_name.ilike(f'%{query}%')
+            )
+        ).order_by(Sale.sale_date.desc()).all()
+        return [s.to_dict() for s in items]
+        
     return db.get_all_sales()
 
 

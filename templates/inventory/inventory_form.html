@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% from 'components/_navigation.html' import page_header, breadcrumb with context %}
 {% from 'components/_buttons.html' import btn with context %}
+{% from 'components/_forms.html' import searchable_select with context %}
 {% from 'components/_seo.html' import og_tags, breadcrumb_schema with context %}
 
 {% block title %}{{ _('Add Inventory') }} - {{ _('Bangladesh Engineering Workshop') }}{% endblock %}
@@ -29,8 +30,8 @@
 ) }}
 
 {# ── Form Label/Input Helpers ────────────────────────────── #}
-{% set label_cls = "flex items-center gap-0.5 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase tracking-wide min-h-[24px]" %}
-{% set input_cls = "form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:border-[var(--color-primary)] outline-none transition-all" %}
+{% set label_cls = "flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide min-h-[28px]" %}
+{% set input_cls = "form-control w-full h-[38px] px-3 py-1.5 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all" %}
 
 {# ── Form ────────────────────────────────────────────────── #}
 <section class="mt-4">
@@ -38,57 +39,70 @@
           class="bg-[var(--color-surface)] p-5 md:p-6 rounded-[var(--radius-lg)]
                  shadow-[var(--shadow)] border border-[var(--color-border)]">
 
-        {# ── Row 1: Source Shop, Material Name, Purchase Date ── #}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5 p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)]">
-            <div>
-                <label for="shop_id" class="{{ label_cls }}">
-                    <span class="material-icons text-sm">storefront</span> {{ _('Source Shop') }}
-                </label>
-                <select name="shop_id" id="shop_id" class="{{ input_cls }}" required>
-                    <option value="">-- {{ _('Select Shop') }} --</option>
+        {# ── Material Details Block ──────────────────────── #}
+        <div class="p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)] mb-5">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-base font-semibold m-0 flex items-center gap-2 text-[var(--color-text)]">
+                    <span class="material-icons text-[var(--color-primary)]">inventory_2</span> {{ _('Material Details') }}
+                </h3>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="flex flex-col justify-end">
+                    {% set shop_options = [] %}
                     {% for shop in shops %}
-                    <option value="{{ shop.id }}">{{ shop.name }} ({{ shop.proprietor }})</option>
+                        {% set label = shop.name ~ ' (' ~ shop.proprietor ~ ')' if shop.proprietor else shop.name %}
+                        {% set _ = shop_options.append({'value': shop.id|string, 'label': label}) %}
                     {% endfor %}
-                </select>
-            </div>
-            <div>
-                <label for="material_name" class="{{ label_cls }}">
-                    <span class="material-icons text-sm">category</span> {{ _('Material Name') }}
-                </label>
-                <input type="text" name="material_name" id="material_name" class="{{ input_cls }}" required
-                       placeholder="{{ _('e.g. Steel Pipe 2 inch') }}">
-            </div>
-            <div>
-                <label for="purchase_date" class="{{ label_cls }}">
-                    <span class="material-icons text-sm">calendar_today</span> {{ _('Purchase Date') }}
-                </label>
-                <input type="date" name="purchase_date" id="purchase_date" class="{{ input_cls }}"
-                       value="{{ now_date }}">
-            </div>
-        </div>
-
-        {# ── Row 2: Quantity, Cost, Tags ─────────────────── #}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5 p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)]">
-            <div>
-                <label for="quantity" class="{{ label_cls }}">
-                    <span class="material-icons text-sm">balance</span> {{ _('Quantity') }}
-                </label>
-                <input type="number" step="0.01" name="quantity" id="quantity" class="{{ input_cls }}"
-                       placeholder="{{ _('Qty') }}">
-            </div>
-            <div>
-                <label for="cost" class="{{ label_cls }}">
-                    <span class="material-icons text-sm">payments</span> {{ _('Cost') }}
-                </label>
-                <input type="number" step="0.01" name="cost" id="cost" class="{{ input_cls }}"
-                       placeholder="{{ _('Total Cost') }}">
-            </div>
-            <div>
-                <label for="tags" class="{{ label_cls }}">
-                    <span class="material-icons text-sm">label</span> {{ _('Tags') }}
-                </label>
-                <input type="text" name="tags" id="tags" class="{{ input_cls }}"
-                       placeholder="{{ _('e.g. Steel, Heavy, Grade-A') }}">
+                    {{ searchable_select(
+                        name='shop_id',
+                        label=_('Supplier'),
+                        icon='storefront',
+                        options=shop_options,
+                        required=true,
+                        placeholder=_('Select Supplier')
+                    ) }}
+                </div>
+                <div class="flex flex-col justify-end">
+                    <label for="material_name" class="{{ label_cls }}">
+                        <span class="material-icons text-sm">category</span> {{ _('Material Name') }}
+                    </label>
+                    <input type="text" name="material_name" id="material_name" class="{{ input_cls }}" required
+                           placeholder="{{ _('e.g. Steel Pipe 2 inch') }}">
+                </div>
+                <div class="flex flex-col justify-end">
+                    <label for="purchase_date" class="{{ label_cls }}">
+                        <span class="material-icons text-sm">calendar_today</span> {{ _('Purchase Date') }}
+                    </label>
+                    <div class="relative flex items-center group">
+                        <input type="date" name="purchase_date" id="purchase_date" class="{{ input_cls }} pr-10"
+                               placeholder="dd/mm/yyyy"
+                               value="{{ now_date }}">
+                        <span class="material-icons absolute right-3 text-[var(--color-primary)] pointer-events-none text-lg">calendar_today</span>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col justify-end">
+                    <label for="quantity" class="{{ label_cls }}">
+                        <span class="material-icons text-sm">balance</span> {{ _('Quantity') }}
+                    </label>
+                    <input type="number" step="0.01" name="quantity" id="quantity" class="{{ input_cls }}"
+                           placeholder="{{ _('Qty') }}">
+                </div>
+                <div class="flex flex-col justify-end">
+                    <label for="cost" class="{{ label_cls }}">
+                        <span class="material-icons text-sm">payments</span> {{ _('Cost') }}
+                    </label>
+                    <input type="number" step="0.01" name="cost" id="cost" class="{{ input_cls }}"
+                           placeholder="{{ _('Total Cost') }}">
+                </div>
+                <div class="flex flex-col justify-end">
+                    <label for="tags" class="{{ label_cls }}">
+                        <span class="material-icons text-sm">label</span> {{ _('Tags') }}
+                    </label>
+                    <input type="text" name="tags" id="tags" class="{{ input_cls }}"
+                           placeholder="{{ _('e.g. Steel, Heavy, Grade-A') }}">
+                </div>
             </div>
         </div>
 

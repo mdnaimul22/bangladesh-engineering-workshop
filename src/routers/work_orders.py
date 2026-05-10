@@ -13,11 +13,12 @@ work_orders_bp = Blueprint('work_orders', __name__)
 @work_orders_bp.route('/work-orders')
 def work_order_list():
     """Master list of all production jobs"""
-    work_orders = work_order_svc.list_all()
+    query = request.args.get('q', '').strip()
+    work_orders = work_order_svc.list_all(query)
     page = request.args.get('page', 1, type=int)
     from src.helpers.utils import paginate_list
     work_orders, meta = paginate_list(work_orders, page, per_page=10)
-    return render_template('work_orders/work_order_list.html', work_orders=work_orders, meta=meta)
+    return render_template('work_orders/work_order_list.html', work_orders=work_orders, meta=meta, search_query=query)
 
 
 @work_orders_bp.route('/work-orders/new', methods=['GET', 'POST'])

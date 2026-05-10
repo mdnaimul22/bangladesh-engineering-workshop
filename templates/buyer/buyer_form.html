@@ -31,6 +31,10 @@
     actions=[header_actions]
 ) }}
 
+{# ── Form Variables ───────────────────────────────────────── #}
+{% set lbl = "flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide min-h-[28px]" %}
+{% set inp = "form-control w-full h-[38px] px-3 py-1.5 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all" %}
+
 {# ── Form ────────────────────────────────────────────────── #}
 <section class="mt-4">
     <form method="POST"
@@ -39,33 +43,25 @@
 
         {# ── Company Info ────────────────────────────────── #}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5 p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)]">
-            <div>
-                <label for="company_name"
-                       class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+            <div class="flex flex-col justify-end">
+                <label for="company_name" class="{{ lbl }}">
                     <span class="material-icons text-sm">business</span>
                     {{ _('Company Name') }}
                 </label>
                 <input type="text" name="company_name" id="company_name" required
                        value="{{ buyer.company_name or '' }}"
                        placeholder="{{ _('Enter company name') }}"
-                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
-                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
-                              focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
-                              outline-none transition-all">
+                       class="{{ inp }}">
             </div>
-            <div>
-                <label for="address"
-                       class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+            <div class="flex flex-col justify-end">
+                <label for="address" class="{{ lbl }}">
                     <span class="material-icons text-sm">place</span>
                     {{ _('Address') }}
                 </label>
                 <input type="text" name="address" id="address"
                        value="{{ buyer.address or '' }}"
                        placeholder="{{ _('Enter address') }}"
-                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
-                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
-                              focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
-                              outline-none transition-all">
+                       class="{{ inp }}">
             </div>
         </div>
 
@@ -73,37 +69,34 @@
 
         {# ── Contact Persons Section ─────────────────────── #}
         <div x-data="buyerForm()" class="p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)] mb-5">
-            <h3 class="text-base font-semibold m-0 mb-4 pb-2 border-b-2 border-slate-200
-                       flex items-center gap-2 text-[var(--color-text)]">
-                <span class="material-icons text-lg">people</span>
-                {{ _('Contact Persons') }}
-            </h3>
+            <div class="flex justify-between items-center mb-3 pb-2 border-b border-[var(--color-border)]">
+                <h3 class="text-base font-semibold m-0 flex items-center gap-2 text-[var(--color-text)]">
+                    <span class="material-icons text-lg text-[var(--color-primary)]">people</span>
+                    {{ _('Contact Persons') }}
+                </h3>
+            </div>
 
             <div id="contacts-container" class="space-y-3">
                 <template x-for="(contact, idx) in contacts" :key="idx">
                     <div class="contact-row bg-[var(--color-surface)] p-3 rounded-[var(--radius)] border border-[var(--color-border)] shadow-sm">
                         <div class="grid grid-cols-1 lg:grid-cols-[1fr_1fr_1fr_1fr_1fr_50px_50px] gap-2.5">
                             {# Name #}
-                            <div>
-                                <label class="flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Name') }}</label>
+                            <div class="flex flex-col justify-end">
+                                <label class="{{ lbl }}">{{ _('Name') }}</label>
                                 <input type="text" name="contact_name" placeholder="{{ _('Name') }}"
                                        x-model="contact.name"
-                                       class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md
-                                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
-                                              focus:border-[var(--color-primary)] outline-none transition-all">
+                                       class="{{ inp }}">
                             </div>
                             {# Designation #}
-                            <div>
-                                <label class="flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Designation') }}</label>
+                            <div class="flex flex-col justify-end">
+                                <label class="{{ lbl }}">{{ _('Designation') }}</label>
                                 <input type="text" name="contact_designation" placeholder="{{ _('Designation') }}"
                                        x-model="contact.designation"
-                                       class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md
-                                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
-                                              focus:border-[var(--color-primary)] outline-none transition-all">
+                                       class="{{ inp }}">
                             </div>
                             {# Mobile Numbers #}
-                            <div>
-                                <label class="flex items-center justify-between text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase w-full">
+                            <div class="flex flex-col justify-end">
+                                <label class="flex items-center justify-between text-[0.7rem] font-bold text-[var(--color-primary)] mb-1 uppercase w-full min-h-[28px]">
                                     <span>{{ _('Mobile Numbers') }}</span>
                                     <div class="flex gap-1 ml-2">
                                         <button type="button" @click="addMobile(idx)"
@@ -125,34 +118,28 @@
                                         <div class="mobile-row">
                                             <input type="text" :name="`contact_mobiles_${idx}[]`" placeholder="{{ _('No.') }}"
                                                    x-model="contact.mobiles[mIdx]"
-                                                   class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md
-                                                          bg-[var(--color-input)] text-[var(--color-text)] text-sm
-                                                          focus:border-[var(--color-primary)] outline-none transition-all">
+                                                   class="{{ inp }}">
                                         </div>
                                     </template>
                                 </div>
                             </div>
                             {# WhatsApp #}
-                            <div>
-                                <label class="flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('WhatsApp') }}</label>
+                            <div class="flex flex-col justify-end">
+                                <label class="{{ lbl }}">{{ _('WhatsApp') }}</label>
                                 <input type="text" name="contact_whatsapp" placeholder="{{ _('WhatsApp') }}"
                                        x-model="contact.whatsapp"
-                                       class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md
-                                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
-                                              focus:border-[var(--color-primary)] outline-none transition-all">
+                                       class="{{ inp }}">
                             </div>
                             {# Email #}
-                            <div>
-                                <label class="flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Email') }}</label>
+                            <div class="flex flex-col justify-end">
+                                <label class="{{ lbl }}">{{ _('Email') }}</label>
                                 <input type="email" name="contact_email" placeholder="{{ _('Email') }}"
                                        x-model="contact.email"
-                                       class="form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md
-                                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
-                                              focus:border-[var(--color-primary)] outline-none transition-all">
+                                       class="{{ inp }}">
                             </div>
                             {# Primary Radio #}
-                            <div class="flex flex-col items-center">
-                                <label class="text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Primary') }}</label>
+                            <div class="flex flex-col items-center justify-end">
+                                <label class="text-[0.7rem] font-bold text-[var(--color-primary)] mb-1 uppercase min-h-[28px] flex items-center">{{ _('Primary') }}</label>
                                 <div class="h-[38px] flex items-center justify-center">
                                     <input type="radio" name="primary_contact_index" :value="idx"
                                            class="w-5 h-5 cursor-pointer accent-[var(--color-primary)]"
@@ -161,8 +148,8 @@
                                 </div>
                             </div>
                             {# Delete #}
-                            <div class="flex flex-col items-center">
-                                <label class="text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase">{{ _('Action') }}</label>
+                            <div class="flex flex-col items-center justify-end">
+                                <label class="text-[0.7rem] font-bold text-[var(--color-primary)] mb-1 uppercase min-h-[28px] flex items-center">{{ _('Action') }}</label>
                                 <button type="button" @click="removeContact(idx)"
                                         class="w-[38px] h-[38px] flex items-center justify-center
                                                bg-red-500 text-white rounded-md hover:bg-red-600 transition-all">

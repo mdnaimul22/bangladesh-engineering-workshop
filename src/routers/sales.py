@@ -13,11 +13,12 @@ sales_bp = Blueprint('sales', __name__)
 @sales_bp.route('/sales')
 def sale_list():
     """Record of all material/product sales"""
-    sales = sale_svc.list_all()
+    query = request.args.get('q', '').strip()
+    sales = sale_svc.list_all(query)
     page = request.args.get('page', 1, type=int)
     from src.helpers.utils import paginate_list
     sales, meta = paginate_list(sales, page, per_page=10)
-    return render_template('sales/sale_list.html', sales=sales, meta=meta)
+    return render_template('sales/sale_list.html', sales=sales, meta=meta, search_query=query)
 
 
 @sales_bp.route('/sales/new', methods=['GET', 'POST'])

@@ -9,8 +9,19 @@ from src.helpers.auth import verify_delete_password
 logger = setup_logger(Settings.LOG_DIR / "services.log", name="bew.services.inventory")
 
 
-def list_all():
-    """Return all inventory items."""
+def list_all(query: str = ''):
+    """Return all inventory items, optionally filtered."""
+    if query:
+        from src.db.database import InventoryItem, Shop
+        items = InventoryItem.query.join(Shop, InventoryItem.shop_id == Shop.id, isouter=True).filter(
+            or_(
+                InventoryItem.material_name.ilike(f'%{query}%'),
+                InventoryItem.tags.ilike(f'%{query}%'),
+                Shop.name.ilike(f'%{query}%')
+            )
+        ).order_by(InventoryItem.purchase_date.desc()).all()
+        return [i.to_dict() for i in items]
+        
     return db.get_all_inventory()
 
 

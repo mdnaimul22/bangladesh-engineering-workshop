@@ -12,8 +12,22 @@ from src.helpers.auth import verify_delete_password
 logger = setup_logger(Settings.LOG_DIR / "services.log", name="bew.services.work_order")
 
 
-def list_all():
-    """Return all work orders."""
+def list_all(query: str = ''):
+    """Return all work orders, optionally filtered."""
+    if query:
+        from src.db.database import WorkOrder, Buyer
+        from sqlalchemy import or_
+        items = WorkOrder.query.join(Buyer, WorkOrder.company_id == Buyer.id, isouter=True).filter(
+            or_(
+                WorkOrder.display_id.ilike(f'%{query}%'),
+                WorkOrder.voucher_id.ilike(f'%{query}%'),
+                WorkOrder.job_name.ilike(f'%{query}%'),
+                WorkOrder.status.ilike(f'%{query}%'),
+                Buyer.company_name.ilike(f'%{query}%')
+            )
+        ).order_by(WorkOrder.job_date.desc()).all()
+        return [w.to_dict() for w in items]
+        
     return db.get_all_work_orders()
 
 

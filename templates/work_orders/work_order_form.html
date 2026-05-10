@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% from 'components/_navigation.html' import page_header, breadcrumb with context %}
 {% from 'components/_buttons.html' import btn with context %}
+{% from 'components/_forms.html' import searchable_select with context %}
 {% from 'components/_seo.html' import og_tags, breadcrumb_schema with context %}
 
 {% block title %}{{ _('Add Order') if action == 'add' else _('Edit Order') }} - {{ _('Bangladesh Engineering Workshop') }}{% endblock %}
@@ -32,8 +33,8 @@
 <option value="Coil" {% if selected_value=='Coil' %}selected{% endif %}>{{ _('Coil') }}</option>
 {% endmacro %}
 
-{% set lbl = "flex items-center gap-0.5 text-[0.7rem] font-bold text-[var(--color-primary)] mb-0.5 uppercase tracking-wide min-h-[24px]" %}
-{% set inp = "form-control w-full px-2.5 py-1.5 border border-[var(--color-border)] rounded-md bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:border-[var(--color-primary)] outline-none transition-all" %}
+{% set lbl = "flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide min-h-[28px]" %}
+{% set inp = "form-control w-full h-[38px] px-3 py-1.5 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all" %}
 
 <section class="mt-4">
     <form method="POST" enctype="multipart/form-data" id="work-order-form"
@@ -58,43 +59,60 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                <div>
+                <div class="flex flex-col justify-end">
                     <label for="job_name" class="{{ lbl }}"><span class="material-icons text-sm">build</span> {{ _('Job Name') }}</label>
                     <input type="text" name="job_name" id="job_name" class="{{ inp }}" required value="{{ work_order.job_name or '' }}" placeholder="{{ _('Enter job name') }}">
                 </div>
-                <div>
-                    <label for="company_id" class="{{ lbl }}"><span class="material-icons text-sm">business</span> {{ _('Company') }}</label>
-                    <select name="company_id" id="company_id" class="{{ inp }}" required>
-                        <option value="">-- {{ _('Select Company') }} --</option>
-                        {% for c in companies %}
-                        <option value="{{ c.id }}" {% if work_order.company_id and c.id==work_order.company_id %}selected{% endif %}>{{ c.company_name }}</option>
-                        {% endfor %}
-                    </select>
+                <div class="flex flex-col justify-end">
+                    {% set company_options = [] %}
+                    {% for c in companies %}
+                        {% set _ = company_options.append({'value': c.id|string, 'label': c.company_name}) %}
+                    {% endfor %}
+                    {{ searchable_select(
+                        name='company_id',
+                        label=_('Buyer'),
+                        icon='business',
+                        options=company_options,
+                        selected=(work_order.company_id|string if work_order.company_id else ''),
+                        required=true,
+                        placeholder=_('Select Buyer')
+                    ) }}
                 </div>
-                <div>
+                <div class="flex flex-col justify-end">
                     <label for="job_date" class="{{ lbl }}"><span class="material-icons text-sm">today</span> {{ _('Job Date') }}</label>
-                    <input type="date" name="job_date" id="job_date" class="{{ inp }}" value="{{ work_order.job_date or '' }}">
+                    <div class="relative flex items-center group">
+                        <input type="date" name="job_date" id="job_date" class="{{ inp }} pr-10" 
+                               required placeholder="dd/mm/yyyy"
+                               value="{{ work_order.job_date or '' }}"
+                               x-init="if(!$el.value) $el.value = new Date().toLocaleDateString('en-CA')">
+                        <span class="material-icons absolute right-3 text-[var(--color-primary)] pointer-events-none text-lg">calendar_today</span>
+                    </div>
                 </div>
-                <div>
+                <div class="flex flex-col justify-end">
                     <label for="delivery_date" class="{{ lbl }}"><span class="material-icons text-sm">local_shipping</span> {{ _('Delivery Date') }}</label>
-                    <input type="date" name="delivery_date" id="delivery_date" class="{{ inp }}" value="{{ work_order.delivery_date or '' }}">
+                    <div class="relative flex items-center group">
+                        <input type="date" name="delivery_date" id="delivery_date" class="{{ inp }} pr-10" 
+                               placeholder="dd/mm/yyyy"
+                               value="{{ work_order.delivery_date or '' }}">
+                        <span class="material-icons absolute right-3 text-[var(--color-primary)] pointer-events-none text-lg">calendar_today</span>
+                    </div>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div>
+                <div class="flex flex-col justify-end">
                     <label for="job_description" class="{{ lbl }}"><span class="material-icons text-sm">description</span> {{ _('Job Description') }}</label>
                     <textarea name="job_description" id="job_description" class="{{ inp }} h-[38px] resize-y" rows="1">{{ work_order.job_description or '' }}</textarea>
                 </div>
-                <div>
+                <div class="flex flex-col justify-end">
                     <label for="quoted_price" class="{{ lbl }}"><span class="material-icons text-sm">request_quote</span> {{ _('Quoted Price') }}</label>
                     <input type="number" step="0.01" name="quoted_price" id="quoted_price" class="{{ inp }}" value="{{ work_order.quoted_price or 0 }}">
                 </div>
-                <div>
+                <div class="flex flex-col justify-end">
                     <label for="labor_cost" class="{{ lbl }}"><span class="material-icons text-sm">engineering</span> {{ _('Labor Cost') }}</label>
                     <input type="number" step="0.01" name="labor_cost" id="labor_cost" class="{{ inp }}" x-model.number="laborCost">
                 </div>
-                <div>
+                <div class="flex flex-col justify-end">
                     <label for="material_cost" class="{{ lbl }}"><span class="material-icons text-sm">inventory_2</span> {{ _('Material Cost') }}</label>
                     <input type="number" step="0.01" name="material_cost" id="material_cost" class="{{ inp }}" readonly :value="materialCost.toFixed(2)">
                 </div>
@@ -214,12 +232,40 @@
                             </div>
                             <div class="flex flex-col justify-end">
                                 <label class="{{ lbl }}"><span class="material-icons text-sm">store</span> {{ _('Supplier') }}</label>
-                                <select name="supplier_id" class="{{ inp }}" x-model="part.supplier_id">
-                                    <option value="">--</option>
-                                    {% for s in suppliers %}
-                                    <option value="{{ s.id }}">{{ s.name }}</option>
-                                    {% endfor %}
-                                </select>
+                                <div class="relative w-full" 
+                                     x-data="searchableSelect(part.supplier_id, supplierOptions, '-- Select --')" 
+                                     x-effect="part.supplier_id = selected" 
+                                     @click.away="close()">
+                                    
+                                    <input type="text" name="supplier_id" :value="selected" class="absolute opacity-0 -z-10 w-full h-1 bottom-0 pointer-events-none" tabindex="-1">
+                                    
+                                    <button type="button" @click="toggle()"
+                                            class="{{ inp }} flex justify-between items-center text-left">
+                                        <span x-text="selectedLabel" :class="!selected ? 'text-[var(--color-text-muted)]' : ''" class="truncate pr-2"></span>
+                                        <span class="material-icons text-sm text-[var(--color-text-muted)] transition-transform duration-200 shrink-0" :class="open ? 'rotate-180' : ''">expand_more</span>
+                                    </button>
+                                    
+                                    <div x-show="open" x-cloak
+                                         class="absolute z-dropdown w-full mt-1 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[var(--radius-sm)] shadow-[var(--shadow-lg)] max-h-60 flex flex-col overflow-hidden">
+                                        <div class="p-2 border-b border-[var(--color-border)] bg-[var(--color-surface)] shrink-0">
+                                            <input type="text" x-model="search" x-ref="searchInput" @keydown.escape="close()"
+                                                   class="w-full px-2 py-1.5 text-sm border border-[var(--color-border)] rounded bg-[var(--color-input)] focus:outline-none focus:border-[var(--color-primary)] text-[var(--color-text)] placeholder:text-[var(--color-text-muted)]"
+                                                   placeholder="{{ _('Search Supplier...') }}">
+                                        </div>
+                                        <ul class="py-1 overflow-y-auto grow">
+                                            <template x-for="opt in filteredOptions" :key="opt.value">
+                                                <li @click="selectOption(opt.value)"
+                                                    class="px-3 py-2 text-sm cursor-pointer hover:bg-[var(--color-primary)]/10 hover:text-[var(--color-primary)] transition-colors truncate"
+                                                    :class="selected == opt.value ? 'bg-[var(--color-primary)]/10 text-[var(--color-primary)] font-medium' : ''">
+                                                    <span x-text="opt.label"></span>
+                                                </li>
+                                            </template>
+                                            <li x-show="filteredOptions.length === 0" class="px-3 py-3 text-sm text-[var(--color-text-muted)] italic text-center">
+                                                {{ _('No matches found.') }}
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -245,15 +291,22 @@
 </section>
 
 <script>
+{% set supplier_options_list = [] %}
+{% for s in suppliers %}
+    {% set _ = supplier_options_list.append({'value': s.id|string, 'label': s.name}) %}
+{% endfor %}
+
 function workOrderForm() {
+    const supplierOptions = {{ supplier_options_list | tojson }};
     const serverParts = {{ work_order.get('parts', []) | tojson if work_order.get('parts') else '[]' }};
     const serverDocs = {{ work_order.get('documents', []) | tojson if work_order.get('documents') else '[]' }};
     
     return {
+        supplierOptions: supplierOptions,
         status: '{{ work_order.status or "open" }}',
         laborCost: parseFloat({{ work_order.labor_cost or 0 }}),
         parts: serverParts.length ? serverParts : [{ part_name: '', measurement: '', qty: '', price: '', weight: '', unit: '', voucher_file_path: '', supplier_id: '' }],
-        docs: serverDocs,
+        docs: serverDocs.length ? serverDocs : [{ document_type: 'Photo', notes: '', file_path: '' }],
         
         get materialCost() {
             return this.parts.reduce((sum, part) => sum + (parseFloat(part.price) || 0), 0);
@@ -284,14 +337,15 @@ function workOrderForm() {
         },
         
         removeDoc(index) {
-            this.docs.splice(index, 1);
+            if (this.docs.length > 1) {
+                this.docs.splice(index, 1);
+            } else {
+                this.docs[0] = { document_type: 'Photo', notes: '', file_path: '' };
+            }
         },
         
         init() {
-            {% if action != 'edit' %}
-            const jobDate = document.getElementById('job_date');
-            if (jobDate && !jobDate.value) jobDate.valueAsDate = new Date();
-            {% endif %}
+            // Component initialized
         }
     };
 }

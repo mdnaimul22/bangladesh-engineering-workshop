@@ -11,8 +11,21 @@ from src.helpers.auth import verify_delete_password
 logger = setup_logger(Settings.LOG_DIR / "services.log", name="bew.services.purchase")
 
 
-def list_all():
-    """Return all supplier purchases."""
+def list_all(query: str = ''):
+    """Return all supplier purchases, optionally filtered."""
+    if query:
+        from src.db.database import SupplierPurchase, Shop
+        from sqlalchemy import or_
+        items = SupplierPurchase.query.join(Shop, SupplierPurchase.supplier_id == Shop.id, isouter=True).filter(
+            or_(
+                SupplierPurchase.display_id.ilike(f'%{query}%'),
+                SupplierPurchase.voucher_no.ilike(f'%{query}%'),
+                SupplierPurchase.notes.ilike(f'%{query}%'),
+                Shop.name.ilike(f'%{query}%')
+            )
+        ).order_by(SupplierPurchase.purchase_date.desc()).all()
+        return [p.to_dict() for p in items]
+        
     return db.get_all_supplier_purchases()
 
 

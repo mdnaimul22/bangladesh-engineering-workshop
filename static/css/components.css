@@ -135,3 +135,44 @@ html { scroll-behavior: smooth; }
     border-color: var(--color-primary);
     outline: none;
 }
+
+/* ── 6. Native Date Input Enhancements ─────────────────────── */
+/* Makes the calendar icon more clickable and expands hit area */
+input[type="date"] {
+    position: relative;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    background: transparent;
+    bottom: 0;
+    color: transparent;
+    cursor: pointer;
+    height: 100%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 50px;
+    z-index: 10;
+}
+
+/* Custom placeholder for date inputs */
+input[type="date"]::before {
+    content: attr(placeholder);
+    position: absolute;
+    color: var(--color-text-muted);
+    left: 0.8rem;
+    pointer-events: none;
+    font-size: 0.875rem;
+    display: none;
+}
+
+input[type="date"]:invalid::before {
+    display: inline-block;
+}
+
+input[type="date"]:focus::before,
+input[type="date"]:valid::before {
+    display: none;
+}

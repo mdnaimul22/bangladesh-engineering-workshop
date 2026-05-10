@@ -5,13 +5,13 @@
 <div class="form-group mb-0">
     {% if label %}
     <label for="{{ name }}"
-           class="mb-0.5 text-xs text-[var(--color-primary)] font-bold flex items-center gap-1 min-h-[24px]">
+           class="mb-1 text-[0.7rem] uppercase tracking-wide text-[var(--color-primary)] font-bold flex items-center gap-1 min-h-[28px]">
         {% if icon %}<span class="material-icons text-sm">{{ icon }}</span>{% endif %}
         {{ label }}
     </label>
     {% endif %}
     <input type="{{ type }}" name="{{ name }}" id="{{ name }}"
-           class="w-full px-3 py-2 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] transition focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)]"
+           class="w-full h-[38px] px-3 py-1.5 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm transition focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)]"
            value="{{ value }}"
            placeholder="{{ placeholder }}"
            {% if required %}required{% endif %}
@@ -26,13 +26,13 @@
 <div class="form-group mb-0">
     {% if label %}
     <label for="{{ name }}"
-           class="mb-0.5 text-xs text-[var(--color-primary)] font-bold flex items-center gap-1 min-h-[24px]">
+           class="mb-1 text-[0.7rem] uppercase tracking-wide text-[var(--color-primary)] font-bold flex items-center gap-1 min-h-[28px]">
         {% if icon %}<span class="material-icons text-sm">{{ icon }}</span>{% endif %}
         {{ label }}
     </label>
     {% endif %}
     <select name="{{ name }}" id="{{ name }}"
-            class="w-full px-3 py-2 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] transition focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)]"
+            class="w-full h-[38px] px-3 py-1.5 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm transition focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)]"
             {% if required %}required{% endif %} {{ attrs }}>
         {% if placeholder %}<option value="">-- {{ placeholder }} --</option>{% endif %}
         {% for opt in options %}
@@ -49,7 +49,7 @@
 <div class="form-group mb-0">
     {% if label %}
     <label for="{{ name }}"
-           class="mb-0.5 text-xs text-[var(--color-primary)] font-bold flex items-center gap-1 min-h-[24px]">
+           class="mb-1 text-[0.7rem] uppercase tracking-wide text-[var(--color-primary)] font-bold flex items-center gap-1 min-h-[28px]">
         {% if icon %}<span class="material-icons text-sm">{{ icon }}</span>{% endif %}
         {{ label }}
     </label>
@@ -66,7 +66,7 @@
 <div class="form-group mb-0">
     {% if label %}
     <label for="{{ name }}"
-           class="mb-0.5 text-xs text-[var(--color-primary)] font-bold flex items-center gap-1 min-h-[24px]">
+           class="mb-1 text-[0.7rem] uppercase tracking-wide text-[var(--color-primary)] font-bold flex items-center gap-1 min-h-[28px]">
         <span class="material-icons text-sm">attach_file</span>
         {{ label }}
     </label>
@@ -75,6 +75,47 @@
            class="w-full text-sm text-[var(--color-text-muted)]"
            {% if accept %}accept="{{ accept }}"{% endif %}
            {{ attrs }}>
+</div>
+{% endmacro %}
+
+{% macro searchable_select(name, label='', options=[], selected='', icon='', required=false, placeholder='-- Select --', attrs='') %}
+<div class="form-group mb-0 relative" x-data='searchableSelect("{{ selected }}", {{ options | tojson }}, "{{ placeholder }}")' @click.away="close()">
+    {% if label %}
+    <label for="{{ name }}" class="mb-0.5 text-xs text-[var(--color-primary)] font-bold flex items-center gap-1 min-h-[24px]">
+        {% if icon %}<span class="material-icons text-sm">{{ icon }}</span>{% endif %}
+        {{ label }}
+    </label>
+    {% endif %}
+    
+    {# Hidden input for form submission #}
+    <input type="text" name="{{ name }}" :value="selected" class="absolute opacity-0 -z-10 w-full h-1 bottom-0 pointer-events-none" tabindex="-1" {% if required %}required{% endif %} {{ attrs }}>
+    
+    <button type="button" @click="toggle()"
+            class="w-full h-[38px] px-3 py-1.5 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all flex justify-between items-center text-left">
+        <span x-text="selectedLabel" :class="!selected ? 'text-[var(--color-text-muted)]' : ''" class="truncate pr-2"></span>
+        <span class="material-icons text-sm text-[var(--color-text-muted)] transition-transform duration-200 shrink-0" :class="open ? 'rotate-180' : ''">expand_more</span>
+    </button>
+    
+    <div x-show="open" x-cloak
+         class="absolute z-dropdown w-full mt-1 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-[var(--radius-sm)] shadow-[var(--shadow-lg)] max-h-60 flex flex-col overflow-hidden">
+        <div class="p-2 border-b border-[var(--color-border)] bg-[var(--color-surface)] shrink-0">
+            <input type="text" x-model="search" x-ref="searchInput" @keydown.escape="close()"
+                   class="w-full px-2 py-1.5 text-sm border border-[var(--color-border)] rounded bg-[var(--color-input)] focus:outline-none focus:border-[var(--color-primary)] text-[var(--color-text)] placeholder:text-[var(--color-text-muted)]"
+                   placeholder="{{ _('Search...') }}">
+        </div>
+        <ul class="py-1 overflow-y-auto grow">
+            <template x-for="opt in filteredOptions" :key="opt.value">
+                <li @click="selectOption(opt.value)"
+                    class="px-3 py-2 text-sm cursor-pointer hover:bg-[var(--color-primary)]/10 hover:text-[var(--color-primary)] transition-colors truncate"
+                    :class="selected == opt.value ? 'bg-[var(--color-primary)]/10 text-[var(--color-primary)] font-medium' : ''">
+                    <span x-text="opt.label"></span>
+                </li>
+            </template>
+            <li x-show="filteredOptions.length === 0" class="px-3 py-3 text-sm text-[var(--color-text-muted)] italic text-center">
+                {{ _('No matches found.') }}
+            </li>
+        </ul>
+    </div>
 </div>
 {% endmacro %}
 

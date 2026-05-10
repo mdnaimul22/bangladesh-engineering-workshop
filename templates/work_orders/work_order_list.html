@@ -21,6 +21,24 @@
 
 {# ── Page Header ─────────────────────────────────────────── #}
 {% set header_actions %}
+{# Compact Search Bar #}
+<form action="{{ url_for('work_orders.work_order_list') }}" method="get"
+      class="flex items-center gap-2 bg-[var(--color-surface)]/50 backdrop-blur-sm
+             border border-[var(--color-border)] rounded-full px-3 py-1.5
+             shadow-[var(--shadow-sm)]">
+    <span class="material-icons text-[var(--color-text-muted)] text-lg">search</span>
+    <input type="text" name="q" placeholder="{{ _('Search...') }}" value="{{ search_query or '' }}"
+           class="bg-transparent border-none outline-none text-sm text-[var(--color-text)] w-32 sm:w-40
+                  placeholder:text-[var(--color-text-muted)]">
+    {% if search_query %}
+    <a href="{{ url_for('work_orders.work_order_list') }}"
+       class="text-[var(--color-text-muted)] hover:text-[var(--color-danger)] transition-colors"
+       title="{{ _('Clear') }}">
+        <span class="material-icons text-lg">close</span>
+    </a>
+    {% endif %}
+</form>
+
 {{ btn(text=_('Add Order'), icon='add_task', variant='primary', href=url_for('work_orders.new_work_order')) }}
 {{ btn(text=_('Back'), icon='arrow_back', variant='secondary', href=url_for('shops.index')) }}
 {% endset %}

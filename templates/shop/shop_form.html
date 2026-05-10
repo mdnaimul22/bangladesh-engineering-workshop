@@ -30,6 +30,10 @@
     actions=[header_actions]
 ) }}
 
+{# ── Form Variables ───────────────────────────────────────── #}
+{% set lbl = "flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide min-h-[28px]" %}
+{% set inp = "form-control w-full h-[38px] px-3 py-1.5 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all" %}
+
 {# ── Form ────────────────────────────────────────────────── #}
 <section class="mt-4">
     <form action="{% if action == 'add' %}{{ url_for('shops.new_shop') }}{% else %}{{ url_for('shops.edit_shop', shop_id=shop_id) }}{% endif %}" method="POST" enctype="multipart/form-data" 
@@ -40,35 +44,26 @@
         {# ── Row 1: Shop Name, Visiting Card, Preview ──── #}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
             {# Shop Name #}
-            <div>
-                <label for="name"
-                       class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+            <div class="flex flex-col justify-end">
+                <label for="name" class="{{ lbl }}">
                     <span class="material-icons text-sm">storefront</span>
                     {{ _('Shop Name') }}
                 </label>
                 <input type="text" name="name" id="name" required
                        value="{{ shop.name or '' }}"
                        placeholder="{{ _('Enter shop name') }}"
-                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
-                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
-                              focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
-                              outline-none transition-all h-[33px]">
+                       class="{{ inp }}">
             </div>
 
             {# Visiting Card Upload #}
-            <div>
-                <label for="visiting_card"
-                       class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
+            <div class="flex flex-col justify-end">
+                <label for="visiting_card" class="{{ lbl }}">
                     <span class="material-icons text-sm">image</span>
                     {{ _('Visiting Card') }}
                 </label>
                 <input type="file" name="visiting_card" id="visiting_card" accept="image/*"
                        @change="handleImageUpload"
-                       class="form-control w-full text-sm border border-[var(--color-border)] rounded-md
-                              bg-[var(--color-input)] file:mr-3 file:py-1 file:px-3 file:rounded-md
-                              file:border file:border-[var(--color-border)] file:bg-[var(--color-bg)]
-                              file:text-[var(--color-text)] file:text-xs file:font-semibold
-                              file:cursor-pointer h-[33px]">
+                       class="{{ inp }} file:mr-3 file:py-1 file:px-3 file:rounded-md file:border file:border-[var(--color-border)] file:bg-[var(--color-bg)] file:text-[var(--color-text)] file:text-xs file:font-semibold file:cursor-pointer file:h-full px-0 py-0 overflow-hidden">
             </div>
 
             {# Preview Box #}
@@ -106,10 +101,7 @@
                 <input type="text" name="proprietor" id="proprietor"
                        value="{{ shop.proprietor or '' }}"
                        placeholder="{{ _('Proprietor Name') }}"
-                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
-                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
-                              focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
-                              outline-none transition-all">
+                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all min-h-[38px]">
             </div>
 
             <div>
@@ -121,10 +113,7 @@
                 <input type="text" name="address" id="address"
                        value="{{ shop.address or '' }}"
                        placeholder="{{ _('Shop Address') }}"
-                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
-                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
-                              focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
-                              outline-none transition-all">
+                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all min-h-[38px]">
             </div>
 
             <div x-data="{ category: '{{ shop.category_id or '' }}' }">
@@ -134,10 +123,7 @@
                     {{ _('Category') }}
                 </label>
                 <select name="category_id" id="category_id" x-model="category"
-                        class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
-                               bg-[var(--color-input)] text-[var(--color-text)] text-sm
-                               focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
-                               outline-none transition-all">
+                        class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all min-h-[38px]">
                     <option value="">-- {{ _('Select Category') }} --</option>
                     {% for cat in categories %}
                     <option value="{{ cat.id }}">
@@ -168,10 +154,7 @@
                 <input type="text" name="mobile" id="mobile"
                        value="{{ shop.mobile or '' }}"
                        placeholder="{{ _('e.g. 017XX-XXXXXX') }}"
-                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
-                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
-                              focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
-                              outline-none transition-all">
+                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all min-h-[38px]">
             </div>
 
             <div>
@@ -183,10 +166,7 @@
                 <input type="text" name="whatsapp" id="whatsapp"
                        value="{{ shop.whatsapp or '' }}"
                        placeholder="{{ _('WhatsApp Number') }}"
-                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
-                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
-                              focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
-                              outline-none transition-all">
+                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all min-h-[38px]">
             </div>
 
             <div>
@@ -198,10 +178,7 @@
                 <input type="text" name="transaction_status" id="transaction_status"
                        value="{{ shop.transaction_status or '' }}"
                        placeholder="{{ _('e.g. Bkash 018XX-XXXXXX') }}"
-                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
-                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
-                              focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
-                              outline-none transition-all">
+                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all min-h-[38px]">
             </div>
         </div>
 
@@ -217,10 +194,7 @@
                 <input type="text" name="email_web" id="email_web"
                        value="{{ shop.email_web or '' }}"
                        placeholder="{{ _('Email or Website') }}"
-                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-md
-                              bg-[var(--color-input)] text-[var(--color-text)] text-sm
-                              focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/30
-                              outline-none transition-all">
+                       class="form-control w-full px-3 py-2 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all min-h-[38px]">
             </div>
 
             {# Tags #}
