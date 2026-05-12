@@ -13,7 +13,7 @@ param(
 
 $pythonExecutable = "C:\Users\PC\AppData\Local\Programs\Python\Python311\python.exe"
 $gitExecutable = "C:\Program Files\Git\bin\git.exe"
-$projectDir = "E:\bangladesh-engineering-workshop"
+$projectDir = $PSScriptRoot
 $appScript = "main.py"
 $logFile = "$projectDir\automation.log"
 $taskName = "BEW_ERP_Automation"
