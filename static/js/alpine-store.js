@@ -13,10 +13,10 @@ document.addEventListener('alpine:init', () => {
         fontFamily: localStorage.getItem('bew-font-family') || 'default',
 
         scales: {
-            's': '12px',
-            'm': '13px',
-            'l': '14px',
-            'xl': '15px'
+            's': '11px',
+            'm': '12px',
+            'l': '13px',
+            'xl': '14px'
         },
 
         fonts: {
@@ -58,7 +58,7 @@ document.addEventListener('alpine:init', () => {
     Alpine.store('sidebar', {
         collapsed: JSON.parse(localStorage.getItem('bew-sidebar-collapsed') || 'false'),
         mobileOpen: false,
-        width: parseInt(localStorage.getItem('bew-sidebar-width') || '260', 10),
+        width: parseInt(localStorage.getItem('bew-sidebar-width') || '280', 10),
         minWidth: 220,
         maxWidth: 400,
 

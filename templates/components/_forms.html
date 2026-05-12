@@ -119,11 +119,11 @@
 </div>
 {% endmacro %}
 
-{# Shared unit options — extracted from duplicate macros in
-   work_order_form.html and purchase_form.html #}
+{# Shared unit options — Single Source of Truth.
+   DO NOT redefine this macro locally in any form template. #}
 {% macro unit_options(selected_value='') %}
-{% set units = ['Pcs','Kg','Ton','Meter','Feet','Inch','Set','Job','Ltr','Nos','Bag','Coil'] %}
+{% set units = ['Pcs','Kg','Ton','Meter','Feet','Inch','Set','Job','Ltr','Nos','Bag','Coil','Box','Roll','Sheet'] %}
 {% for u in units %}
-<option value="{{ u }}" {% if selected_value == u %}selected{% endif %}>{{ _(u) }}</option>
+<option value="{{ u }}" {% if selected_value|lower == u|lower %}selected{% endif %}>{{ _(u) }}</option>
 {% endfor %}
 {% endmacro %}

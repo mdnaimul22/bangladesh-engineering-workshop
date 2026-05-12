@@ -1,7 +1,7 @@
 {% extends "dashboard_base.html" %}
 {% from 'components/_navigation.html' import page_header, breadcrumb with context %}
 {% from 'components/_buttons.html' import btn with context %}
-{% from 'components/_forms.html' import searchable_select with context %}
+{% from 'components/_forms.html' import searchable_select, unit_options with context %}
 {% from 'components/_seo.html' import og_tags, breadcrumb_schema with context %}
 
 {% block title %}{{ _('Add Order') if action == 'add' else _('Edit Order') }} - {{ _('Bangladesh Engineering Workshop') }}{% endblock %}
@@ -15,21 +15,6 @@
      data-title="{{ _('Add Order') if action == 'add' else _('Edit Order') }}"
      data-icon="{{ 'add_task' if action == 'add' else 'edit_document' }}"
      data-back-url="{{ url_for('work_orders.work_order_list') }}"></div>
-
-{% macro unit_options(selected_value='') %}
-<option value="Pcs" {% if selected_value=='Pcs' %}selected{% endif %}>{{ _('Pcs') }}</option>
-<option value="Kg" {% if selected_value=='Kg' %}selected{% endif %}>{{ _('Kg') }}</option>
-<option value="Ton" {% if selected_value=='Ton' %}selected{% endif %}>{{ _('Ton') }}</option>
-<option value="Meter" {% if selected_value=='Meter' %}selected{% endif %}>{{ _('Meter') }}</option>
-<option value="Feet" {% if selected_value=='Feet' %}selected{% endif %}>{{ _('Feet') }}</option>
-<option value="Inch" {% if selected_value=='Inch' %}selected{% endif %}>{{ _('Inch') }}</option>
-<option value="Set" {% if selected_value=='Set' %}selected{% endif %}>{{ _('Set') }}</option>
-<option value="Job" {% if selected_value=='Job' %}selected{% endif %}>{{ _('Job') }}</option>
-<option value="Ltr" {% if selected_value=='Ltr' %}selected{% endif %}>{{ _('Ltr') }}</option>
-<option value="Nos" {% if selected_value=='Nos' %}selected{% endif %}>{{ _('Nos') }}</option>
-<option value="Bag" {% if selected_value=='Bag' %}selected{% endif %}>{{ _('Bag') }}</option>
-<option value="Coil" {% if selected_value=='Coil' %}selected{% endif %}>{{ _('Coil') }}</option>
-{% endmacro %}
 
 {% set lbl = "flex items-center gap-1 text-xs tracking-wider font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide min-h-[28px]" %}
 {% set inp = "form-control w-full h-[38px] px-3 py-1.5 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all" %}

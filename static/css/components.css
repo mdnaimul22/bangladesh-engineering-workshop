@@ -98,7 +98,7 @@ html { scroll-behavior: smooth; }
     background: var(--color-bg);
     color: var(--color-text);
     border: 1px solid var(--color-border);
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     padding: 2px 10px;
     font-size: var(--text-xs);
     font-weight: var(--weight-semi);
@@ -123,17 +123,34 @@ html { scroll-behavior: smooth; }
 .form-control {
     padding: 0.5rem 0.8rem;
     border: 1px solid var(--color-border);
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     transition: var(--transition);
     width: 100%;
+    min-height: 2.375em; /* ~38px at 16px base — scales with font size */
     background: var(--color-input, var(--color-surface));
     color: var(--color-text);
     font-size: var(--text-sm);
+    box-sizing: border-box;
 }
 
 .form-control:focus {
     border-color: var(--color-primary);
+    box-shadow: var(--ring);
     outline: none;
+}
+
+/* ── 5b. Form Label — shared by 6+ form templates ─────────── */
+.form-label {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: var(--text-xs);
+    letter-spacing: 0.05em;
+    font-weight: var(--weight-bold);
+    color: var(--color-primary);
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    min-height: 1.75rem;
 }
 
 /* ── 6. Native Date Input Enhancements ─────────────────────── */

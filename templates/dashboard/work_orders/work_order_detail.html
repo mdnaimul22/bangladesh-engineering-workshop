@@ -1,6 +1,7 @@
 {% extends "dashboard_base.html" %}
 {% from 'components/_navigation.html' import page_header, breadcrumb with context %}
 {% from 'components/_buttons.html' import btn with context %}
+{% from 'components/_modals.html' import preview_modal with context %}
 {% from 'components/_seo.html' import og_tags, breadcrumb_schema with context %}
 
 {% block title %}
@@ -309,66 +310,24 @@
     </div>
 </div>
 
-{# ── Preview Modal ───────────────────────────────────────── #}
-<div id="preview-modal" class="fixed inset-0 z-[9999] hidden items-center justify-center bg-black/60 backdrop-blur-sm"
-     onclick="if(event.target===this)closePreview()">
-    <div class="bg-[var(--color-surface)] rounded-xl shadow-2xl w-[90vw] max-w-4xl max-h-[90vh] flex flex-col overflow-hidden border border-[var(--color-border)]">
-        <div class="flex justify-between items-center px-5 py-3 border-b border-[var(--color-border)]">
-            <h3 id="preview-modal-title" class="m-0 text-base font-semibold text-[var(--color-text)]">{{ _('Preview') }}</h3>
-            <div class="flex items-center gap-2">
-                <a id="preview-direct-link" href="" target="_blank"
-                   class="inline-flex items-center gap-1 text-sm text-[var(--color-primary)] no-underline hover:underline">
-                    <span class="material-icons text-base">open_in_new</span> {{ _('View Full') }}
-                </a>
-                <button onclick="closePreview()" class="p-1 rounded-full hover:bg-[var(--color-bg)] text-[var(--color-text-muted)] transition-colors">
-                    <span class="material-icons">close</span>
-                </button>
-            </div>
-        </div>
-        <div class="flex-1 overflow-auto flex items-center justify-center p-4 bg-[var(--color-bg)]">
-            <iframe id="preview-iframe" src="" class="hidden w-full h-[70vh] border-none"></iframe>
-            <div id="preview-img-container" class="hidden items-center justify-center">
-                <img id="preview-img" src="" alt="Full Preview" class="max-w-full max-h-[70vh] object-contain rounded">
-            </div>
-        </div>
-    </div>
-</div>
+{# ── Preview Modal (shared component) ────────────────────── #}
+{{ preview_modal() }}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
+    // Global wrappers — delegates to Alpine previewModal() component.
+    // Kept so existing onclick="openPreview(...)" attributes work unchanged.
     function openPreview(url, title) {
-        const modal = document.getElementById('preview-modal');
-        const iframe = document.getElementById('preview-iframe');
-        const imgContainer = document.getElementById('preview-img-container');
-        const img = document.getElementById('preview-img');
-        document.getElementById('preview-modal-title').innerText = title;
-        document.getElementById('preview-direct-link').href = url;
-
-        iframe.src = 'about:blank'; img.src = '';
-        iframe.style.display = 'none'; imgContainer.style.display = 'none';
-
-        if (url.toLowerCase().endsWith('.pdf')) {
-            iframe.src = url; iframe.style.display = 'block';
-        } else {
-            img.src = url; imgContainer.style.display = 'flex';
-        }
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+        const el = document.querySelector('[x-data="previewModal()"]');
+        if (el) Alpine.$data(el).show(url, title);
     }
-
     function closePreview() {
-        const modal = document.getElementById('preview-modal');
-        modal.style.display = 'none';
-        document.getElementById('preview-iframe').src = 'about:blank';
-        document.getElementById('preview-img').src = '';
-        document.body.style.overflow = '';
+        const el = document.querySelector('[x-data="previewModal()"]');
+        if (el) Alpine.$data(el).close();
     }
 
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closePreview(); });
-
-    // PDF Thumbnail
+    // PDF Thumbnail — page-specific canvas rendering for hard copy preview
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     document.addEventListener('DOMContentLoaded', function() {
         const canvas = document.getElementById('pdf-thumbnail-canvas');
         if (!canvas) return;

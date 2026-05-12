@@ -1,7 +1,7 @@
 {% extends "dashboard_base.html" %}
 {% from 'components/_navigation.html' import page_header, breadcrumb with context %}
 {% from 'components/_buttons.html' import btn with context %}
-{% from 'components/_forms.html' import searchable_select with context %}
+{% from 'components/_forms.html' import searchable_select, unit_options with context %}
 {% from 'components/_seo.html' import og_tags, breadcrumb_schema with context %}
 
 {% block title %}
@@ -21,23 +21,6 @@
      data-title="{{ _('New Purchase') if action == 'add' else _('Edit Purchase') }}"
      data-icon="{{ 'add_shopping_cart' if action == 'add' else 'edit_note' }}"
      data-back-url="{{ url_for('purchases.purchase_list') }}"></div>
-
-{# ── Unit Options Macro ──────────────────────────────────── #}
-{% macro unit_options(selected_value='') %}
-<option value="Kg" {% if selected_value=='Kg' or selected_value=='kg' %}selected{% endif %}>{{ _('Kg') }}</option>
-<option value="Pcs" {% if selected_value=='Pcs' or selected_value=='pcs' %}selected{% endif %}>{{ _('Pcs') }}</option>
-<option value="Meter" {% if selected_value=='Meter' or selected_value=='m' %}selected{% endif %}>{{ _('Meter') }}</option>
-<option value="Ton" {% if selected_value=='Ton' %}selected{% endif %}>{{ _('Ton') }}</option>
-<option value="Feet" {% if selected_value=='Feet' %}selected{% endif %}>{{ _('Feet') }}</option>
-<option value="Inch" {% if selected_value=='Inch' %}selected{% endif %}>{{ _('Inch') }}</option>
-<option value="Ltr" {% if selected_value=='Ltr' or selected_value=='liter' %}selected{% endif %}>{{ _('Ltr') }}</option>
-<option value="Set" {% if selected_value=='Set' or selected_value=='set' %}selected{% endif %}>{{ _('Set') }}</option>
-<option value="Nos" {% if selected_value=='Nos' %}selected{% endif %}>{{ _('Nos') }}</option>
-<option value="Box" {% if selected_value=='Box' or selected_value=='box' %}selected{% endif %}>{{ _('Box') }}</option>
-<option value="Roll" {% if selected_value=='Roll' or selected_value=='roll' %}selected{% endif %}>{{ _('Roll') }}</option>
-<option value="Sheet" {% if selected_value=='Sheet' or selected_value=='sheet' %}selected{% endif %}>{{ _('Sheet') }}</option>
-<option value="Coil" {% if selected_value=='Coil' %}selected{% endif %}>{{ _('Coil') }}</option>
-{% endmacro %}
 
 {# ── Form Label Helper ───────────────────────────────────── #}
 {% set label_cls = "flex items-center gap-1 text-xs tracking-wider font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide min-h-[28px]" %}
