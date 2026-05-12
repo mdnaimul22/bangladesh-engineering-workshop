@@ -1,9 +1,8 @@
 """File upload helper for vouchers, visiting cards, and work order documents."""
 import os
-from pathlib import Path
 from werkzeug.utils import secure_filename
 
-from src.config import Settings, setup_logger
+from src.config import Settings, setup_logger, ensure_dir
 
 logger = setup_logger(Settings.LOG_DIR / "helpers.log", name="bew.helpers.upload")
 
@@ -38,8 +37,7 @@ def save_upload(file, subfolder: str, custom_name: str | None = None) -> str | N
         ext = filename.rsplit('.', 1)[1].lower()
         filename = f"{secure_filename(custom_name)}.{ext}"
 
-    upload_dir = Path(Settings.UPLOAD_DIR) / subfolder
-    upload_dir.mkdir(parents=True, exist_ok=True)
+    upload_dir = ensure_dir(f"{Settings.upload_dir_rel}/{subfolder}")
 
     file_path = upload_dir / filename
     file.save(str(file_path))

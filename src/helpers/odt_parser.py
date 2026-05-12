@@ -1,9 +1,15 @@
 import xml.etree.ElementTree as ET
 import json
 import re
-import os
 import unicodedata
 from zipfile import ZipFile
+
+from src.config import setup_logger, Settings, exists, write_json, get_abs_path
+
+logger = setup_logger(
+    Settings.LOG_DIR / "helper.log",
+    name="bew.helpers.odt_parser"
+)
 
 # Bengali to English number mapping
 BENGALI_DIGITS = '০১২৩৪৫৬৭৮৯'
@@ -22,13 +28,14 @@ def normalize_mobile(mobile_text):
     clean = re.sub(r'[^\d০-৯\-,\s]', '', mobile_text)
     return clean.strip()
 
-def parse_odt(odt_path):
-    content_xml_path = os.path.join(os.path.dirname(odt_path), 'extracted_odt', 'content.xml')
+def parse_odt(odt_rel_path: str):
+    base_dir = odt_rel_path.rsplit('/', 1)[0]
+    extract_dir = f"{base_dir}/extracted_odt"
+    content_xml_path = f"{extract_dir}/content.xml"
     
-    if not os.path.exists(content_xml_path):
-        with ZipFile(odt_path, 'r') as zip_ref:
-            extract_dir = os.path.join(os.path.dirname(odt_path), 'extracted_odt')
-            zip_ref.extractall(extract_dir)
+    if not exists(content_xml_path):
+        with ZipFile(get_abs_path(odt_rel_path), 'r') as zip_ref:
+            zip_ref.extractall(get_abs_path(extract_dir))
     
     tree = ET.parse(content_xml_path)
     root = tree.getroot()
@@ -49,7 +56,7 @@ def parse_odt(odt_path):
                 if child.tail: texts.append(child.tail)
         return normalize_text(" ".join(texts).strip())
 
-    print("Scanning for categories in Index tables...")
+    logger.info("Scanning for categories in Index tables...")
     tables = root.findall('.//table:table', ns)
     
     for table in tables:
@@ -72,13 +79,13 @@ def parse_odt(odt_path):
                         cat_id = int(cat_id_match.group())
                         if not any(c[0] == cat_id for c in categories_list):
                             categories_list.append((cat_id, cat_name, "")) # English name empty
-                            print(f"DEBUG: Found Category {cat_id}: {cat_name}")
+                            logger.debug(f"Found Category {cat_id}: {cat_name}")
 
     if not categories_list:
-        print("WARNING: No dynamic categories found. Falling back to basics or manual check needed.")
+        logger.warning("No dynamic categories found. Falling back to basics or manual check needed.")
     
     categories_list.sort(key=lambda x: x[0])
-    print(f"Total Categories Found: {len(categories_list)}")
+    logger.info(f"Total Categories Found: {len(categories_list)}")
 
     categories = {}
     for serial, name_bn, name_en in categories_list:
@@ -173,25 +180,23 @@ def parse_odt(odt_path):
     }
 
 def main():
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    odt_path = os.path.join(script_dir, 'shop_details.odt')
+    odt_rel_path = "src/helpers/shop_details.odt"
     
-    print("Parsing ODT file...")
-    data = parse_odt(odt_path)
+    logger.info("Parsing ODT file...")
+    data = parse_odt(odt_rel_path)
     
-    print(f"Found {len(data['categories'])} categories")
-    print(f"Found {len(data['shops'])} shops")
+    logger.info(f"Found {len(data['categories'])} categories")
+    logger.info(f"Found {len(data['shops'])} shops")
     
     # Check category coverage
     shops_with_cat = sum(1 for s in data['shops'] if s['category_id'])
-    print(f"Shops with category: {shops_with_cat} / {len(data['shops'])}")
+    logger.info(f"Shops with category: {shops_with_cat} / {len(data['shops'])}")
     
     # Save to JSON
-    output_path = os.path.join(script_dir, 'shops_data.json')
-    with open(output_path, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+    output_rel_path = "src/helpers/shops_data.json"
+    write_json(output_rel_path, data)
     
-    print(f"Data saved to {output_path}")
+    logger.info(f"Data saved to {output_rel_path}")
 
 if __name__ == '__main__':
     main()

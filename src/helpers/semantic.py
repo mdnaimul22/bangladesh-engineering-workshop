@@ -116,8 +116,8 @@ class SemanticSearch:
             self.vectorizer = read_pickle(self.vectorizer_path)
             self.tfidf_matrix = read_pickle(self.matrix_path)
             self.shop_ids = read_pickle(self.shop_ids_path)
-        except Exception:
-            pass
+        except Exception as e:
+            logger.error(f"Failed to load Semantic Search Index: {e}")
 
 
 if __name__ == "__main__":

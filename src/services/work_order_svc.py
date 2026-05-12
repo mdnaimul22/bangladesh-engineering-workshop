@@ -2,7 +2,7 @@
 import os
 import datetime
 from sqlalchemy.exc import OperationalError
-from src.config import setup_logger, Settings, exists
+from src.config import setup_logger, Settings, exists, delete
 from src.db.database import db
 from src.helpers.exceptions import ValidationError
 from src.helpers.upload import save_upload
@@ -221,10 +221,10 @@ def delete_upload(file_path: str):
     """Delete an uploaded file if it exists."""
     if not file_path:
         return
-    full_path = os.path.join(str(Settings.UPLOAD_DIR), file_path)
-    if os.path.exists(full_path):
+    rel_path = f"{Settings.upload_dir_rel}/{file_path}"
+    if exists(rel_path):
         try:
-            os.remove(full_path)
-            logger.info(f"Deleted upload: {full_path}")
+            delete(rel_path)
+            logger.info(f"Deleted upload: {rel_path}")
         except OSError as e:
-            logger.warning(f"Failed to delete {full_path}: {e}")
+            logger.warning(f"Failed to delete {rel_path}: {e}")

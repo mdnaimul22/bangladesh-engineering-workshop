@@ -2,49 +2,51 @@ import os
 import sys
 
 # Ensure project root is in path
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 if BASE_DIR not in sys.path:
     sys.path.append(BASE_DIR)
 
-from src.config import Settings, PROJECT_ROOT
-from .semantic import SemanticSearch
+from src.config import Settings, PROJECT_ROOT, setup_logger, exists, delete
+from src.helpers.semantic import SemanticSearch
 
-print("====================================")
-print("  REBUILDING SEARCH INDEX & MODEL  ")
-print("====================================")
+logger = setup_logger(Settings.LOG_DIR / "services.log", name="bew.services.search.trainer")
+
+logger.info("====================================")
+logger.info("  REBUILDING SEARCH INDEX & MODEL  ")
+logger.info("====================================")
 
 # 1. Clean up old artifacts
 artifacts = [
-    str(Settings.MODELS_DIR / 'tfidf_vectorizer.pkl'),
-    str(Settings.MODELS_DIR / 'tfidf_matrix.pkl'),
-    str(Settings.MODELS_DIR / 'shop_ids.pkl')
+    f"{Settings.models_dir_rel}/tfidf_vectorizer.pkl",
+    f"{Settings.models_dir_rel}/tfidf_matrix.pkl",
+    f"{Settings.models_dir_rel}/shop_ids.pkl"
 ]
 
-print("Scanning for old artifacts...")
-for file_path in artifacts:
-    if os.path.exists(file_path):
-        os.remove(file_path)
-        print(f"Deleted old: {os.path.basename(file_path)}")
+logger.info("Scanning for old artifacts...")
+for rel_path in artifacts:
+    if exists(rel_path):
+        delete(rel_path)
+        logger.info(f"Deleted old: {rel_path.split('/')[-1]}")
     else:
-        print(f"Not found (clean): {os.path.basename(file_path)}")
+        logger.info(f"Not found (clean): {rel_path.split('/')[-1]}")
 
-print("\n------------------------------")
-print("Retraining Model...")
+logger.info("\n------------------------------")
+logger.info("Retraining Model...")
 
 # 2. Rebuild Index
 try:
     ss = SemanticSearch()
-    db_path = str(PROJECT_ROOT / Settings.DATABASE_NAME)
+    db_rel_path = Settings.DATABASE_NAME
     
-    if not os.path.exists(db_path):
-        print(f"ERROR: Database not found at {db_path}")
-        exit(1)
+    if not exists(db_rel_path):
+        logger.error(f"ERROR: Database not found at {db_rel_path}")
+        sys.exit(1)
         
-    ss.build_index(db_path)
-    print("\nSUCCESS: Search Index Rebuilt Successfully!")
-    print(f"Artifacts saved in: {Settings.MODELS_DIR}")
+    ss.build_index()
+    logger.info("\nSUCCESS: Search Index Rebuilt Successfully!")
+    logger.info(f"Artifacts saved in: {Settings.MODELS_DIR}")
     
 except Exception as e:
-    print(f"\nFAILED: {e}")
+    logger.error(f"\nFAILED: {e}")
     import traceback
-    traceback.print_exc()
+    logger.error(traceback.format_exc())
