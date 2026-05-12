@@ -81,7 +81,7 @@
 {% macro searchable_select(name, label='', options=[], selected='', icon='', required=false, placeholder='-- Select --', attrs='') %}
 <div class="form-group mb-0 relative" x-data='searchableSelect("{{ selected }}", {{ options | tojson }}, "{{ placeholder }}")' @click.away="close()">
     {% if label %}
-    <label for="{{ name }}" class="mb-0.5 text-xs text-[var(--color-primary)] font-bold flex items-center gap-1 min-h-[24px]">
+    <label for="{{ name }}" class="mb-1 text-[0.7rem] uppercase tracking-wide text-[var(--color-primary)] font-bold flex items-center gap-1 min-h-[28px]">
         {% if icon %}<span class="material-icons text-sm">{{ icon }}</span>{% endif %}
         {{ label }}
     </label>

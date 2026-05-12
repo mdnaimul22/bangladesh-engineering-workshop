@@ -22,6 +22,11 @@
 {% endblock %}
 
 {% block content %}
+<div id="page-meta" class="hidden"
+     data-title="{{ shop.name }}"
+     data-icon="storefront"
+     data-back-url="{{ url_for('shops.shop_list') }}"></div>
+
 {# ── Breadcrumb ──────────────────────────────────────────── #}
 {{ breadcrumb_schema(crumbs) }}
 

@@ -1,4 +1,4 @@
-{% from 'components/_pagination.html' import render_pagination %}
+{% from 'components/_pagination.html' import render_pagination with context %}
 {% extends "dashboard_base.html" %}
 {% from 'components/_navigation.html' import page_header, breadcrumb with context %}
 {% from 'components/_buttons.html' import btn with context %}
@@ -16,73 +16,50 @@
 {% endblock %}
 
 {% block content %}
-{# ── Breadcrumb ──────────────────────────────────────────── #}
-{{ breadcrumb_schema(crumbs) }}
-
-{# ── Page Header ─────────────────────────────────────────── #}
-{% set header_actions %}
-{# Compact Search Bar #}
-<form action="{{ url_for('buyers.buyer_list') }}" method="get"
-      class="flex items-center gap-2 bg-[var(--color-surface)]/50 backdrop-blur-sm
-             border border-[var(--color-border)] rounded-full px-3 py-1.5
-             shadow-[var(--shadow-sm)]">
-    <span class="material-icons text-[var(--color-text-muted)] text-lg">search</span>
-    <input type="text" name="q" placeholder="{{ _('Search...') }}" value="{{ search_query or '' }}"
-           class="bg-transparent border-none outline-none text-sm text-[var(--color-text)] w-32 sm:w-40
-                  placeholder:text-[var(--color-text-muted)]">
-    {% if search_query %}
-    <a href="{{ url_for('buyers.buyer_list') }}"
-       class="text-[var(--color-text-muted)] hover:text-[var(--color-danger)] transition-colors"
-       title="{{ _('Clear') }}">
-        <span class="material-icons text-lg">close</span>
-    </a>
-    {% endif %}
-</form>
-{{ btn(text=_('Add Buyer'), icon='person_add', variant='primary', href=url_for('buyers.new_buyer')) }}
-{% endset %}
-
-{{ page_header(
-    title=_('Buyer Companies'),
-    icon='people',
-    actions=[header_actions]
-) }}
+<div id="page-meta" class="hidden"
+     data-title="{{ _('Buyer Companies') }}"
+     data-icon="people"
+     data-search-url="{{ url_for('buyers.buyer_list') }}"
+     data-add-url="{{ url_for('buyers.new_buyer') }}"></div>
 
 {# ── Buyer Table ─────────────────────────────────────────── #}
-<section class="mt-4 min-w-0">
+<section class="min-w-0">
     {% if buyers %}
     <div class="overflow-x-auto bg-[var(--color-surface)] rounded-[var(--radius)] shadow-[var(--shadow)] border border-[var(--color-border)] min-w-0">
         <table class="w-full border-collapse table-auto min-w-[700px]">
             <thead>
                 <tr class="bg-[var(--color-bg)] text-[var(--color-text-muted)]">
-                    <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
+                    <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide whitespace-nowrap border-b border-[var(--color-border)]">
                         <span class="material-icons text-sm align-middle mr-0.5">tag</span> {{ _('No') }}
                     </th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
+                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide whitespace-nowrap border-b border-[var(--color-border)]">
                         <span class="material-icons text-sm align-middle mr-0.5">business</span> {{ _('Company Name') }}
                     </th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
+                    <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide whitespace-nowrap border-b border-[var(--color-border)]">
                         <span class="material-icons text-sm align-middle mr-0.5">place</span> {{ _('Address') }}
                     </th>
-                    <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
+                    <th class="px-4 py-3 text-center text-xs font-semibold uppercase tracking-wide whitespace-nowrap border-b border-[var(--color-border)]">
                         <span class="material-icons text-sm align-middle mr-0.5">people</span> {{ _('Contacts') }}
                     </th>
-                    <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)] w-24">
+                    <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide whitespace-nowrap border-b border-[var(--color-border)] w-24">
                         <span class="material-icons text-sm align-middle mr-0.5">settings</span> {{ _('Actions') }}
                     </th>
                 </tr>
             </thead>
             <tbody>
                 {% for buyer in buyers %}
-                <tr class="border-b border-[var(--color-border)] hover:bg-[var(--color-bg)]/50 transition-colors">
+                <tr class="border-b border-[var(--color-border)] hover:bg-[var(--color-bg)]/50 transition-colors cursor-pointer"
+                    @click="if(!$event.target.closest('a, button, form')) htmx.ajax('GET', '{{ url_for('buyers.buyer_detail', buyer_id=buyer.id) }}', {target:'#content-area', select:'#content-area', swap:'innerHTML', pushUrl:true})">
                     <td class="px-4 py-3 text-center text-sm" data-label="{{ _('No') }}">{{ loop.index }}</td>
-                    <td class="px-4 py-3 text-sm" data-label="{{ _('Company Name') }}">
+                    <td class="px-4 py-3 text-base" data-label="{{ _('Company Name') }}">
                         <a href="{{ url_for('buyers.buyer_detail', buyer_id=buyer.id) }}"
                            class="text-[var(--color-text)] no-underline hover:text-[var(--color-primary)] transition-colors font-bold">
                             {{ buyer.company_name }}
                         </a>
                     </td>
                     <td class="px-4 py-3 text-sm text-[var(--color-text-muted)]" data-label="{{ _('Address') }}">
-                        {{ buyer.address or '-' }}
+                        {% set address_text = buyer.address or '-' %}
+                        {{ address_text | truncate(40, True, '...') }}
                     </td>
                     <td class="px-4 py-3 text-sm text-center" data-label="{{ _('Contacts') }}">
                         {% if buyer.contacts %}
@@ -91,23 +68,16 @@
                         {% if primary_contact.designation %}
                         <div class="text-xs text-[var(--color-text-muted)]">{{ primary_contact.designation }}</div>
                         {% endif %}
-                        {% if primary_contact.mobiles %}
-                        <a href="tel:{{ primary_contact.mobiles[0] }}"
-                           class="text-[var(--color-primary)] no-underline text-xs flex items-center justify-center gap-1 mt-0.5">
-                            <span class="material-icons text-xs">call</span>
-                            {{ primary_contact.mobiles[0] }}
-                        </a>
-                        {% endif %}
                         {% else %}-{% endif %}
                     </td>
                     <td class="px-4 py-3 text-right" data-label="{{ _('Actions') }}">
                         <div class="flex gap-1.5 justify-end flex-nowrap">
-                            {{ btn(icon='visibility', variant='secondary', size='sm', href=url_for('buyers.buyer_detail', buyer_id=buyer.id)) }}
-                            {{ btn(icon='edit', variant='primary', size='sm', href=url_for('buyers.edit_buyer', buyer_id=buyer.id)) }}
+                            {{ btn(icon='visibility', variant='secondary', size='xs', href=url_for('buyers.buyer_detail', buyer_id=buyer.id)) }}
+                            {{ btn(icon='edit', variant='primary', size='xs', href=url_for('buyers.edit_buyer', buyer_id=buyer.id)) }}
                             <form action="{{ url_for('buyers.delete_buyer', buyer_id=buyer.id) }}" method="POST"
                                   onsubmit="return confirm('{{ _('Are you sure you want to delete this buyer?') }}');"
                                   class="inline-flex">
-                                {{ btn(icon='delete', variant='danger', size='sm', type='submit') }}
+                                {{ btn(icon='delete', variant='danger', size='xs', type='submit') }}
                             </form>
                         </div>
                     </td>

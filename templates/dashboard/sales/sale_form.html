@@ -11,23 +11,21 @@
 {% endblock %}
 
 {% block content %}
-{{ breadcrumb_schema(crumbs) }}
+<div id="page-meta" class="hidden"
+     data-title="{{ _('Edit Sale Record') if action == 'edit' else _('New Sale Record') }}"
+     data-icon="{{ 'edit' if action == 'edit' else 'local_mall' }}"
+     data-back-url="{{ url_for('sales.sale_list') }}"></div>
 
-{% set header_actions %}
-{{ btn(text=_('Back'), icon='arrow_back', variant='secondary', href=url_for('sales.sale_list')) }}
-{% endset %}
-{{ page_header(title=_('Edit Sale Record') if action == 'edit' else _('New Sale Record'), icon='edit' if action == 'edit' else 'local_mall', actions=[header_actions]) }}
-
-{% set lbl = "flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide min-h-[28px]" %}
+{% set lbl = "flex items-center gap-1 text-xs tracking-wider font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide min-h-[28px]" %}
 {% set inp = "form-control w-full h-[38px] px-3 py-1.5 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all" %}
 
-<section class="mt-4">
+<section class="min-w-0">
     <form method="POST" enctype="multipart/form-data"
-          class="bg-[var(--color-surface)] p-5 md:p-6 rounded-[var(--radius-lg)] shadow-[var(--shadow)] border border-[var(--color-border)]"
+          class="bg-[var(--color-surface)] p-4 sm:p-5 rounded-[var(--radius-lg)] shadow-sm border border-[var(--color-border)] space-y-6"
           x-data="saleItems()">
 
         {# ── Header: Buyer, Date, Voucher ────────────────── #}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5 p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)]">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2">
             <div class="flex flex-col justify-end">
                 {% set buyer_options = [] %}
                 {% for b in buyers %}
@@ -63,7 +61,7 @@
         </div>
 
         {# ── Items Section (Alpine.js) ───────────────────── #}
-        <div class="p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)] mb-5">
+        <div class="">
             <div class="flex justify-between items-center mb-4 pb-2 border-b border-[var(--color-border)]">
                 <h3 class="text-base font-semibold m-0 flex items-center gap-2 text-[var(--color-text)]">
                     <span class="material-icons text-lg">list</span> {{ _('ITEMS') }}
@@ -125,9 +123,7 @@
         </div>
     </form>
 </section>
-{% endblock %}
 
-{% block extra_js %}
 <script>
 function saleItems() {
     const serverItems = {{ sale.get('items', []) | tojson if sale.get('items') else '[]' }};

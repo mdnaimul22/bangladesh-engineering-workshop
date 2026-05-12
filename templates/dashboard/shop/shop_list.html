@@ -1,4 +1,4 @@
-{% from 'components/_pagination.html' import render_pagination %}
+{% from 'components/_pagination.html' import render_pagination with context %}
 {% extends "dashboard_base.html" %}
 {% from 'components/_navigation.html' import page_header, breadcrumb with context %}
 {% from 'components/_badges.html' import badge with context %}
@@ -15,73 +15,59 @@
 
 {% block extra_head %}
 {{ og_tags(
-    title=current_category.name if current_category else _('All Shops'),
-    description=_('Browse all supplier shops and vendors at Bangladesh Engineering Workshop.'),
-    url=request.url
+title=current_category.name if current_category else _('All Shops'),
+description=_('Browse all supplier shops and vendors at Bangladesh Engineering Workshop.'),
+url=request.url
 ) }}
 {% endblock %}
 
 {% block content %}
-
-{# ── Breadcrumb ──────────────────────────────────────────── #}
-{% set crumbs = [] %}
-{% if current_category %}
-{% set _void = crumbs.append({'label': _('All Shops'), 'url': url_for('shops.shop_list')}) %}
-{% set _void = crumbs.append({'label': current_category.name, 'url': ''}) %}
-{% else %}
-{% set _void = crumbs.append({'label': _('All Shops'), 'url': ''}) %}
-{% endif %}
-{{ breadcrumb_schema(crumbs) }}
-
-{# ── Page Header ─────────────────────────────────────────── #}
-{% set header_icon = 'folder_open' if current_category else 'storefront' %}
 {% set header_title = current_category.name if current_category else _('All Shops') %}
-{% set header_subtitle = current_category.name_english if current_category else '' %}
+<div id="page-meta" class="hidden" data-title="{{ header_title }}" data-icon="storefront"
+    data-search-url="{{ url_for('shops.shop_list') }}" data-add-url="{{ url_for('shops.new_shop') }}"></div>
 
-{% set header_actions %}
-{{ badge(_('Total') ~ ': ' ~ total, 'info') }}
-{{ btn(text=_('New Search'), icon='search', variant='primary', href=url_for('shops.index')) }}
-{% endset %}
-
-{{ page_header(
-    title=header_title,
-    subtitle=header_subtitle,
-    icon=header_icon,
-    actions=[header_actions]
-) }}
 
 {# ── Shop Table ──────────────────────────────────────────── #}
 {% if shops %}
-<div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)] shadow-[var(--shadow)] bg-[var(--color-surface)]">
+<div
+    class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)] shadow-[var(--shadow)] bg-[var(--color-surface)]">
     <table class="shops-table w-full border-collapse text-sm" id="shops-table">
         <thead>
             <tr class="bg-[var(--color-bg)]">
-                <th class="px-3 py-3 text-center text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider border-b border-[var(--color-border)] whitespace-nowrap">
+                <th
+                    class="px-3 py-3 text-center text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider border-b border-[var(--color-border)] whitespace-nowrap">
                     {{ _('No') }}
                 </th>
-                <th class="px-4 py-3 text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider border-b border-[var(--color-border)] whitespace-nowrap">
+                <th
+                    class="px-4 py-3 text-left text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider border-b border-[var(--color-border)] whitespace-nowrap">
                     {{ _('Institution') }}
                 </th>
-                <th class="px-4 py-3 text-center text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider border-b border-[var(--color-border)] whitespace-nowrap">
+                <th
+                    class="px-4 py-3 text-center text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider border-b border-[var(--color-border)] whitespace-nowrap">
                     {{ _('Proprietor') }}
                 </th>
-                <th class="px-4 py-3 text-center text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider border-b border-[var(--color-border)] whitespace-nowrap">
+                <th
+                    class="px-4 py-3 text-center text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider border-b border-[var(--color-border)] whitespace-nowrap">
                     {{ _('Address') }}
                 </th>
-                <th class="px-4 py-3 text-center text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider border-b border-[var(--color-border)] whitespace-nowrap">
+                <th
+                    class="px-4 py-3 text-center text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider border-b border-[var(--color-border)] whitespace-nowrap">
                     {{ _('Mobile') }}
                 </th>
-                <th class="px-4 py-3 text-center text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider border-b border-[var(--color-border)] whitespace-nowrap">
+                <th
+                    class="px-4 py-3 text-center text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider border-b border-[var(--color-border)] whitespace-nowrap">
                     {{ _('Category') }}
                 </th>
-                <th class="px-4 py-3 text-center text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider border-b border-[var(--color-border)] whitespace-nowrap">
+                <th
+                    class="px-4 py-3 text-center text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider border-b border-[var(--color-border)] whitespace-nowrap">
                     {{ _('Tags') }}
                 </th>
             </tr>
         </thead>
         <tbody class="divide-y divide-[var(--color-border)]">
             {% for shop in shops %}
-            <tr class="hover:bg-[var(--color-bg)] transition-colors duration-150">
+            <tr class="hover:bg-[var(--color-bg)] transition-colors duration-150 cursor-pointer"
+                @click="if(!$event.target.closest('a, button, form')) htmx.ajax('GET', '{{ url_for('shops.shop_detail', shop_id=shop.id) }}', {target:'#content-area', select:'#content-area', swap:'innerHTML', pushUrl:true})">
                 {# Row Number #}
                 <td class="px-3 py-3 text-center text-[var(--color-text-muted)] text-sm tabular-nums"
                     data-label="{{ _('No') }}">
@@ -89,35 +75,33 @@
                 </td>
 
                 {# Shop Name #}
-                <td class="px-4 py-3 text-left font-medium" data-label="{{ _('Institution') }}">
+                <td class="px-4 py-3 text-left font-bold text-base" data-label="{{ _('Institution') }}">
                     <a href="{{ url_for('shops.shop_detail', shop_id=shop.id) }}"
-                       class="text-[var(--color-primary)] no-underline font-medium hover:underline transition-colors">
+                        class="text-[var(--color-primary)] no-underline font-medium hover:underline transition-colors">
                         {{ shop.name }}
                     </a>
                 </td>
 
                 {# Proprietor #}
-                <td class="px-4 py-3 text-center text-[var(--color-text)] text-sm"
-                    data-label="{{ _('Proprietor') }}">
+                <td class="px-4 py-3 text-center text-[var(--color-text)] text-sm" data-label="{{ _('Proprietor') }}">
                     {{ shop.proprietor or '-' }}
                 </td>
 
                 {# Address #}
-                <td class="px-4 py-3 text-center text-[var(--color-text-muted)] text-sm max-w-[200px] break-words"
+                <td class="px-4 py-3 text-center text-[var(--color-text-muted)] text-sm max-w-[200px] truncate"
                     data-label="{{ _('Address') }}">
-                    {{ shop.address or '-' }}
+                    {{ (shop.address or '-') | truncate(40, True, '...') }}
                 </td>
 
                 {# Mobile #}
                 <td class="px-4 py-3 text-center" data-label="{{ _('Mobile') }}">
                     {% if shop.mobile %}
-                    {% for num in shop.mobile.split() %}
+                    {% set first_num = shop.mobile.split()[0] %}
                     <div>
-                        <a href="tel:{{ num }}"
-                           class="text-[var(--color-success)] no-underline text-sm tabular-nums hover:underline"
-                           dir="ltr">{{ num }}</a>
+                        <a href="tel:{{ first_num }}"
+                            class="text-[var(--color-success)] no-underline text-sm tabular-nums hover:underline"
+                            dir="ltr">{{ first_num }}</a>
                     </div>
-                    {% endfor %}
                     {% else %}
                     <span class="text-[var(--color-text-muted)]">-</span>
                     {% endif %}
@@ -126,8 +110,7 @@
                 {# Category #}
                 <td class="px-4 py-3 text-center" data-label="{{ _('Category') }}">
                     {% if shop.category_name %}
-                    <a href="{{ url_for('shops.category_shops', category_id=shop.category_id) }}"
-                       class="category-badge inline-flex items-center px-3 py-1 rounded-full text-xs font-medium
+                    <a href="{{ url_for('shops.category_shops', category_id=shop.category_id) }}" class="category-badge inline-flex items-center px-3 py-1 rounded-full text-xs font-medium
                               bg-[var(--color-btn-primary)] text-white no-underline whitespace-nowrap
                               border border-white/10
                               hover:bg-[var(--color-btn-hover)] hover:text-[var(--color-primary)]
@@ -144,10 +127,9 @@
                     {% if shop.tags %}
                     <div class="flex flex-wrap gap-1 justify-center">
                         {% for tag in shop.tags %}
-                        <a href="{{ url_for('shops.search_by_tag', tag_name=tag.name) }}"
-                           class="inline-block px-2 py-0.5 text-xs rounded no-underline
+                        <a href="{{ url_for('shops.search_by_tag', tag_name=tag.name) }}" class="inline-block px-2 py-0.5 text-xs rounded no-underline
                                   bg-sky-100 text-sky-600 hover:bg-sky-200 transition-colors"
-                           title="{{ tag.name_bn or tag.name }}">
+                            title="{{ tag.name_bn or tag.name }}">
                             {{ tag.name }}
                         </a>
                         {% endfor %}
@@ -161,7 +143,7 @@
         </tbody>
     </table>
 
-            {{ render_pagination(meta, 'shops.shop_list', search_query) }}
+    {{ render_pagination(meta, 'shops.shop_list', search_query) }}
 </div>
 
 

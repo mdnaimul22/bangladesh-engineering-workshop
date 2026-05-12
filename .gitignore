@@ -7,5 +7,5 @@ instance/
 extracted_odt/
 *.odt
 .~lock*
-frontend_audit.md
-FRONTEND_BLUEPRINT.md
+
+hardcoded_units_report.md

@@ -11,12 +11,10 @@
 {% endblock %}
 
 {% block content %}
-{{ breadcrumb_schema(crumbs) }}
-
-{% set header_actions %}
-{{ btn(text=_('Back'), icon='arrow_back', variant='secondary', href=url_for('work_orders.work_order_list')) }}
-{% endset %}
-{{ page_header(title=_('Add Order') if action == 'add' else _('Edit Order'), icon='add_task' if action == 'add' else 'edit_document', actions=[header_actions]) }}
+<div id="page-meta" class="hidden"
+     data-title="{{ _('Add Order') if action == 'add' else _('Edit Order') }}"
+     data-icon="{{ 'add_task' if action == 'add' else 'edit_document' }}"
+     data-back-url="{{ url_for('work_orders.work_order_list') }}"></div>
 
 {% macro unit_options(selected_value='') %}
 <option value="Pcs" {% if selected_value=='Pcs' %}selected{% endif %}>{{ _('Pcs') }}</option>
@@ -33,16 +31,16 @@
 <option value="Coil" {% if selected_value=='Coil' %}selected{% endif %}>{{ _('Coil') }}</option>
 {% endmacro %}
 
-{% set lbl = "flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide min-h-[28px]" %}
+{% set lbl = "flex items-center gap-1 text-xs tracking-wider font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide min-h-[28px]" %}
 {% set inp = "form-control w-full h-[38px] px-3 py-1.5 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all" %}
 
-<section class="mt-4">
+<section class="min-w-0">
     <form method="POST" enctype="multipart/form-data" id="work-order-form"
           x-data="workOrderForm()"
-          class="bg-[var(--color-surface)] p-5 md:p-6 rounded-[var(--radius-lg)] shadow-[var(--shadow)] border border-[var(--color-border)]">
+          class="bg-[var(--color-surface)] p-4 sm:p-5 rounded-[var(--radius-lg)] shadow-sm border border-[var(--color-border)] space-y-6">
 
         {# ── Status Toggle + Order Details ───────────────── #}
-        <div class="p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)] mb-5">
+        <div class="">
             <div class="flex justify-between items-center mb-3">
                 <h3 class="text-base font-semibold m-0 flex items-center gap-2 text-[var(--color-text)]">
                     <span class="material-icons text-[var(--color-primary)]">assignment</span> {{ _('Order Details') }}
@@ -121,7 +119,7 @@
         </div>
 
         {# ── Hard Copy Upload ────────────────────────────── #}
-        <div class="p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)] mb-5">
+        <div class="">
             <label for="hard_copy_file" class="{{ lbl }}"><span class="material-icons text-sm">document_scanner</span> {{ _('Work Order (Scan/Photo)') }}</label>
             <input type="file" name="hard_copy_file" id="hard_copy_file" accept="image/*,application/pdf"
                    class="{{ inp }} file:mr-3 file:py-1 file:px-2 file:rounded file:border file:border-[var(--color-border)] file:bg-[var(--color-bg)] file:text-xs file:font-semibold">
@@ -132,7 +130,7 @@
         </div>
 
         {# ── Document Gallery ────────────────────────────── #}
-        <div class="p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)] mb-5">
+        <div class="">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-[var(--color-border)]">
                 <h3 class="text-base font-semibold m-0 flex items-center gap-2 text-[var(--color-text)]">
                     <span class="material-icons text-[var(--color-primary)]">collections</span> {{ _('Document Gallery') }}
@@ -174,7 +172,7 @@
         </div>
 
         {# ── Parts & Materials ───────────────────────────── #}
-        <div class="p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)] mb-5">
+        <div class="">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-[var(--color-border)]">
                 <h3 class="text-base font-semibold m-0 flex items-center gap-2 text-[var(--color-text)]">
                     <span class="material-icons text-[var(--color-primary)]">settings_suggest</span> {{ _('Parts & Materials') }}

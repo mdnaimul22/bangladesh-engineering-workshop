@@ -3,8 +3,22 @@
 
 <head>
     <meta charset="UTF-8">
-    {# FOUC prevention: set theme BEFORE any CSS loads #}
-    <script>document.documentElement.setAttribute('data-theme', localStorage.getItem('bew-theme') || 'light')</script>
+    {# FOUC prevention: set theme and fonts BEFORE any CSS loads #}
+    <script>
+        (function() {
+            var root = document.documentElement;
+            root.setAttribute('data-theme', localStorage.getItem('bew-theme') || 'light');
+            var scales = {'s':'11px','m':'12px','l':'13px','xl':'14px'};
+            root.style.fontSize = scales[localStorage.getItem('bew-app-scale') || 'm'] || '12px';
+            var fonts = {
+                'default': "'Noto Sans Bengali', system-ui, -apple-system, sans-serif",
+                'inter': "'Inter', 'Noto Sans Bengali', sans-serif",
+                'poppins': "'Poppins', 'Noto Sans Bengali', sans-serif",
+                'roboto': "'Roboto', 'Noto Sans Bengali', sans-serif"
+            };
+            root.style.setProperty('--font-primary', fonts[localStorage.getItem('bew-font-family') || 'default']);
+        })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{{ _('Bangladesh Engineering Workshop') }}{% endblock %}</title>
     <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/logo.svg') }}">
@@ -17,7 +31,7 @@
 
     {# ── 3. Fonts ────────────────────────────────────────────── #}
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&family=Inter:wght@300;400;700&display=swap"
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&family=Inter:wght@300;400;700&family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap"
           rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -88,6 +102,9 @@
     <script defer src="{{ url_for('static', filename='js/alpine-store.js') }}"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
+    {# ── 6. HTMX — SPA-like navigation ─────────────────────── #}
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+
     {% block extra_css %}{% endblock %}
     {% block extra_head %}{% endblock %}
 </head>
@@ -98,7 +115,7 @@
        MAIN CONTENT — Flash messages + page content
        ══════════════════════════════════════════════════════════════ #}
     <main class="w-full flex-grow relative" role="main" id="main-content">
-        {# Flash messages — Alpine-powered auto-dismiss #}
+        {% block flash_messages %}
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
         <div class="fixed top-[var(--header-height)] right-4 z-[2000] w-full max-w-sm space-y-2 mt-4 pointer-events-none" aria-live="polite">
@@ -122,6 +139,7 @@
         </div>
         {% endif %}
         {% endwith %}
+        {% endblock %}
 
         {% block layout_content %}{% endblock %}
     </main>

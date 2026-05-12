@@ -14,6 +14,11 @@
 {% endblock %}
 
 {% block content %}
+<div id="page-meta" class="hidden"
+     data-title="{{ _('Purchase Details') }}"
+     data-icon="receipt_long"
+     data-back-url="{{ url_for('purchases.purchase_list') }}"></div>
+
 {# ── Breadcrumb ──────────────────────────────────────────── #}
 {{ breadcrumb_schema(crumbs) }}
 

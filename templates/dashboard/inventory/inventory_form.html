@@ -15,32 +15,22 @@
 {% endblock %}
 
 {% block content %}
-{# ── Breadcrumb ──────────────────────────────────────────── #}
-{{ breadcrumb_schema(crumbs) }}
-
-{# ── Page Header ─────────────────────────────────────────── #}
-{% set header_actions %}
-{{ btn(text=_('Back'), icon='arrow_back', variant='secondary', href=url_for('inventory.inventory_list')) }}
-{% endset %}
-
-{{ page_header(
-    title=_('Add Inventory Item'),
-    icon='inventory_2',
-    actions=[header_actions]
-) }}
+<div id="page-meta" class="hidden"
+     data-title="{{ _('Add Inventory Item') }}"
+     data-icon="inventory_2"
+     data-back-url="{{ url_for('inventory.inventory_list') }}"></div>
 
 {# ── Form Label/Input Helpers ────────────────────────────── #}
-{% set label_cls = "flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide min-h-[28px]" %}
+{% set label_cls = "flex items-center gap-1 text-xs tracking-wider font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide min-h-[28px]" %}
 {% set input_cls = "form-control w-full h-[38px] px-3 py-1.5 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all" %}
 
 {# ── Form ────────────────────────────────────────────────── #}
-<section class="mt-4">
+<section class="min-w-0">
     <form method="POST"
-          class="bg-[var(--color-surface)] p-5 md:p-6 rounded-[var(--radius-lg)]
-                 shadow-[var(--shadow)] border border-[var(--color-border)]">
+          class="bg-[var(--color-surface)] p-4 sm:p-5 rounded-[var(--radius-lg)] shadow-sm border border-[var(--color-border)] space-y-6">
 
         {# ── Material Details Block ──────────────────────── #}
-        <div class="p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)] mb-5">
+        <div class="">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-base font-semibold m-0 flex items-center gap-2 text-[var(--color-text)]">
                     <span class="material-icons text-[var(--color-primary)]">inventory_2</span> {{ _('Material Details') }}
@@ -113,9 +103,7 @@
         </div>
     </form>
 </section>
-{% endblock %}
 
-{% block extra_js %}
 <script>
     // Set default date to today if not pre-filled
     const dateEl = document.getElementById('purchase_date');

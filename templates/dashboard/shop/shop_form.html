@@ -16,29 +16,19 @@
 {% endblock %}
 
 {% block content %}
-{# ── Breadcrumb ──────────────────────────────────────────── #}
-{{ breadcrumb_schema(crumbs) }}
-
-{# ── Page Header ─────────────────────────────────────────── #}
-{% set header_actions %}
-{{ btn(text=_('Back'), icon='arrow_back', variant='secondary', href=url_for('shops.shop_list')) }}
-{% endset %}
-
-{{ page_header(
-    title=_('Add New Shop') if action == 'add' else _('Edit Shop'),
-    icon='add_circle' if action == 'add' else 'edit',
-    actions=[header_actions]
-) }}
+<div id="page-meta" class="hidden"
+     data-title="{{ _('Add New Shop') if action == 'add' else _('Edit Shop') }}"
+     data-icon="{{ 'add_circle' if action == 'add' else 'edit' }}"
+     data-back-url="{{ url_for('shops.shop_list') }}"></div>
 
 {# ── Form Variables ───────────────────────────────────────── #}
-{% set lbl = "flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide min-h-[28px]" %}
+{% set lbl = "flex items-center gap-1 text-xs tracking-wider font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide min-h-[28px]" %}
 {% set inp = "form-control w-full h-[38px] px-3 py-1.5 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all" %}
 
 {# ── Form ────────────────────────────────────────────────── #}
-<section class="mt-4">
+<section class="min-w-0">
     <form action="{% if action == 'add' %}{{ url_for('shops.new_shop') }}{% else %}{{ url_for('shops.edit_shop', shop_id=shop_id) }}{% endif %}" method="POST" enctype="multipart/form-data" 
-          class="bg-[var(--color-surface)] p-5 md:p-6 rounded-[var(--radius-lg)]
-                 shadow-[var(--shadow)] border border-[var(--color-border)]"
+          class="bg-[var(--color-surface)] p-4 sm:p-5 rounded-[var(--radius-lg)] shadow-sm border border-[var(--color-border)] space-y-6"
           x-data="shopForm()">
 
         {# ── Row 1: Shop Name, Visiting Card, Preview ──── #}
@@ -202,7 +192,7 @@
                 <label class="flex items-center gap-1 text-xs font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide">
                     <span class="material-icons text-sm">local_offer</span>
                     {{ _('Tags') }}
-                    <span class="text-[var(--color-text-muted)] font-normal text-[0.65rem] ml-1">({{ _('comma separated') }})</span>
+                    <span class="text-[var(--color-text-muted)] font-normal text-xs ml-1">({{ _('comma separated') }})</span>
                 </label>
 
                 {# Tag Input Row #}
@@ -271,9 +261,7 @@
         </div>
     </form>
 </section>
-{% endblock %}
 
-{% block extra_js %}
 <script>
 document.addEventListener('alpine:init', () => {
     Alpine.data('shopForm', () => ({

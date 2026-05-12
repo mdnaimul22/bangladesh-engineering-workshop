@@ -1,25 +1,18 @@
 {# ── Navigation Macros ──────────────────────────────────────── #}
 
 {% macro page_header(title, subtitle='', icon='', actions=[]) %}
-<section class="bg-[var(--color-surface)] p-4 md:px-8 md:py-6 rounded-[var(--radius)] mb-8 shadow border border-[var(--color-border)] flex flex-col md:flex-row justify-between items-start md:items-center gap-3 md:gap-4"
-        role="banner">
-    <div class="flex items-center gap-3">
-        {% if icon %}
-        <span class="material-icons text-[var(--color-primary)] text-2xl">{{ icon }}</span>
-        {% endif %}
-        <div>
-            <h1 class="text-2xl font-bold text-[var(--color-text)] m-0 leading-tight">{{ title }}</h1>
-            {% if subtitle %}
-            <span class="block text-sm text-[var(--color-text-muted)] font-normal mt-0.5">{{ subtitle }}</span>
-            {% endif %}
-        </div>
-    </div>
-    {% if actions %}
-    <div class="flex items-center gap-3 flex-wrap">
-        {% for action in actions %}{{ action }}{% endfor %}
-    </div>
+{# Renders INSIDE the header bar — no bg/border/shadow needed #}
+<div class="flex items-center gap-2 min-w-0 shrink-0">
+    {% if icon %}
+    <span class="material-icons text-[var(--color-primary)] text-xl">{{ icon }}</span>
     {% endif %}
-</section>
+    <h1 class="text-base font-bold text-[var(--color-text)] m-0 whitespace-nowrap truncate">{{ title }}</h1>
+</div>
+{% if actions %}
+<div class="flex items-center gap-2 flex-wrap shrink-0 ml-auto">
+    {% for action in actions %}{{ action }}{% endfor %}
+</div>
+{% endif %}
 {% endmacro %}
 
 

@@ -3,7 +3,7 @@
 {% set target_endpoint = endpoint if endpoint else request.endpoint %}
 {% set kwargs = request.view_args or {} %}
 {% if search_query %}
-    {% set _ = kwargs.update({'q': search_query}) %}
+    {% set _dummy = kwargs.update({'q': search_query}) %}
 {% endif %}
 
 {% if meta.total_pages > 1 %}

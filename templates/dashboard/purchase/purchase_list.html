@@ -1,4 +1,4 @@
-{% from 'components/_pagination.html' import render_pagination %}
+{% from 'components/_pagination.html' import render_pagination with context %}
 {% extends "dashboard_base.html" %}
 {% from 'components/_navigation.html' import page_header, breadcrumb with context %}
 {% from 'components/_buttons.html' import btn with context %}
@@ -8,126 +8,116 @@
 
 {% block extra_head %}
 {{ og_tags(
-    title=_('Purchases'),
-    description=_('Purchase records for Bangladesh Engineering Workshop.'),
-    url=request.url
+title=_('Purchases'),
+description=_('Purchase records for Bangladesh Engineering Workshop.'),
+url=request.url
 ) }}
 {% endblock %}
 
 {% block content %}
-{# ── Breadcrumb ──────────────────────────────────────────── #}
-{% if supplier %}
-{% endif %}
-{{ breadcrumb_schema(crumbs) }}
-
-{# ── Page Header ─────────────────────────────────────────── #}
-{% set new_url = url_for('purchases.new_purchase', supplier_id=supplier.id) if supplier else url_for('purchases.new_purchase') %}
-{% set back_url = url_for('shops.shop_detail', shop_id=supplier.id) if supplier else url_for('shops.index') %}
-{% set header_actions %}
-{# Compact Search Bar #}
-<form action="{{ url_for('purchases.purchase_list') }}" method="get"
-      class="flex items-center gap-2 bg-[var(--color-surface)]/50 backdrop-blur-sm
-             border border-[var(--color-border)] rounded-full px-3 py-1.5
-             shadow-[var(--shadow-sm)]">
-    <span class="material-icons text-[var(--color-text-muted)] text-lg">search</span>
-    <input type="text" name="q" placeholder="{{ _('Search...') }}" value="{{ search_query or '' }}"
-           class="bg-transparent border-none outline-none text-sm text-[var(--color-text)] w-32 sm:w-40
-                  placeholder:text-[var(--color-text-muted)]">
-    {% if search_query %}
-    <a href="{{ url_for('purchases.purchase_list') }}"
-       class="text-[var(--color-text-muted)] hover:text-[var(--color-danger)] transition-colors"
-       title="{{ _('Clear') }}">
-        <span class="material-icons text-lg">close</span>
-    </a>
-    {% endif %}
-</form>
-
-{{ btn(text=_('New Purchase'), icon='add_circle', variant='primary', href=new_url) }}
-{{ btn(text=_('Back'), icon='arrow_back', variant='secondary', href=back_url) }}
-{% endset %}
-
-{{ page_header(
-    title=(_('Purchases') ~ ' - ' ~ supplier.name) if supplier else _('Purchases'),
-    icon='receipt_long',
-    actions=[header_actions]
-) }}
+{% set new_url = url_for('purchases.new_purchase', supplier_id=supplier.id) if supplier else
+url_for('purchases.new_purchase') %}
+<div id="page-meta" class="hidden"
+    data-title="{{ (_('Purchases') ~ ' — ' ~ supplier.name) if supplier else _('Purchases') }}" data-icon="receipt_long"
+    data-search-url="{{ url_for('purchases.purchase_list') }}" data-add-url="{{ new_url }}"></div>
 
 {# ── Purchases Table ─────────────────────────────────────── #}
-<section class="mt-4 min-w-0">
+<section class="min-w-0">
     {% if purchases %}
-    <div class="overflow-x-auto bg-[var(--color-surface)] rounded-[var(--radius)] shadow-[var(--shadow)] border border-[var(--color-border)] min-w-0">
+    <div
+        class="overflow-x-auto bg-[var(--color-surface)] rounded-[var(--radius)] shadow-[var(--shadow)] border border-[var(--color-border)] min-w-0">
         <table class="w-full border-collapse table-auto min-w-[900px] text-sm">
             <thead>
                 <tr class="bg-[var(--color-bg)] text-[var(--color-text-muted)]">
-                    <th class="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
+                    <th
+                        class="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide whitespace-nowrap border-b border-[var(--color-border)]">
                         <span class="material-icons text-sm align-middle mr-0.5">calendar_today</span> {{ _('Date') }}
                     </th>
-                    <th class="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
+                    <th
+                        class="px-3 py-3 text-left text-xs font-semibold uppercase tracking-wide whitespace-nowrap border-b border-[var(--color-border)]">
                         <span class="material-icons text-sm align-middle mr-0.5">storefront</span> {{ _('Supplier') }}
                     </th>
-                    <th class="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
+                    <th
+                        class="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wide whitespace-nowrap border-b border-[var(--color-border)]">
                         ID
                     </th>
-                    <th class="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
+                    <th
+                        class="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wide whitespace-nowrap border-b border-[var(--color-border)]">
                         <span class="material-icons text-sm align-middle mr-0.5">receipt</span> {{ _('Voucher No') }}
                     </th>
-                    <th class="px-3 py-3 text-right text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
+                    <th
+                        class="px-3 py-3 text-right text-xs font-semibold uppercase tracking-wide whitespace-nowrap border-b border-[var(--color-border)]">
                         <span class="material-icons text-sm align-middle mr-0.5">payments</span> {{ _('Total') }}
                     </th>
-                    <th class="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
+                    <th
+                        class="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wide whitespace-nowrap border-b border-[var(--color-border)]">
                         <span class="material-icons text-sm align-middle mr-0.5">info</span> {{ _('Payment') }}
                     </th>
-                    <th class="px-3 py-3 text-right text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
+                    <th
+                        class="px-3 py-3 text-right text-xs font-semibold uppercase tracking-wide whitespace-nowrap border-b border-[var(--color-border)]">
                         <span class="material-icons text-sm align-middle mr-0.5">paid</span> {{ _('Paid') }}
                     </th>
-                    <th class="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
+                    <th
+                        class="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wide whitespace-nowrap border-b border-[var(--color-border)]">
                         <span class="material-icons text-sm align-middle mr-0.5">list</span> {{ _('Items') }}
                     </th>
-                    <th class="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)]">
+                    <th
+                        class="px-3 py-3 text-center text-xs font-semibold uppercase tracking-wide whitespace-nowrap border-b border-[var(--color-border)]">
                         <span class="material-icons text-sm align-middle mr-0.5">attach_file</span> {{ _('Voucher') }}
                     </th>
-                    <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider whitespace-nowrap border-b border-[var(--color-border)] w-24">
+                    <th
+                        class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wide whitespace-nowrap border-b border-[var(--color-border)] w-24">
                         <span class="material-icons text-sm align-middle mr-0.5">settings</span> {{ _('Actions') }}
                     </th>
                 </tr>
             </thead>
             <tbody>
                 {% for p in purchases %}
-                <tr class="border-b border-[var(--color-border)] hover:bg-[var(--color-bg)]/50 transition-colors">
-                    <td class="px-3 py-2.5 text-[var(--color-text-muted)]" data-label="{{ _('Date') }}">{{ p.purchase_date_display or '-' }}</td>
-                    <td class="px-3 py-2.5" data-label="{{ _('Supplier') }}">
+                <tr class="border-b border-[var(--color-border)] hover:bg-[var(--color-bg)]/50 transition-colors cursor-pointer"
+                    @click="if(!$event.target.closest('a, button, form')) htmx.ajax('GET', '{{ url_for('purchases.purchase_detail', purchase_id=p.id) }}', {target:'#content-area', select:'#content-area', swap:'innerHTML', pushUrl:true})">
+                    <td class="px-3 py-2.5 text-[var(--color-text-muted)]" data-label="{{ _('Date') }}">{{
+                        p.purchase_date_display or '-' }}</td>
+                    <td class="px-3 py-2.5 font-bold text-base" data-label="{{ _('Supplier') }}">
                         {% if p.supplier_id %}
                         <a href="{{ url_for('shops.shop_detail', shop_id=p.supplier_id) }}"
-                           class="text-[var(--color-primary)] no-underline font-medium hover:underline">{{ p.supplier_name }}</a>
+                            class="text-[var(--color-primary)] no-underline font-medium hover:underline">{{
+                            p.supplier_name }}</a>
                         {% else %}
                         {{ p.supplier_name or '-' }}
                         {% endif %}
                     </td>
                     <td class="px-3 py-2.5 text-center text-xs font-mono whitespace-nowrap" data-label="ID">
                         <a href="{{ url_for('purchases.purchase_detail', purchase_id=p.id) }}"
-                           class="text-[var(--color-primary)] no-underline hover:underline">{{ (p.display_id or p.id)|lower }}</a>
+                            class="text-[var(--color-primary)] no-underline hover:underline">{{ (p.display_id or
+                            p.id)|lower }}</a>
                     </td>
-                    <td class="px-3 py-2.5 text-center font-mono text-[var(--color-text)]" data-label="{{ _('Voucher No') }}">{{ p.voucher_no or '-' }}</td>
-                    <td class="px-3 py-2.5 text-right font-bold text-[var(--color-text)]" data-label="{{ _('Total') }}">৳ {{ p.total_amount or 0 }}</td>
-                    <td class="px-3 py-2.5 text-center" data-label="{{ _('Payment') }}">{{ _(p.payment_status or '-') }}</td>
-                    <td class="px-3 py-2.5 text-right text-[var(--color-text)]" data-label="{{ _('Paid') }}">৳ {{ p.paid_amount or 0 }}</td>
+                    <td class="px-3 py-2.5 text-center font-mono text-[var(--color-text)]"
+                        data-label="{{ _('Voucher No') }}">{{ p.voucher_no or '-' }}</td>
+                    <td class="px-3 py-2.5 text-right font-bold text-[var(--color-text)]" data-label="{{ _('Total') }}">
+                        ৳ {{ p.total_amount or 0 }}</td>
+                    <td class="px-3 py-2.5 text-center" data-label="{{ _('Payment') }}">{{ _(p.payment_status or '-') }}
+                    </td>
+                    <td class="px-3 py-2.5 text-right text-[var(--color-text)]" data-label="{{ _('Paid') }}">৳ {{
+                        p.paid_amount or 0 }}</td>
                     <td class="px-3 py-2.5 text-center" data-label="{{ _('Items') }}">{{ p.item_count or 0 }}</td>
                     <td class="px-3 py-2.5 text-center" data-label="{{ _('Voucher') }}">
                         {% if p.voucher_file_path %}
                         <a href="{{ url_for('shop_img', filename=p.voucher_file_path) }}" target="_blank"
-                           class="text-[var(--color-primary)] hover:text-[var(--color-primary-dark)]">
+                            class="text-[var(--color-primary)] hover:text-[var(--color-primary-dark)]">
                             <span class="material-icons text-lg">receipt</span>
                         </a>
                         {% else %}-{% endif %}
                     </td>
                     <td class="px-4 py-3 text-right" data-label="{{ _('Actions') }}">
                         <div class="flex gap-1.5 justify-end flex-nowrap">
-                            {{ btn(icon='visibility', variant='secondary', size='sm', href=url_for('purchases.purchase_detail', purchase_id=p.id)) }}
-                            {{ btn(icon='edit', variant='primary', size='sm', href=url_for('purchases.edit_purchase', purchase_id=p.id)) }}
+                            {{ btn(icon='visibility', variant='secondary', size='xs',
+                            href=url_for('purchases.purchase_detail', purchase_id=p.id)) }}
+                            {{ btn(icon='edit', variant='primary', size='xs', href=url_for('purchases.edit_purchase',
+                            purchase_id=p.id)) }}
                             <form action="{{ url_for('purchases.delete_purchase', purchase_id=p.id) }}" method="POST"
-                                  class="inline-flex"
-                                  onsubmit='return confirm({{ _("Are you sure you want to delete this purchase?")|tojson }});'>
-                                {{ btn(icon='delete', variant='danger', size='sm', type='submit') }}
+                                class="inline-flex"
+                                onsubmit='return confirm({{ _("Are you sure you want to delete this purchase?")|tojson }});'>
+                                {{ btn(icon='delete', variant='danger', size='xs', type='submit') }}
                             </form>
                         </div>
                     </td>
@@ -136,7 +126,7 @@
             </tbody>
         </table>
 
-            {{ render_pagination(meta, 'purchases.purchase_list', search_query) }}
+        {{ render_pagination(meta, 'purchases.purchase_list', search_query) }}
     </div>
     {% else %}
     <div class="text-center py-12 text-[var(--color-text-muted)]">

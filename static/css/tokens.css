@@ -54,7 +54,7 @@
     --font-display: 'Inter', 'Noto Sans Bengali', sans-serif;
     --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
-    --text-xs: 0.85rem;
+    --text-xs: 1rem;
     /* 12.8px */
     --text-sm: 0.92rem;
     /* 14.7px */
@@ -618,16 +618,29 @@ hr {
     color: var(--color-text);
 }
 
-/* ── Dark/Matrix Scrollbar ─────────────────────────────────── */
-[data-theme='dark'] ::-webkit-scrollbar-track,
-[data-theme='matrix'] ::-webkit-scrollbar-track {
-    background: var(--color-bg);
+/* ── Global Theme-Aware Scrollbar ───────────────────────────── */
+html {
+    scrollbar-color: var(--color-text-muted) var(--color-bg);
+    scrollbar-width: thin;
 }
 
-[data-theme='dark'] ::-webkit-scrollbar-thumb,
-[data-theme='matrix'] ::-webkit-scrollbar-thumb {
-    background: var(--color-border);
-    border-radius: 4px;
+::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(128, 128, 128, 0.5);
+    border: 3px solid var(--color-bg);
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(128, 128, 128, 0.8);
 }
 
 /* ── File Input ────────────────────────────────────────────── */

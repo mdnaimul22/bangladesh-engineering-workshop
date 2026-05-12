@@ -16,6 +16,11 @@
 {% endblock %}
 
 {% block content %}
+<div id="page-meta" class="hidden"
+     data-title="{{ work_order.job_name }}"
+     data-icon="assignment"
+     data-back-url="{{ url_for('work_orders.work_order_list') }}"></div>
+
 {# ── Breadcrumb ──────────────────────────────────────────── #}
 {{ breadcrumb_schema(crumbs) }}
 
@@ -49,17 +54,17 @@
 <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
     {# Quoted Price #}
     <div class="p-3 bg-[var(--color-surface)] rounded-[var(--radius)] border border-[var(--color-border)] shadow-[var(--shadow-sm)]">
-        <div class="text-[0.7rem] font-bold text-[var(--color-primary)] uppercase tracking-wider">{{ _('QUOTED PRICE') }}</div>
+        <div class="text-xs tracking-wider font-bold text-[var(--color-primary)] uppercase tracking-wider">{{ _('QUOTED PRICE') }}</div>
         <div class="text-lg font-bold text-[var(--color-text)] mt-1">৳ {{ "{:,.0f}".format(work_order.quoted_price or 0) }}</div>
     </div>
     {# Total Cost #}
     <div class="p-3 bg-[var(--color-surface)] rounded-[var(--radius)] border border-[var(--color-border)] shadow-[var(--shadow-sm)]">
-        <div class="text-[0.7rem] font-bold text-[var(--color-primary)] uppercase tracking-wider">{{ _('TOTAL COST') }}</div>
+        <div class="text-xs tracking-wider font-bold text-[var(--color-primary)] uppercase tracking-wider">{{ _('TOTAL COST') }}</div>
         <div class="text-lg font-bold text-[var(--color-text)] mt-1">৳ {{ "{:,.0f}".format(work_order.total_cost or 0) }}</div>
     </div>
     {# Profit/Loss #}
     <div class="p-3 bg-[var(--color-surface)] rounded-[var(--radius)] border border-[var(--color-border)] shadow-[var(--shadow-sm)]">
-        <div class="text-[0.7rem] font-bold text-[var(--color-primary)] uppercase tracking-wider">{{ _('PROFIT / LOSS') }}</div>
+        <div class="text-xs tracking-wider font-bold text-[var(--color-primary)] uppercase tracking-wider">{{ _('PROFIT / LOSS') }}</div>
         <div class="text-lg font-bold mt-1 flex items-center gap-1
                     {% if profit >= 0 %}text-emerald-500{% else %}text-red-500{% endif %}">
             {% if profit >= 0 %}+{% endif %}৳ {{ "{:,.0f}".format(profit) }}
@@ -68,7 +73,7 @@
     </div>
     {# Status #}
     <div class="p-3 bg-[var(--color-surface)] rounded-[var(--radius)] border border-[var(--color-border)] shadow-[var(--shadow-sm)]">
-        <div class="text-[0.7rem] font-bold text-[var(--color-primary)] uppercase tracking-wider">{{ _('STATUS') }}</div>
+        <div class="text-xs tracking-wider font-bold text-[var(--color-primary)] uppercase tracking-wider">{{ _('STATUS') }}</div>
         <div class="text-lg font-bold mt-1 flex items-center gap-1
                     {% if (work_order.status or '').lower() == 'closed' %}text-emerald-500{% else %}text-amber-500{% endif %}">
             <span class="material-icons text-base">{% if (work_order.status or '').lower() == 'closed' %}check_circle{% else %}pending{% endif %}</span>
@@ -202,7 +207,7 @@
                         {% else %}
                         <div class="text-center">
                             <span class="material-icons text-4xl text-red-500">picture_as_pdf</span>
-                            <div class="text-[0.65rem] font-bold text-[var(--color-text-muted)] mt-1">PDF</div>
+                            <div class="text-xs font-bold text-[var(--color-text-muted)] mt-1">PDF</div>
                         </div>
                         <a href="javascript:void(0)" onclick="openPreview('{{ doc_url }}', '{{ doc_title }}')"
                            class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -211,8 +216,8 @@
                         {% endif %}
                     </div>
                     <div class="px-2.5 py-2 border-t border-[var(--color-border)]">
-                        <span class="inline-block bg-[var(--color-bg)] text-[var(--color-text-muted)] text-[0.6rem] font-bold uppercase px-1.5 py-0.5 rounded mb-1">{{ doc_title }}</span>
-                        <div class="text-[0.7rem] text-[var(--color-text-muted)] truncate" title="{{ doc.notes or '' }}">
+                        <span class="inline-block bg-[var(--color-bg)] text-[var(--color-text-muted)] text-xs font-bold uppercase px-1.5 py-0.5 rounded mb-1">{{ doc_title }}</span>
+                        <div class="text-xs tracking-wider text-[var(--color-text-muted)] truncate" title="{{ doc.notes or '' }}">
                             {{ doc.notes or _('No description') }}
                         </div>
                     </div>
@@ -252,7 +257,7 @@
                             <div class="font-semibold text-[var(--color-text)]">{{ p.part_name }}</div>
                             {% if p.voucher_file_path %}
                             <a href="javascript:void(0)" onclick="openPreview('{{ part_voucher_url }}', '{{ part_voucher_title }}')"
-                               class="inline-flex items-center gap-1 text-[0.7rem] font-semibold mt-1 px-2 py-0.5 rounded
+                               class="inline-flex items-center gap-1 text-xs tracking-wider font-semibold mt-1 px-2 py-0.5 rounded
                                       {% if p.voucher_file_path.lower().endswith('.pdf') %}
                                           bg-red-500/10 text-red-500 border border-red-500/20
                                       {% else %}
@@ -328,9 +333,7 @@
         </div>
     </div>
 </div>
-{% endblock %}
 
-{% block extra_js %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';

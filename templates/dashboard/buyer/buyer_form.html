@@ -16,33 +16,22 @@
 {% endblock %}
 
 {% block content %}
-{# ── Breadcrumb ──────────────────────────────────────────── #}
-{{ breadcrumb_schema(crumbs) }}
-
-{# ── Page Header ─────────────────────────────────────────── #}
-{% set back_url = url_for('buyers.buyer_detail', buyer_id=buyer_id) if buyer_id else url_for('buyers.buyer_list') %}
-{% set header_actions %}
-{{ btn(text=_('Back'), icon='arrow_back', variant='secondary', href=back_url) }}
-{% endset %}
-
-{{ page_header(
-    title=_('Add New Buyer') if action == 'add' else _('Edit Buyer Company'),
-    icon='person_add' if action == 'add' else 'edit',
-    actions=[header_actions]
-) }}
+<div id="page-meta" class="hidden"
+     data-title="{{ _('Edit Buyer') if action == 'edit' else _('Add Buyer') }}"
+     data-icon="{{ 'edit' if action == 'edit' else 'person_add' }}"
+     data-back-url="{{ url_for('buyers.buyer_list') }}"></div>
 
 {# ── Form Variables ───────────────────────────────────────── #}
-{% set lbl = "flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide min-h-[28px]" %}
+{% set lbl = "flex items-center gap-1 text-xs tracking-wider font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide min-h-[28px]" %}
 {% set inp = "form-control w-full h-[38px] px-3 py-1.5 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all" %}
 
 {# ── Form ────────────────────────────────────────────────── #}
-<section class="mt-4">
+<section class="min-w-0">
     <form method="POST"
-          class="bg-[var(--color-surface)] p-5 md:p-6 rounded-[var(--radius-lg)]
-                 shadow-[var(--shadow)] border border-[var(--color-border)]">
+          class="bg-[var(--color-surface)] p-4 sm:p-5 rounded-[var(--radius-lg)] shadow-sm border border-[var(--color-border)] space-y-6">
 
         {# ── Company Info ────────────────────────────────── #}
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5 p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)]">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-2">
             <div class="flex flex-col justify-end">
                 <label for="company_name" class="{{ lbl }}">
                     <span class="material-icons text-sm">business</span>
@@ -65,10 +54,8 @@
             </div>
         </div>
 
-        </div>
-
         {# ── Contact Persons Section ─────────────────────── #}
-        <div x-data="buyerForm()" class="p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)] mb-5">
+        <div x-data="buyerForm()" class="">
             <div class="flex justify-between items-center mb-3 pb-2 border-b border-[var(--color-border)]">
                 <h3 class="text-base font-semibold m-0 flex items-center gap-2 text-[var(--color-text)]">
                     <span class="material-icons text-lg text-[var(--color-primary)]">people</span>
@@ -96,7 +83,7 @@
                             </div>
                             {# Mobile Numbers #}
                             <div class="flex flex-col justify-end">
-                                <label class="flex items-center justify-between text-[0.7rem] font-bold text-[var(--color-primary)] mb-1 uppercase w-full min-h-[28px]">
+                                <label class="flex items-center justify-between text-xs tracking-wider font-bold text-[var(--color-primary)] mb-1 uppercase w-full min-h-[28px]">
                                     <span>{{ _('Mobile Numbers') }}</span>
                                     <div class="flex gap-1 ml-2">
                                         <button type="button" @click="addMobile(idx)"
@@ -139,7 +126,7 @@
                             </div>
                             {# Primary Radio #}
                             <div class="flex flex-col items-center justify-end">
-                                <label class="text-[0.7rem] font-bold text-[var(--color-primary)] mb-1 uppercase min-h-[28px] flex items-center">{{ _('Primary') }}</label>
+                                <label class="text-xs tracking-wider font-bold text-[var(--color-primary)] mb-1 uppercase min-h-[28px] flex items-center">{{ _('Primary') }}</label>
                                 <div class="h-[38px] flex items-center justify-center">
                                     <input type="radio" name="primary_contact_index" :value="idx"
                                            class="w-5 h-5 cursor-pointer accent-[var(--color-primary)]"
@@ -149,7 +136,7 @@
                             </div>
                             {# Delete #}
                             <div class="flex flex-col items-center justify-end">
-                                <label class="text-[0.7rem] font-bold text-[var(--color-primary)] mb-1 uppercase min-h-[28px] flex items-center">{{ _('Action') }}</label>
+                                <label class="text-xs tracking-wider font-bold text-[var(--color-primary)] mb-1 uppercase min-h-[28px] flex items-center">{{ _('Action') }}</label>
                                 <button type="button" @click="removeContact(idx)"
                                         class="w-[38px] h-[38px] flex items-center justify-center
                                                bg-red-500 text-white rounded-md hover:bg-red-600 transition-all">
@@ -178,9 +165,7 @@
         </div>
     </form>
 </section>
-{% endblock %}
 
-{% block extra_js %}
 <script>
 function buyerForm() {
     const serverContacts = {{ buyer.contacts | tojson if buyer and buyer.contacts else '[]' }};

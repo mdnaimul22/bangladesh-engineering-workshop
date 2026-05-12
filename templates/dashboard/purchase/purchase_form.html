@@ -17,19 +17,10 @@
 {% endblock %}
 
 {% block content %}
-{# ── Breadcrumb ──────────────────────────────────────────── #}
-{{ breadcrumb_schema(crumbs) }}
-
-{# ── Page Header ─────────────────────────────────────────── #}
-{% set header_actions %}
-{{ btn(text=_('Back'), icon='arrow_back', variant='secondary', href=url_for('purchases.purchase_list')) }}
-{% endset %}
-
-{{ page_header(
-    title=_('New Purchase') if action == 'add' else _('Edit Purchase'),
-    icon='add_shopping_cart' if action == 'add' else 'edit_note',
-    actions=[header_actions]
-) }}
+<div id="page-meta" class="hidden"
+     data-title="{{ _('New Purchase') if action == 'add' else _('Edit Purchase') }}"
+     data-icon="{{ 'add_shopping_cart' if action == 'add' else 'edit_note' }}"
+     data-back-url="{{ url_for('purchases.purchase_list') }}"></div>
 
 {# ── Unit Options Macro ──────────────────────────────────── #}
 {% macro unit_options(selected_value='') %}
@@ -49,18 +40,17 @@
 {% endmacro %}
 
 {# ── Form Label Helper ───────────────────────────────────── #}
-{% set label_cls = "flex items-center gap-1 text-[0.7rem] font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide min-h-[28px]" %}
+{% set label_cls = "flex items-center gap-1 text-xs tracking-wider font-bold text-[var(--color-primary)] mb-1 uppercase tracking-wide min-h-[28px]" %}
 {% set input_cls = "form-control w-full h-[38px] px-3 py-1.5 border border-[var(--color-border)] rounded-[var(--radius-sm)] bg-[var(--color-input)] text-[var(--color-text)] text-sm focus:outline-none focus:border-[var(--color-primary)] focus:shadow-[var(--ring)] transition-all" %}
 
 {# ── Form ────────────────────────────────────────────────── #}
-<section class="mt-4">
+<section class="min-w-0">
     <form method="POST" enctype="multipart/form-data"
-          class="bg-[var(--color-surface)] p-5 md:p-6 rounded-[var(--radius-lg)]
-                 shadow-[var(--shadow)] border border-[var(--color-border)]"
+          class="bg-[var(--color-surface)] p-4 sm:p-5 rounded-[var(--radius-lg)] shadow-sm border border-[var(--color-border)] space-y-6"
           x-data="purchaseItems()">
 
         {# ── Purchase Details Block ──────────────────────── #}
-        <div class="p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)] mb-5">
+        <div class="">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-base font-semibold m-0 flex items-center gap-2 text-[var(--color-text)]">
                     <span class="material-icons text-[var(--color-primary)]">receipt_long</span> {{ _('Purchase Details') }}
@@ -135,7 +125,7 @@
         </div>
 
         {# ── Items Section (Alpine.js) ──────────────────── #}
-        <div class="p-4 bg-[var(--color-bg)]/50 rounded-[var(--radius)] border border-[var(--color-border)] mb-5">
+        <div class="">
 
             <div class="flex justify-between items-center mb-4 pb-2 border-b border-[var(--color-border)]">
                 <h3 class="text-base font-semibold m-0 flex items-center gap-2 text-[var(--color-text)]">
@@ -232,9 +222,7 @@
         </div>
     </form>
 </section>
-{% endblock %}
 
-{% block extra_js %}
 <script>
     function purchaseItems() {
         const serverItems = {{ purchase.get('items', []) | tojson if purchase.get('items') else '[]' }};

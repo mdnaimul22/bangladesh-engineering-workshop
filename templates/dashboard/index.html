@@ -3,11 +3,12 @@
 {% block title %}Dashboard | {{ super() }}{% endblock %}
 
 {% block content %}
+<div id="page-meta" class="hidden"
+     data-title="{{ _('Dashboard Overview') }}"
+     data-icon="dashboard"></div>
+
+
 <div class="space-y-8">
-    <div class="flex items-center justify-between">
-        <h2 class="text-2xl font-bold text-[var(--color-text)]">{{ _('Dashboard Overview') }}</h2>
-        <p class="text-[var(--color-text-muted)]">{{ _('Welcome back, Admin!') }}</p>
-    </div>
 
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

@@ -22,6 +22,11 @@ type='profile'
 {% endblock %}
 
 {% block content %}
+<div id="page-meta" class="hidden"
+     data-title="{{ buyer.company_name }}"
+     data-icon="business"
+     data-back-url="{{ url_for('buyers.buyer_list') }}"></div>
+
 {# ── Breadcrumb ──────────────────────────────────────────── #}
 {{ breadcrumb_schema(crumbs) }}
 
@@ -60,7 +65,7 @@ type='profile'
     {% for s in stats %}
     <div class="bg-[var(--color-surface)] border border-[var(--color-border)] {{ s.border }} border-l-4
                 rounded-[var(--radius)] p-3 shadow-[var(--shadow-sm)]">
-        <div class="text-[0.7rem] font-bold text-[var(--color-primary)] uppercase tracking-wider">{{ s.label }}</div>
+        <div class="text-xs tracking-wider font-bold text-[var(--color-primary)] uppercase tracking-wider">{{ s.label }}</div>
         <div class="text-lg font-bold text-[var(--color-text)] mt-0.5 {% if loop.last %}text-base{% endif %}">{{ s.value
             }}</div>
     </div>
@@ -98,7 +103,7 @@ type='profile'
                             <span class="material-icons text-[var(--color-text)]">person</span>
                         </div>
                         <div>
-                            <div class="font-bold text-[var(--color-text)] text-[0.95rem] leading-tight">{{ contact.name
+                            <div class="font-bold text-[var(--color-text)] text-sm leading-tight">{{ contact.name
                                 }}</div>
                             {% if contact.designation %}
                             <div class="text-xs text-[var(--color-text-muted)] mt-0.5">{{
@@ -161,9 +166,9 @@ type='profile'
                 {{ _('Transaction History') }}
             </h3>
             <div class="flex gap-2 flex-wrap">
-                {{ btn(text=_('Add Order'), icon='add_task', variant='secondary', size='sm',
+                {{ btn(text=_('Add Order'), icon='add_task', variant='secondary', size='xs',
                 href=url_for('work_orders.new_work_order', buyer_id=buyer.id)) }}
-                {{ btn(text=_('New Sale'), icon='local_mall', variant='primary', size='sm',
+                {{ btn(text=_('New Sale'), icon='local_mall', variant='primary', size='xs',
                 href=url_for('sales.new_sale', buyer_id=buyer.id)) }}
             </div>
         </div>
