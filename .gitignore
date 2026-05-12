@@ -1,21 +1,21 @@
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.pyc
+
+# Environments
 .env
+
+# OS generated files
 .DS_Store
+
+# Project specific ignores
 instance/
 extracted_odt/
 *.odt
 .~lock*
-<<<<<<< HEAD
+.tmp*
 
-hardcoded_units_report.md
-=======
+# Data and Logs
 data/logs/
 automation.log
 manage_erp.ps1
-<<<<<<< HEAD
-# ডাটাবেজ এবং ইমেজ পুশ করার জন্য এগুলো ইগনোর লিস্টে রাখা যাবে না
->>>>>>> a6727b3 (Syncing environment and data from Khulna server)
-=======
-# ডাটাবেজ এবং ইমেজ পুশ করার জন্য এগুলো ইগনোর লিস্টে রাখা যাবে না.tmp*
->>>>>>> d2d8e42 (Ignore temp files and sync)
