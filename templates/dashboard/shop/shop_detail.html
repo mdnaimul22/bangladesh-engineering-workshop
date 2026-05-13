@@ -46,12 +46,23 @@
                 <h1 class="m-0 mb-3 text-2xl md:text-3xl font-bold text-[var(--color-text)] leading-tight">
                     {{ shop.name }}
                 </h1>
-                <div class="text-base text-[var(--color-text-muted)]">
-                    <span class="text-[var(--color-text-muted)] opacity-70">
-                        <span class="material-icons align-middle text-lg">person</span>
-                        {{ _('Owner') }}:
-                    </span>
-                    <span class="font-medium text-[var(--color-text)]">{{ shop.proprietor or _('Not specified') }}</span>
+                <div class="text-base text-[var(--color-text-muted)] flex flex-col gap-1.5">
+                    {% if shop.category_name %}
+                    <div>
+                        <span class="text-[var(--color-text-muted)] opacity-70">
+                            <span class="material-icons align-middle text-lg">category</span>
+                            {{ _('Category') }}:
+                        </span>
+                        <a href="{{ url_for('shops.category_shops', category_id=shop.category_id) }}" class="font-medium text-[var(--color-primary)] hover:underline no-underline">{{ shop.category_name }}</a>
+                    </div>
+                    {% endif %}
+                    <div>
+                        <span class="text-[var(--color-text-muted)] opacity-70">
+                            <span class="material-icons align-middle text-lg">person</span>
+                            {{ _('Owner') }}:
+                        </span>
+                        <span class="font-medium text-[var(--color-text)]">{{ shop.proprietor or _('Not specified') }}</span>
+                    </div>
                 </div>
             </div>
 
@@ -151,16 +162,7 @@
             {# Action Buttons & Category #}
             <div class="flex flex-col items-end gap-3 w-full">
                 <div class="flex items-center gap-2 flex-wrap justify-end">
-                    {% if shop.category_name %}
-                    <a href="{{ url_for('shops.category_shops', category_id=shop.category_id) }}"
-                       class="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-semibold
-                              bg-[var(--color-btn-primary)] text-white no-underline whitespace-nowrap
-                              border border-white/10 shadow-sm
-                              hover:bg-[var(--color-btn-hover)] hover:text-[var(--color-primary)]
-                              hover:scale-105 transition-all duration-300">
-                        {{ shop.category_name }}
-                    </a>
-                    {% endif %}
+
                     <div class="flex gap-2 flex-wrap justify-end">
                         {% if session.get('is_admin') %}
                         {{ btn(text=_('Purchases'), icon='receipt_long', variant='secondary', href=url_for('purchases.shop_purchases', shop_id=shop.id)) }}
@@ -179,10 +181,6 @@
 
             {# Visiting Card #}
             <div class="w-full flex flex-col items-end mt-2">
-                <h3 class="m-0 mb-3 text-sm font-medium text-[var(--color-text-muted)] flex items-center gap-1.5">
-                    <span class="material-icons text-base">image</span>
-                    {{ _('Visiting Card') }}
-                </h3>
                 {% if shop.visiting_card %}
                 <img src="/shop_img/{{ shop.visiting_card }}" alt="{{ _('Visiting Card for') }} {{ shop.name }}"
                      class="w-[280px] h-[160px] object-cover rounded-lg shadow-md border border-[var(--color-border)]
