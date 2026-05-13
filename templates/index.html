@@ -78,18 +78,18 @@
     {% if shops %}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-[1200px] mx-auto text-left">
         {% for shop in shops %}
-        <div class="bg-[var(--color-surface)] rounded-[var(--radius)] p-6
-                    shadow-[var(--shadow)] border border-[var(--color-border)]
-                    hover:-translate-y-1 hover:shadow-[var(--shadow-lg)]
-                    transition-all duration-300 flex flex-col">
+        <a href="{{ url_for('shops.shop_detail', shop_id=shop.id) }}"
+           class="bg-[var(--color-surface)] rounded-[var(--radius)] p-6
+                  shadow-[var(--shadow)] border border-[var(--color-border)]
+                  hover:-translate-y-1 hover:shadow-[var(--shadow-lg)]
+                  transition-all duration-300 flex flex-col no-underline text-inherit group block">
             {# Header #}
             <div class="flex justify-between items-start gap-3 mb-3 pb-3
                         border-b border-[var(--color-border)]">
-                <a href="{{ url_for('shops.shop_detail', shop_id=shop.id) }}"
-                   class="text-[var(--color-text)] no-underline font-semibold text-lg
-                          hover:text-[var(--color-primary)] transition-colors leading-snug">
+                <div class="text-[var(--color-text)] font-semibold text-lg
+                            group-hover:text-[var(--color-primary)] transition-colors leading-snug">
                     {{ shop.name }}
-                </a>
+                </div>
                 {% if shop.category_name %}
                 <span class="inline-block px-3 py-1 rounded-full text-sm font-medium
                              bg-[var(--color-btn-primary)] text-white whitespace-nowrap shrink-0">
@@ -112,7 +112,7 @@
                 </p>
                 {% endif %}
             </div>
-        </div>
+        </a>
         {% endfor %}
     </div>
     {% else %}
