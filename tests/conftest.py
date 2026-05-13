@@ -42,6 +42,15 @@ def client(app):
 
 
 @pytest.fixture
+def auth_client(app):
+    """Create an authenticated Flask test client (admin session)."""
+    with app.test_client() as client:
+        with client.session_transaction() as sess:
+            sess['is_admin'] = True
+        yield client
+
+
+@pytest.fixture
 def app_context(app):
     """Push an application context for DB operations."""
     with app.app_context():

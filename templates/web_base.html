@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 
 {% block layout_content %}
+<div class="flex flex-col min-h-screen">
     {# ══════════════════════════════════════════════════════════════
        PUBLIC NAVBAR
        ══════════════════════════════════════════════════════════════ #}
@@ -66,7 +67,7 @@
     {# ══════════════════════════════════════════════════════════════
        MAIN CONTENT
        ══════════════════════════════════════════════════════════════ #}
-    <div class="container mx-auto px-4 mt-6 mb-16">
+    <div class="container mx-auto px-4 flex-grow flex items-center justify-center pb-16">
         {% block content %}{% endblock %}
     </div>
 
@@ -74,117 +75,48 @@
        FOOTER
        ══════════════════════════════════════════════════════════════ #}
     <footer class="bg-footer-bg backdrop-blur-[15px] backdrop-saturate-[180%]
-                   text-text-main pt-6 mt-auto border-t border-bew-border
-                   shadow-[0_-10px_30px_rgba(0,0,0,0.05)] text-sm" role="contentinfo">
-        <div class="container mx-auto px-4
-                    grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_1.5fr_1fr]
-                    gap-8 lg:gap-12 pb-1 items-start">
+                   text-text-main mt-auto border-t border-bew-border text-sm" role="contentinfo">
+        {# ── Main Footer Row ── #}
+        <div class="container mx-auto px-4 py-4
+                    flex flex-col md:flex-row items-center justify-between gap-4">
 
-            <!-- Left: Quick Links -->
-            <div class="text-center sm:text-left">
-                <h4 class="text-text-main text-[0.9375rem] font-bold mb-4 relative pb-1
-                           after:content-[''] after:absolute after:left-1/2 sm:after:left-0
-                           after:-translate-x-1/2 sm:after:translate-x-0
-                           after:bottom-0 after:w-6 after:h-0.5 after:bg-primary">
-                    {{ _('Quick Links') }}
-                </h4>
-                <ul class="list-none p-0 m-0 space-y-2">
-                    <li>
-                        <a href="{{ url_for('core.about') }}"
-                            class="text-text-muted no-underline flex items-center gap-2 text-sm
-                                   justify-center sm:justify-start
-                                   hover:text-primary hover:pl-1 transition-all">
-                            <span class="material-icons text-base opacity-70">chevron_right</span>
-                            {{ _('About Us') }}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ url_for('core.services') }}"
-                            class="text-text-muted no-underline flex items-center gap-2 text-sm
-                                   justify-center sm:justify-start
-                                   hover:text-primary hover:pl-1 transition-all">
-                            <span class="material-icons text-base opacity-70">chevron_right</span>
-                            {{ _('Services') }}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ url_for('core.contact') }}"
-                            class="text-text-muted no-underline flex items-center gap-2 text-sm
-                                   justify-center sm:justify-start
-                                   hover:text-primary hover:pl-1 transition-all">
-                            <span class="material-icons text-base opacity-70">chevron_right</span>
-                            {{ _('Contact Us') }}
-                        </a>
-                    </li>
-                </ul>
+            {# Brand #}
+            <div class="flex items-center gap-2 shrink-0">
+                <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="BEW Logo"
+                    class="h-7 w-auto">
+                <span class="text-text-main text-sm font-semibold">{{ _('Bangladesh Engineering Workshop') }}</span>
             </div>
 
-            <!-- Center: Brand identity -->
-            <div class="text-center flex flex-col items-center">
-                <div class="flex items-center gap-3 mb-1 justify-center">
-                    <img src="{{ url_for('static', filename='img/logo.svg') }}" alt="BEW Logo"
-                        class="h-9 w-auto">
-                    <h4 class="text-text-main text-base font-bold m-0 p-0">
-                        {{ _('Bangladesh Engineering Workshop') }}
-                    </h4>
-                </div>
-                <p class="text-text-muted leading-relaxed text-[0.8125rem] mt-2 max-w-[400px]">
-                    {{ _('Your trusted partner for heavy machinery repair, precision machining, and engineering solutions since years.') }}
-                </p>
-            </div>
+            {# Nav Links #}
+            <nav class="flex items-center gap-4 text-xs" aria-label="Footer Navigation">
+                <a href="{{ url_for('core.about') }}"
+                   class="text-text-muted no-underline hover:text-primary transition-colors">{{ _('About Us') }}</a>
+                <a href="{{ url_for('core.services') }}"
+                   class="text-text-muted no-underline hover:text-primary transition-colors">{{ _('Services') }}</a>
+                <a href="{{ url_for('core.contact') }}"
+                   class="text-text-muted no-underline hover:text-primary transition-colors">{{ _('Contact Us') }}</a>
+            </nav>
 
-            <!-- Right: Contact Info -->
-            <div class="text-center sm:text-right flex flex-col items-center sm:items-end">
-                <div class="flex items-center justify-center sm:justify-end gap-6 mb-4">
-                    <div class="flex gap-2">
-                        <a href="tel:+8801906399161" title="Call Us"
-                            class="bg-surface text-text-main w-[30px] h-[30px] flex items-center justify-center
-                                   rounded-full border border-bew-border backdrop-blur-sm
-                                   hover:bg-primary hover:text-white hover:-translate-y-0.5
-                                   hover:shadow-md transition-all">
-                            <span class="material-icons text-lg">phone</span>
-                        </a>
-                        <a href="https://wa.me/8801906399161" title="WhatsApp"
-                            class="bg-surface text-text-main w-[30px] h-[30px] flex items-center justify-center
-                                   rounded-full border border-bew-border backdrop-blur-sm
-                                   hover:bg-primary hover:text-white hover:-translate-y-0.5
-                                   hover:shadow-md transition-all">
-                            <span class="material-icons text-lg">chat</span>
-                        </a>
-                    </div>
-                    <h4 class="text-text-main text-[0.9375rem] font-bold m-0 relative pb-1
-                               after:content-[''] after:absolute after:right-0
-                               after:bottom-0 after:w-6 after:h-0.5 after:bg-primary">
-                        {{ _('Contact Info') }}
-                    </h4>
-                </div>
-                <ul class="list-none p-0 m-0 w-full space-y-2">
-                    <li class="flex justify-center sm:justify-end items-center gap-1.5
-                               text-text-muted text-[0.8125rem] leading-snug">
-                        <span class="material-icons text-primary text-lg shrink-0">phone_android</span>
-                        <span>+880 1906 399161</span>
-                    </li>
-                    <li class="flex justify-center sm:justify-end items-center gap-1.5
-                               text-text-muted text-[0.8125rem] leading-snug">
-                        <span class="material-icons text-primary text-lg shrink-0">email</span>
-                        <span>info@bew-bd.com</span>
-                    </li>
-                    <li class="flex justify-center sm:justify-end items-center gap-1.5
-                               text-text-muted text-[0.8125rem] leading-snug">
-                        <span class="material-icons text-primary text-lg shrink-0">place</span>
-                        <span>{{ _('City Bypass, Mostofar Mor, Horintana, Khulna') }}</span>
-                    </li>
-                </ul>
+            {# Contact Chips #}
+            <div class="flex items-center gap-3 text-text-muted text-xs">
+                <a href="tel:+8801906399161"
+                   class="inline-flex items-center gap-1 no-underline text-text-muted hover:text-primary transition-colors">
+                    <span class="material-icons text-sm">phone</span>+880 1906 399161
+                </a>
+                <span class="hidden sm:inline text-[var(--color-border)]">|</span>
+                <a href="mailto:info@bew-bd.com"
+                   class="hidden sm:inline-flex items-center gap-1 no-underline text-text-muted hover:text-primary transition-colors">
+                    <span class="material-icons text-sm">email</span>info@bew-bd.com
+                </a>
             </div>
         </div>
 
-        <!-- Bottom Bar -->
-        <div class="bg-black/[0.03] py-3 text-center border-t border-bew-border">
-            <div class="container mx-auto px-4">
-                <p class="text-text-muted text-xs m-0">
-                    &copy; <span x-data x-text="new Date().getFullYear()"></span> {{ _('Bangladesh Engineering Workshop') }}. All rights reserved.
-                </p>
-            </div>
+        {# ── Copyright Bar ── #}
+        <div class="border-t border-bew-border py-2 text-center">
+            <p class="text-text-muted text-[0.6875rem] m-0 opacity-70">
+                &copy; <span x-data x-text="new Date().getFullYear()"></span> {{ _('Bangladesh Engineering Workshop') }}. All rights reserved.
+            </p>
         </div>
     </footer>
+</div>
 {% endblock %}

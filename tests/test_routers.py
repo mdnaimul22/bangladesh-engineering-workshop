@@ -34,9 +34,15 @@ class TestShopRoutes:
         resp = client.get('/shops/999999')
         assert resp.status_code in (302, 404)
 
-    def test_new_shop_get(self, client):
-        resp = client.get('/shops/new')
+    def test_new_shop_get(self, auth_client):
+        """Admin-protected route — requires auth."""
+        resp = auth_client.get('/dashboard/shops/new')
         assert resp.status_code == 200
+
+    def test_new_shop_get_unauthenticated(self, client):
+        """Unauthenticated access should redirect to login."""
+        resp = client.get('/dashboard/shops/new')
+        assert resp.status_code == 302
 
     def test_search_api(self, client):
         resp = client.get('/api/search?q=test')
@@ -46,64 +52,68 @@ class TestShopRoutes:
 class TestBuyerRoutes:
     """Verify buyer routes respond."""
 
-    def test_buyer_list(self, client):
-        resp = client.get('/buyers')
+    def test_buyer_list(self, auth_client):
+        resp = auth_client.get('/dashboard/buyers')
         assert resp.status_code == 200
 
-    def test_new_buyer_get(self, client):
-        resp = client.get('/buyers/new')
+    def test_buyer_list_unauthenticated(self, client):
+        resp = client.get('/dashboard/buyers')
+        assert resp.status_code == 302
+
+    def test_new_buyer_get(self, auth_client):
+        resp = auth_client.get('/dashboard/buyers/new')
         assert resp.status_code == 200
 
-    def test_buyer_detail_invalid(self, client):
-        resp = client.get('/buyers/999999')
+    def test_buyer_detail_invalid(self, auth_client):
+        resp = auth_client.get('/dashboard/buyers/999999')
         assert resp.status_code in (302, 404)
 
 
 class TestInventoryRoutes:
     """Verify inventory routes respond."""
 
-    def test_inventory_list(self, client):
-        resp = client.get('/inventory')
+    def test_inventory_list(self, auth_client):
+        resp = auth_client.get('/dashboard/inventory')
         assert resp.status_code == 200
 
-    def test_new_inventory_get(self, client):
-        resp = client.get('/inventory/new')
+    def test_new_inventory_get(self, auth_client):
+        resp = auth_client.get('/dashboard/inventory/new')
         assert resp.status_code == 200
 
 
 class TestPurchaseRoutes:
     """Verify purchase routes respond."""
 
-    def test_purchase_list(self, client):
-        resp = client.get('/purchases')
+    def test_purchase_list(self, auth_client):
+        resp = auth_client.get('/dashboard/purchases')
         assert resp.status_code == 200
 
-    def test_new_purchase_get(self, client):
-        resp = client.get('/purchases/new')
+    def test_new_purchase_get(self, auth_client):
+        resp = auth_client.get('/dashboard/purchases/new')
         assert resp.status_code == 200
 
 
 class TestSalesRoutes:
     """Verify sales routes respond."""
 
-    def test_sale_list(self, client):
-        resp = client.get('/sales')
+    def test_sale_list(self, auth_client):
+        resp = auth_client.get('/dashboard/sales')
         assert resp.status_code == 200
 
-    def test_new_sale_get(self, client):
-        resp = client.get('/sales/new')
+    def test_new_sale_get(self, auth_client):
+        resp = auth_client.get('/dashboard/sales/new')
         assert resp.status_code == 200
 
 
 class TestWorkOrderRoutes:
     """Verify work order routes respond."""
 
-    def test_work_order_list(self, client):
-        resp = client.get('/work-orders')
+    def test_work_order_list(self, auth_client):
+        resp = auth_client.get('/dashboard/work-orders')
         assert resp.status_code == 200
 
-    def test_new_work_order_get(self, client):
-        resp = client.get('/work-orders/new')
+    def test_new_work_order_get(self, auth_client):
+        resp = auth_client.get('/dashboard/work-orders/new')
         assert resp.status_code == 200
 
 

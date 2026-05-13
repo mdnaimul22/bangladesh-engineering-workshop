@@ -98,14 +98,14 @@ def static_from_root():
 def not_found(e):
     if request.path.startswith('/api/'):
         return jsonify({'error': 'Resource not found'}), 404
-    return render_template('errors/404.html'), 404
+    return render_template('web/errors/404.html'), 404
 
 @app.errorhandler(500)
 def server_error(e):
     logger.error(f"Unhandled server error: {e}")
     if request.path.startswith('/api/'):
         return jsonify({'error': 'Internal server error'}), 500
-    return render_template('errors/500.html'), 500
+    return render_template('web/errors/500.html'), 500
 
 @app.errorhandler(405)
 def method_not_allowed(e):
