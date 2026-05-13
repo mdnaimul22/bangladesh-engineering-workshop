@@ -13,7 +13,7 @@
     @click="$store.deleteConfirm.show('{{ action_url }}')"
     class="inline-flex items-center gap-1.5 rounded-lg font-medium no-underline transition-colors
            {% if size == 'xs' %}px-2 py-1 text-xs{% elif size == 'sm' %}px-3 py-1.5 text-sm{% else %}px-4 py-2 text-sm{% endif %}
-           {% if variant == 'danger' %}bg-[var(--color-btn-danger)] text-white hover:opacity-90
+           {% if variant == 'danger' %}bg-red-500 text-white border-2 border-red-500 shadow-sm hover:bg-red-600 hover:border-red-600 hover:scale-105 hover:shadow-md
            {% else %}bg-[var(--color-bg)] text-[var(--color-text)] border border-[var(--color-border)] hover:bg-[var(--color-surface)]{% endif %}">
     <span class="material-icons text-base">{{ icon }}</span>
     {% if label %}{{ label }}{% endif %}
