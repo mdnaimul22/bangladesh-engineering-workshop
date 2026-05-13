@@ -77,11 +77,11 @@
                 </h3>
 
                 {% macro detail_row(icon, label, content) %}
-                <div class="mb-4 pb-4 border-b border-dashed border-[var(--color-border)] last:mb-0 last:pb-0 last:border-b-0">
-                    <div class="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wide flex items-center gap-1.5 mb-1.5">
-                        <span class="material-icons text-sm">{{ icon }}</span> {{ label }}
+                <div class="mb-3 pb-3 border-b border-dashed border-[var(--color-border)] last:mb-0 last:pb-0 last:border-b-0 flex items-start sm:items-center gap-2 sm:gap-4">
+                    <div class="text-sm font-medium text-[var(--color-text-muted)] flex items-center gap-1.5 shrink-0 min-w-[140px]">
+                        <span class="material-icons text-base">{{ icon }}</span> {{ label }}:
                     </div>
-                    <div class="text-base md:text-lg text-[var(--color-text)] font-medium pl-0.5">
+                    <div class="text-base text-[var(--color-text)] font-medium flex-1 flex flex-wrap gap-1.5 items-center">
                         {{ caller() }}
                     </div>
                 </div>
