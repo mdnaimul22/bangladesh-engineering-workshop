@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="static/img/logo.svg" alt="BEW Logo" width="80">
+  <img src="static/img/logo.svg" alt="BEW Logo" width="120">
 </p>
 
 <h1 align="center">Bangladesh Engineering Workshop</h1>
