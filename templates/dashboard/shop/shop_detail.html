@@ -122,7 +122,7 @@
                 <span class="material-icons text-lg text-[var(--color-primary)]">inventory_2</span>
                 {{ _('Products List') }}
             </h3>
-            <div class="text-sm text-[var(--color-text)] leading-relaxed whitespace-pre-line">
+            <div class="text-base md:text-lg text-[var(--color-text)] leading-relaxed whitespace-pre-line">
                 {{ shop.products or _('No products list available') }}
             </div>
         </div>
@@ -139,7 +139,7 @@
                 <div class="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wide flex items-center gap-1.5 mb-1.5">
                     <span class="material-icons text-sm">{{ icon }}</span> {{ label }}
                 </div>
-                <div class="text-base text-[var(--color-text)] font-medium pl-0.5">
+                <div class="text-base md:text-lg text-[var(--color-text)] font-medium pl-0.5">
                     {{ caller() }}
                 </div>
             </div>
@@ -153,9 +153,9 @@
                 {% if shop.mobile %}
                 {% for num in shop.mobile.split() %}
                 <a href="tel:{{ num }}"
-                   class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold
-                          text-white no-underline bg-sky-500 mr-1.5 mb-1 shadow-sm
-                          hover:scale-105 hover:shadow-md hover:brightness-110 transition-all"
+                   class="inline-flex items-center px-3 py-1 rounded-full text-base font-semibold
+                          text-[var(--color-primary)] no-underline bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20 mr-1.5 mb-1 shadow-sm
+                          hover:scale-105 hover:shadow-md hover:bg-[var(--color-primary)] hover:text-white transition-all"
                    dir="ltr">{{ num }}</a>
                 {% endfor %}
                 {% else %}-{% endif %}
@@ -163,7 +163,7 @@
 
             {% call detail_row('payments', _('Online Transaction')) %}
                 {% if shop.transaction_status %}
-                <span class="{% if 'Bkash' in shop.transaction_status or 'Nagad' in shop.transaction_status %}inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold text-white bg-pink-600 shadow-sm{% endif %}">
+                <span class="{% if 'Bkash' in shop.transaction_status or 'Nagad' in shop.transaction_status %}inline-flex items-center px-3 py-1 rounded-full text-base font-semibold text-pink-600 bg-pink-600/10 border border-pink-600/20 shadow-sm{% else %}text-base{% endif %}">
                     {{ shop.transaction_status }}
                 </span>
                 {% else %}-{% endif %}
@@ -173,9 +173,9 @@
                 {% if shop.whatsapp %}
                 {% for num in shop.whatsapp.split() %}
                 <a href="https://wa.me/{{ num.replace('-', '').replace(' ', '') }}" target="_blank"
-                   class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold
-                          text-white no-underline bg-[#25d366] mr-1.5 mb-1 shadow-sm
-                          hover:scale-105 hover:shadow-md hover:brightness-110 transition-all"
+                   class="inline-flex items-center px-3 py-1 rounded-full text-base font-semibold
+                          text-[#25d366] no-underline bg-[#25d366]/10 border border-[#25d366]/20 mr-1.5 mb-1 shadow-sm
+                          hover:scale-105 hover:shadow-md hover:bg-[#25d366] hover:text-white transition-all"
                    dir="ltr">{{ num }}</a>
                 {% endfor %}
                 {% else %}-{% endif %}
@@ -185,15 +185,15 @@
                 {% set contact = shop.email_web | parse_contact_info %}
                 {% if contact.type == 'email' %}
                 <a href="mailto:{{ contact.value }}"
-                   class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold
-                          text-white no-underline bg-[var(--color-danger)] shadow-sm
-                          hover:scale-105 hover:shadow-md transition-all">{{ contact.value }}</a>
+                   class="inline-flex items-center px-3 py-1 rounded-full text-base font-semibold
+                          text-[var(--color-danger)] no-underline bg-[var(--color-danger)]/10 border border-[var(--color-danger)]/20 shadow-sm
+                          hover:scale-105 hover:shadow-md hover:bg-[var(--color-danger)] hover:text-white transition-all">{{ contact.value }}</a>
                 {% elif contact.type == 'web' %}
                 <a href="{{ contact.value if 'http' in contact.value else 'http://' + contact.value }}"
                    target="_blank"
-                   class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold
-                          text-white no-underline bg-[var(--color-primary)] shadow-sm
-                          hover:scale-105 hover:shadow-md transition-all">{{ contact.value }}</a>
+                   class="inline-flex items-center px-3 py-1 rounded-full text-base font-semibold
+                          text-[var(--color-primary)] no-underline bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20 shadow-sm
+                          hover:scale-105 hover:shadow-md hover:bg-[var(--color-primary)] hover:text-white transition-all">{{ contact.value }}</a>
                 {% else %}{{ contact.value }}{% endif %}
             {% endcall %}
         </div>
