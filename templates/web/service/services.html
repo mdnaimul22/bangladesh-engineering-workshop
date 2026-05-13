@@ -15,9 +15,16 @@
 {{ breadcrumb_schema(crumbs) }}
 
 {# ── Page Header ─────────────────────────────────────────── #}
-<div class="text-center py-6 mb-6">
-    <h1 class="text-2xl md:text-3xl font-bold text-[var(--color-primary)] mb-1">Our Services & Expertise</h1>
-    <span class="text-[var(--color-text-muted)] text-sm">Specialized Engineering & Manufacturing Services</span>
+<div class="text-center py-6 mb-4">
+    <h1 class="text-2xl md:text-3xl font-bold mb-1"
+        style="background: linear-gradient(135deg, var(--color-primary), var(--color-info, #0ea5e9));
+               -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+               background-clip: text;">
+        Our Services & Expertise
+    </h1>
+    <p class="text-[var(--color-text-muted)] text-base md:text-lg max-w-[500px] mx-auto">
+        Specialized Engineering & Manufacturing Services for heavy equipment and industrial machinery
+    </p>
 </div>
 
 {# ── Service Sections ────────────────────────────────────── #}
@@ -31,35 +38,52 @@
     {'title': 'EWP Access Repair & Maintenance', 'img': 'img/ewp_small.png', 'desc': 'Regular maintenance of your elevated work platforms is essential to ensuring longevity, productivity, and workplace safety. BEW™ helps you keep access machinery running smoothly.', 'features': ['<strong>Access Platforms:</strong> Detailed inspections, greasing, and diagnostic checks.', '<strong>Technical Overhauls:</strong> Hydraulic, brake, and chassis work for all major brands.', '<strong>Emergency Diagnostics:</strong> Quick repair for breakdowns to minimize downtime.', '<strong>Replacement Parts:</strong> Custom lathe and milling work for specialized EWP components.']}
 ] %}
 
-<div class="space-y-6 mb-8">
+<div class="space-y-5 mb-8">
     {% for s in sections %}
-    <div class="bg-[var(--color-surface)] rounded-[var(--radius)] border border-[var(--color-border)] shadow-[var(--shadow-sm)]
-                grid grid-cols-1 md:grid-cols-[1fr_300px] gap-0 overflow-hidden
-                {% if loop.index is even %}md:[direction:rtl]{% endif %}">
-        {# Text #}
-        <div class="p-5 md:p-6 {% if loop.index is even %}md:[direction:ltr]{% endif %}">
-            <h2 class="text-xl font-bold text-[var(--color-text)] mb-2">{{ s.title }}</h2>
-            <p class="text-sm text-[var(--color-text-muted)] leading-relaxed mb-3">{{ s.desc }}</p>
-            <ul class="text-sm text-[var(--color-text-muted)] leading-relaxed pl-5 list-disc space-y-1">
+    <div class="group bg-[var(--color-surface)] rounded-xl border border-[var(--color-border)]
+                overflow-hidden hover:border-[var(--color-primary)]/30 hover:shadow-lg
+                transition-all duration-300
+                grid grid-cols-1 md:grid-cols-[1fr_280px]
+                {% if loop.index is even %}md:grid-cols-[280px_1fr]{% endif %}">
+
+        {# Text — always renders first in HTML, CSS grid reorders visually #}
+        <div class="p-5 md:p-6 {% if loop.index is even %}md:order-2{% endif %}">
+            <div class="flex items-center gap-2 mb-3">
+                <div class="w-8 h-8 rounded-lg bg-[var(--color-primary)] flex items-center justify-center shrink-0">
+                    <span class="text-white font-bold text-sm">{{ loop.index }}</span>
+                </div>
+                <h2 class="text-lg font-bold text-[var(--color-text)] m-0">{{ s.title }}</h2>
+            </div>
+            <p class="text-base text-[var(--color-text-muted)] leading-relaxed mb-3">{{ s.desc }}</p>
+            <ul class="text-base text-[var(--color-text-muted)] leading-relaxed pl-5 list-none space-y-1.5">
                 {% for f in s.features %}
-                <li>{{ f|safe }}</li>
+                <li class="flex items-start gap-2">
+                    <span class="material-icons text-[var(--color-primary)] text-base mt-0.5 shrink-0">check_circle</span>
+                    <span>{{ f|safe }}</span>
+                </li>
                 {% endfor %}
             </ul>
         </div>
+
         {# Image #}
-        <div class="flex items-center justify-center bg-[var(--color-bg)] p-4 {% if loop.index is even %}md:[direction:ltr]{% endif %}">
-            <img src="{{ url_for('static', filename=s.img) }}" alt="{{ s.title }}" class="max-h-[220px] w-auto object-contain rounded-lg">
+        <div class="flex items-center justify-center bg-[var(--color-bg)] p-4
+                    {% if loop.index is even %}md:order-1{% endif %}">
+            <img src="{{ url_for('static', filename=s.img) }}" alt="{{ s.title }}"
+                 class="max-h-[200px] w-auto object-contain rounded-lg
+                        group-hover:scale-105 transition-transform duration-500">
         </div>
     </div>
     {% endfor %}
 </div>
 
 {# ── CTA Banner ──────────────────────────────────────────── #}
-<div class="mb-8 p-8 bg-[var(--color-surface)] rounded-xl text-center border border-[var(--color-border)] shadow-[var(--shadow-sm)]">
-    <h3 class="text-xl font-normal text-[var(--color-text)] mb-3">Need Professional Engineering Support?</h3>
-    <p class="text-[var(--color-text-muted)] mb-5 max-w-[700px] mx-auto text-sm leading-relaxed">
-        Our team of expert mechanics and engineers is ready to assist with your most challenging projects, from
-        precision manufacturing to heavy vehicle maintenance.
+<div class="mb-8 p-6 md:p-8 rounded-2xl text-center border border-[var(--color-border)]
+            bg-gradient-to-br from-[var(--color-primary)]/5 to-[var(--color-info)]/5">
+    <span class="material-icons text-[var(--color-primary)] text-4xl mb-2 block">engineering</span>
+    <h3 class="text-lg font-semibold text-[var(--color-text)] mb-2">Need Professional Engineering Support?</h3>
+    <p class="text-[var(--color-text-muted)] mb-4 max-w-[600px] mx-auto text-base leading-relaxed">
+        Our team of expert mechanics and engineers is ready to assist with your most challenging projects,
+        from precision manufacturing to heavy vehicle maintenance.
     </p>
     {{ btn(text=_('Call Our Workshop Today'), icon='call', variant='primary', href='tel:+8801906399161') }}
 </div>
