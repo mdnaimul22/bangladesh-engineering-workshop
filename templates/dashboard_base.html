@@ -45,7 +45,7 @@
      x-init="
         document.addEventListener('htmx:pushedIntoHistory', (e) => { currentPath = e.detail.path; });
         window.addEventListener('popstate', () => { currentPath = window.location.pathname; });
-        document.getElementById('sidebar-preload')?.remove();
+        $nextTick(() => { document.getElementById('sidebar-preload')?.remove(); });
      "
      class="flex h-screen overflow-hidden bg-[var(--color-bg)]"
      :class="resizing ? 'select-none cursor-col-resize' : ''">

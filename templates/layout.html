@@ -3,7 +3,12 @@
 
 <head>
     <meta charset="UTF-8">
-    {# FOUC prevention: set theme and fonts BEFORE any CSS loads #}
+    {# FOUC prevention: set theme, fonts, and hide Alpine content BEFORE any CSS loads #}
+    <style>
+        [x-cloak] { display: none !important; }
+        .alpine-loading { opacity: 0; }
+        body { transition: opacity 0.15s ease-in; }
+    </style>
     <script>
         (function() {
             var root = document.documentElement;
@@ -105,21 +110,23 @@
     </script>
 
     {# ── 5. Alpine.js — Stores first, then CDN ──────────────── #}
+    {# All use defer: browser guarantees document-order execution for defer scripts #}
     <script defer src="{{ url_for('static', filename='js/alpine-components/theme-switcher.js') }}"></script>
     <script defer src="{{ url_for('static', filename='js/alpine-components/directives.js') }}"></script>
     <script defer src="{{ url_for('static', filename='js/alpine-components/searchable-select.js') }}"></script>
     <script defer src="{{ url_for('static', filename='js/alpine-components/preview-modal.js') }}"></script>
     <script defer src="{{ url_for('static', filename='js/alpine-store.js') }}"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"></script>
 
-    {# ── 6. HTMX — SPA-like navigation ─────────────────────── #}
-    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    {# ── 6. HTMX — SPA-like navigation (defer to not block render) ── #}
+    <script defer src="https://unpkg.com/htmx.org@2.0.4"></script>
 
     {% block extra_css %}{% endblock %}
     {% block extra_head %}{% endblock %}
 </head>
 
-<body class="font-bengali bg-[var(--color-bg)] text-[var(--color-text)] min-h-screen flex flex-col antialiased">
+<body class="font-bengali bg-[var(--color-bg)] text-[var(--color-text)] min-h-screen flex flex-col antialiased alpine-loading"
+      x-data @alpine:initialized.window="$el.classList.remove('alpine-loading')">
 
     {# ══════════════════════════════════════════════════════════════
        MAIN CONTENT — Flash messages + page content

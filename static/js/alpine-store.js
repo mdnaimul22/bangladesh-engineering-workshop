@@ -161,11 +161,8 @@ function bewSyncHeader() {
         Alpine.store('header').sync();
     }
 }
-// Sync once DOM + Alpine are both ready
-document.addEventListener('DOMContentLoaded', () => {
-    // Alpine may not have initialized yet; wait for next tick
-    requestAnimationFrame(() => { requestAnimationFrame(bewSyncHeader); });
-});
+// Sync once Alpine is fully initialized (replaces unreliable DOMContentLoaded + rAF hack)
+document.addEventListener('alpine:initialized', bewSyncHeader);
 // Re-sync on every HTMX swap into content-area
 document.addEventListener('htmx:afterSwap', (e) => {
     if (e.detail.target && e.detail.target.id === 'content-area') {
