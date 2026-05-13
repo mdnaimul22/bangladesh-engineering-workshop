@@ -3,12 +3,12 @@
 {% macro btn(text='', variant='primary', icon='', href='', type='button',
              size='md', class_extra='', attrs='') %}
 {% set base = 'inline-flex items-center justify-center gap-1 font-semibold rounded-[var(--btn-radius)] no-underline cursor-pointer transition-all duration-300 ease-[var(--ease-bounce)] border-2 border-transparent outline-none whitespace-nowrap leading-none focus:shadow-[var(--ring)]' %}
-{% set xs_class = 'w-[30px] h-[30px] min-w-[30px] p-0 text-[0.6875rem]' if not text else 'px-2 h-[26px] min-w-[auto] text-[0.6875rem]' %}
+{% set xs_class = 'w-[30px] h-[30px] min-w-[30px] p-0 text-xs' if not text else 'px-2 h-[26px] min-w-[auto] text-xs' %}
 {% set sm_class = 'w-[36px] h-[36px] min-w-[36px] p-0 text-xs' if not text else 'px-3 h-[32px] min-w-[auto] text-xs' %}
 {% set sizes = {
     'xs': xs_class,
     'sm': sm_class,
-    'md': 'px-4 h-[38px] min-w-[100px] text-[0.78rem]',
+    'md': 'px-4 h-[38px] min-w-[100px] text-sm',
     'lg': 'px-6 h-[44px] min-w-[120px] text-sm'
 } %}
 {% set variants = {

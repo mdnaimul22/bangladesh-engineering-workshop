@@ -120,9 +120,9 @@
                        $store.sidebar.collapsed ? 'px-0 py-2.5 justify-center' : 'px-3 py-2.5'
                    ]"
                    :title="$store.sidebar.collapsed ? '{{ label }}' : ''">
-                    <span class="material-icons text-[1.2rem] shrink-0">{{ icon }}</span>
+                    <span class="material-icons text-xl shrink-0">{{ icon }}</span>
                     <span x-show="!$store.sidebar.collapsed" x-cloak
-                          class="sidebar-label text-[0.8125rem] font-medium whitespace-nowrap">{{ label }}</span>
+                          class="sidebar-label text-sm font-medium whitespace-nowrap">{{ label }}</span>
                 </a>
                 {% endfor %}
             </div>
@@ -134,8 +134,8 @@
                     class="sidebar-nav-item w-full flex items-center gap-3 rounded-lg transition-all duration-200
                            text-[var(--color-text-muted)] hover:bg-[var(--color-bg)] hover:text-[var(--color-primary)]"
                     :class="$store.sidebar.collapsed ? 'px-0 py-2.5 justify-center' : 'px-3 py-2.5'">
-                <span class="material-icons text-[1.2rem] shrink-0">category</span>
-                <span x-show="!$store.sidebar.collapsed" x-cloak class="sidebar-label text-[0.8125rem] font-medium whitespace-nowrap flex-1 text-left">{{ _('Categories') }}</span>
+                <span class="material-icons text-xl shrink-0">category</span>
+                <span x-show="!$store.sidebar.collapsed" x-cloak class="sidebar-label text-sm font-medium whitespace-nowrap flex-1 text-left">{{ _('Categories') }}</span>
                 <span x-show="!$store.sidebar.collapsed" x-cloak class="sidebar-label material-icons text-base transition-transform duration-200"
                       :class="$store.catPanel.open ? 'rotate-90' : ''">chevron_right</span>
             </button>
@@ -149,8 +149,8 @@
                    currentPath.startsWith('/dashboard/messages') ? 'bg-[var(--color-primary)] text-white shadow-sm' : 'text-[var(--color-text-muted)] hover:bg-[var(--color-bg)] hover:text-[var(--color-primary)]',
                    $store.sidebar.collapsed ? 'px-0 py-2.5 justify-center' : 'px-3 py-2.5'
                ]">
-                <span class="material-icons text-[1.2rem] shrink-0">mail</span>
-                <span x-show="!$store.sidebar.collapsed" x-cloak class="sidebar-label text-[0.8125rem] font-medium whitespace-nowrap">{{ _('Messages') }}</span>
+                <span class="material-icons text-xl shrink-0">mail</span>
+                <span x-show="!$store.sidebar.collapsed" x-cloak class="sidebar-label text-sm font-medium whitespace-nowrap">{{ _('Messages') }}</span>
             </a>
         </nav>
 
@@ -160,16 +160,16 @@
                     class="sidebar-nav-item w-full flex items-center gap-3 rounded-lg transition-all duration-200
                            text-[var(--color-text-muted)] hover:bg-[var(--color-bg)] hover:text-[var(--color-primary)]"
                     :class="$store.sidebar.collapsed ? 'px-0 py-2.5 justify-center' : 'px-3 py-2.5'">
-                <span class="material-icons text-[1.2rem] shrink-0" x-text="$store.theme.icon"></span>
-                <span x-show="!$store.sidebar.collapsed" x-cloak class="sidebar-label text-[0.8125rem] font-medium whitespace-nowrap" x-text="$store.theme.label"></span>
+                <span class="material-icons text-xl shrink-0" x-text="$store.theme.icon"></span>
+                <span x-show="!$store.sidebar.collapsed" x-cloak class="sidebar-label text-sm font-medium whitespace-nowrap" x-text="$store.theme.label"></span>
             </button>
             <div class="relative">
                 <button @click.stop="settingsOpen = !settingsOpen"
                         class="sidebar-nav-item w-full flex items-center gap-3 rounded-lg transition-all duration-200
                                text-[var(--color-text-muted)] hover:bg-[var(--color-bg)] hover:text-[var(--color-primary)]"
                         :class="$store.sidebar.collapsed ? 'px-0 py-2.5 justify-center' : 'px-3 py-2.5'">
-                    <span class="material-icons text-[1.2rem] shrink-0">settings</span>
-                    <span x-show="!$store.sidebar.collapsed" x-cloak class="sidebar-label text-[0.8125rem] font-medium whitespace-nowrap">{{ _('Settings') }}</span>
+                    <span class="material-icons text-xl shrink-0">settings</span>
+                    <span x-show="!$store.sidebar.collapsed" x-cloak class="sidebar-label text-sm font-medium whitespace-nowrap">{{ _('Settings') }}</span>
                 </button>
                 <div x-show="settingsOpen" x-cloak @click.outside="settingsOpen = false"
                      x-transition.scale.origin.bottom.left.duration.150ms
@@ -179,7 +179,7 @@
                     <div class="px-4 py-2 space-y-3">
                         {# Language #}
                         <div class="flex items-center justify-between gap-2">
-                            <span class="text-[0.8125rem] text-[var(--color-text-muted)] flex items-center gap-1.5"><span class="material-icons text-[0.9375rem]">translate</span> {{ _('Language') }}</span>
+                            <span class="text-sm text-[var(--color-text-muted)] flex items-center gap-1.5"><span class="material-icons text-base">translate</span> {{ _('Language') }}</span>
                             <div class="flex items-center gap-1 bg-[var(--color-bg)] rounded-md p-0.5">
                                 <a href="{{ url_for('set_language', lang='bn') }}"
                                    class="text-xs no-underline px-2 py-1 rounded-sm transition-colors {% if session.get('lang', 'bn') == 'bn' %}bg-white shadow-sm font-bold text-[var(--color-primary)]{% else %}text-[var(--color-text-muted)] hover:text-[var(--color-text)]{% endif %}">বাং</a>
@@ -190,7 +190,7 @@
 
                         {# Font Scale #}
                         <div class="flex items-center justify-between gap-2">
-                            <span class="text-[0.8125rem] text-[var(--color-text-muted)] flex items-center gap-1.5"><span class="material-icons text-[0.9375rem]">text_increase</span> {{ _('Size') }}</span>
+                            <span class="text-sm text-[var(--color-text-muted)] flex items-center gap-1.5"><span class="material-icons text-base">text_increase</span> {{ _('Size') }}</span>
                             <div class="flex items-center gap-0.5 bg-[var(--color-bg)] rounded-md p-0.5">
                                 <template x-for="sz in ['s', 'm', 'l', 'xl']">
                                     <button @click="$store.appSettings.setScale(sz)"
@@ -204,17 +204,17 @@
                         {# Font Family (Hover menu) #}
                         <div class="relative group">
                             <div class="flex items-center justify-between gap-2 cursor-pointer py-1">
-                                <span class="text-[0.8125rem] text-[var(--color-text-muted)] flex items-center gap-1.5"><span class="material-icons text-[0.9375rem]">font_download</span> {{ _('Font') }}</span>
-                                <span class="material-icons text-[0.9375rem] text-[var(--color-text-muted)]">chevron_right</span>
+                                <span class="text-sm text-[var(--color-text-muted)] flex items-center gap-1.5"><span class="material-icons text-base">font_download</span> {{ _('Font') }}</span>
+                                <span class="material-icons text-base text-[var(--color-text-muted)]">chevron_right</span>
                             </div>
                             <div class="absolute bottom-0 left-full pl-1 z-[1101] hidden group-hover:block">
                                 <div class="w-48 bg-[var(--color-surface)] rounded-xl shadow-xl border border-[var(--color-border)] py-1">
                                     <template x-for="(fontVal, fontKey) in $store.appSettings.fonts">
                                         <button @click="$store.appSettings.setFont(fontKey)"
-                                                class="w-full text-left px-4 py-2 text-[0.8125rem] hover:bg-[var(--color-bg)] transition-colors flex items-center justify-between"
+                                                class="w-full text-left px-4 py-2 text-sm hover:bg-[var(--color-bg)] transition-colors flex items-center justify-between"
                                                 :class="$store.appSettings.fontFamily === fontKey ? 'text-[var(--color-primary)] font-bold bg-[var(--color-primary)]/10' : 'text-[var(--color-text)]'">
                                             <span class="capitalize" x-text="fontKey"></span>
-                                            <span x-show="$store.appSettings.fontFamily === fontKey" class="material-icons text-[0.9375rem]">check</span>
+                                            <span x-show="$store.appSettings.fontFamily === fontKey" class="material-icons text-base">check</span>
                                         </button>
                                     </template>
                                 </div>
@@ -296,7 +296,7 @@
             {# Page icon + title #}
             <div class="flex items-center gap-2 min-w-0 shrink-0" x-show="$store.header.title">
                 <span class="material-icons text-[var(--color-primary)] text-xl" x-text="$store.header.icon" x-show="$store.header.icon"></span>
-                <h1 class="text-[0.9375rem] font-bold text-[var(--color-text)] m-0 whitespace-nowrap truncate" x-text="$store.header.title"></h1>
+                <h1 class="text-base font-bold text-[var(--color-text)] m-0 whitespace-nowrap truncate" x-text="$store.header.title"></h1>
             </div>
 
             {# Spacer #}

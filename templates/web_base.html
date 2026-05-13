@@ -21,22 +21,22 @@
             <!-- Right: Nav Links -->
             <div class="hidden md:flex items-center gap-6">
                 <a href="{{ url_for('shops.index') }}"
-                    class="text-text-muted no-underline font-medium text-[0.95rem] hover:text-primary transition-colors">
+                    class="text-text-muted no-underline font-medium text-sm hover:text-primary transition-colors">
                     <span class="material-icons align-middle">home</span> {{ _('Home') }}
                 </a>
                 
                 <a href="{{ url_for('core.about') }}"
-                    class="text-text-muted no-underline font-medium text-[0.95rem] hover:text-primary transition-colors">
+                    class="text-text-muted no-underline font-medium text-sm hover:text-primary transition-colors">
                     <span class="material-icons align-middle">info</span> {{ _('About Us') }}
                 </a>
 
                 <a href="{{ url_for('core.services') }}"
-                    class="text-text-muted no-underline font-medium text-[0.95rem] hover:text-primary transition-colors">
+                    class="text-text-muted no-underline font-medium text-sm hover:text-primary transition-colors">
                     <span class="material-icons align-middle">build</span> {{ _('Services') }}
                 </a>
 
                 <a href="{{ url_for('core.contact') }}"
-                    class="text-text-muted no-underline font-medium text-[0.95rem] hover:text-primary transition-colors">
+                    class="text-text-muted no-underline font-medium text-sm hover:text-primary transition-colors">
                     <span class="material-icons align-middle">email</span> {{ _('Contact') }}
                 </a>
 
@@ -113,7 +113,7 @@
 
         {# ── Copyright Bar ── #}
         <div class="border-t border-bew-border py-2 text-center">
-            <p class="text-text-muted text-[0.6875rem] m-0 opacity-70">
+            <p class="text-text-muted text-xs m-0 opacity-70">
                 &copy; <span x-data x-text="new Date().getFullYear()"></span> {{ _('Bangladesh Engineering Workshop') }}. All rights reserved.
             </p>
         </div>
