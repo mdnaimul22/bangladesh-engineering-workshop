@@ -30,19 +30,7 @@
 {# ── Breadcrumb ──────────────────────────────────────────── #}
 {{ breadcrumb_schema(crumbs) }}
 
-<div class="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 mb-4
-            bg-[var(--color-surface)] p-4 rounded-[var(--radius)] shadow-[var(--shadow)] border border-[var(--color-border)]">
-    <div class="flex items-center gap-3">
-        <div class="w-11 h-11 bg-[var(--color-btn-primary)] text-white rounded-lg flex items-center justify-center shadow-sm">
-            <span class="material-icons text-2xl">storefront</span>
-        </div>
-        <div>
-            <h1 class="m-0 text-xl md:text-2xl font-bold text-[var(--color-text)] leading-tight">{{ shop.name }}</h1>
-            <div class="text-sm text-[var(--color-text-muted)]">
-                {{ shop.category_name if shop.category_name else _('Shop Profile') }}
-            </div>
-        </div>
-    </div>
+<div class="flex justify-end gap-2 mb-4">
     <div class="flex gap-2 flex-wrap">
         {% if session.get('is_admin') %}
         {{ btn(text=_('Purchases'), icon='receipt_long', variant='secondary', href=url_for('purchases.shop_purchases', shop_id=shop.id)) }}
