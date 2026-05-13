@@ -1,5 +1,5 @@
 {% from 'components/_pagination.html' import render_pagination with context %}
-{% extends "dashboard_base.html" %}
+{% extends "dashboard_base.html" if session.get('is_admin') else "web_base.html" %}
 {% from 'components/_navigation.html' import page_header, breadcrumb with context %}
 {% from 'components/_badges.html' import badge with context %}
 {% from 'components/_buttons.html' import btn with context %}

@@ -1,4 +1,4 @@
-{% extends "dashboard_base.html" %}
+{% extends "dashboard_base.html" if session.get('is_admin') else "web_base.html" %}
 {% from 'components/_navigation.html' import breadcrumb with context %}
 {% from 'components/_buttons.html' import btn with context %}
 {% from 'components/_seo.html' import og_tags, json_ld, breadcrumb_schema with context %}
@@ -44,6 +44,7 @@
         </div>
     </div>
     <div class="flex gap-2 flex-wrap">
+        {% if session.get('is_admin') %}
         {{ btn(text=_('Purchases'), icon='receipt_long', variant='secondary', href=url_for('purchases.shop_purchases', shop_id=shop.id)) }}
         {{ btn(text=_('New Purchase'), icon='add_shopping_cart', variant='primary', href=url_for('purchases.new_purchase', supplier_id=shop.id)) }}
         {{ btn(text=_('Edit'), icon='edit', variant='primary', href=url_for('shops.edit_shop', shop_id=shop.id)) }}
@@ -52,6 +53,7 @@
             <input type="hidden" name="delete_password" id="delete_password_field">
             {{ btn(text=_('Delete'), icon='delete', variant='danger', type='submit') }}
         </form>
+        {% endif %}
         {{ btn(text=_('Back'), icon='arrow_back', variant='secondary', href=url_for('shops.index')) }}
     </div>
 </div>
