@@ -427,73 +427,95 @@ DOMAIN_MAP = {
 }
 
 def normalize_bengali(text):
+    """Safe Bengali normalization - only obvious phonetic equivalents.
+    
+    Previous version had catastrophic bugs:
+    - Ja/Ya swap destroyed words (net effect: ALL Ya became Ja)  
+    - Ya-phala removal destroyed conjuncts
+    - Sha/Sa merge caused wrong matches
+    """
     if not text:
         return ""
     
-    # Character maps usually considered phonetically similar in search context
     replacements = [
-        # Vowels (Normalize long to short)
-        ('ী', 'ি'),
-        ('ূ', 'ু'),
-        (' ঋ', ' র'), # ऋ to র
-        ('ঋ', 'রি'), # Common phonetic representation
-        
-        # Consonants 
-        ('ণ', 'ন'), # Murdhanya to Dantya
-        ('ষ', 'স'), # Murdhanya Sha to Dantya Sa
-        ('শ', 'স'), # Talabya Sha to Dantya Sa
-        ('জ', 'য'), # Ja to Ya (often confused)
-        ('য', 'জ'), # Consistently use one (Ja)
-        ('ড়', 'র'), # Da-bindu Ra to Ra
-        ('ঢ়', 'র'), # Dha-bindu Ra to Ra
-        ('ৎ', 'ত'), # Khanda-ta to Ta
-        ('য়', 'য'), # Antastha-Ya
-        
-        # Nasals & Symbols
-        ('ং', 'ঙ'), # Anusvara to Nga
-        ('ঃ', ''), # Visarga (often silent/geminate, removing for rough match)
-        ('ঁ', ''), # Chandrabindu (optional nasalization, often ignored in search)
-        
-        # Phalas & Extensions
-        ('্য', ''), # Ya-phala (e.g., ব্যাবসা -> ব্যবসা)
-        ('্ব', ''), # Ba-phala
-        ('হ্ম', 'ম্ম'), # Brahman -> Bamman (phonetic)
+        ('ী', 'ি'),   # Long-i to short-i
+        ('ূ', 'ু'),   # Long-u to short-u
+        ('ণ', 'ন'),   # Murdhanya Na to Dantya Na
+        ('ষ', 'স'),   # Murdhanya Sha to Dantya Sa
+        ('ং', 'ঙ'),   # Anusvara to Nga
+        ('ঃ', ''),         # Visarga removal
+        ('ঁ', ''),         # Chandrabindu removal
     ]
     
-    norm_text = text
+    result = text
     for old, new in replacements:
-        norm_text = norm_text.replace(old, new)
-        
-    return norm_text
+        result = result.replace(old, new)
+    return result
 
 def normalize_text(text):
     if not text:
         return ""
-    
     text = str(text).lower().strip()
-    
     text = normalize_bengali(text)
-    
     return text
+
+def tokenize(text):
+    norm = normalize_text(text)
+    tokens = re.split(r'\s+|[,;.]+', norm)
+    return set(t for t in tokens if t)
+
+
+# ── Reverse DOMAIN_MAP: Bengali → Bengali synonym expansion ────────────
+# Built once at module load. Maps every known form (normalized) to all
+# sibling forms so that a Bengali query like 'বেয়ারিং' expands to
+# include all synonyms.
+
+REVERSE_DOMAIN_MAP = {}
+
+def _build_reverse_map():
+    for eng_key, bn_values in DOMAIN_MAP.items():
+        all_forms = [eng_key] + list(bn_values)
+        normalized_forms = set()
+        for form in all_forms:
+            norm = normalize_text(form.strip())
+            if norm:
+                normalized_forms.add(norm)
+        
+        for form in normalized_forms:
+            if form not in REVERSE_DOMAIN_MAP:
+                REVERSE_DOMAIN_MAP[form] = set()
+            REVERSE_DOMAIN_MAP[form].update(normalized_forms)
+
+_build_reverse_map()
+
+
+def expand_query_tokens(query_tokens):
+    """Expand Bengali query tokens with all known synonyms from DOMAIN_MAP."""
+    expanded = set(query_tokens)
+    for token in query_tokens:
+        if token in REVERSE_DOMAIN_MAP:
+            expanded.update(REVERSE_DOMAIN_MAP[token])
+    return expanded
+
 
 def custom_tokenizer(text):
     tokens = list(tokenize(text))
     augmented = []
     for t in tokens:
         augmented.append(t)
+        # Check English keys
         if t.lower() in DOMAIN_MAP:
             mapping = DOMAIN_MAP[t.lower()]
             if isinstance(mapping, list):
                 augmented.extend(mapping)
             else:
                 augmented.append(mapping)
+        # Also expand via reverse map (Bengali -> Bengali synonyms)
+        if t in REVERSE_DOMAIN_MAP:
+            augmented.extend(REVERSE_DOMAIN_MAP[t])
             
     return augmented
 
-def tokenize(text):
-    norm = normalize_text(text)
-    tokens = re.split(r'\s+|[,;.]+', norm)
-    return set(t for t in tokens if t)
 
 def calculate_score(shop, query_tokens, normalized_query):
     score = 0
@@ -505,35 +527,32 @@ def calculate_score(shop, query_tokens, normalized_query):
     all_shop_text = f"{shop_name} {shop_products} {' '.join(shop_tags_list)} {' '.join(shop_tags_bn_list)}"
     shop_tokens = tokenize(all_shop_text)
     
+    # Expand query tokens with synonyms
+    expanded_query = expand_query_tokens(query_tokens)
+    
+    # 1. Exact substring match (full query in shop text)
     if normalized_query in all_shop_text:
         score += 50
-        # Boost if in name
         if normalized_query in shop_name:
             score += 30
             
+    # 2. Token-level matching with expanded synonyms
     matches = 0
     query_token_count = len(query_tokens)
     
-    for q_token in query_tokens:
-        token_found = False
-        
+    for q_token in expanded_query:
         if q_token in shop_tokens:
             matches += 1
-            score += 20 # Increased from 10
-            token_found = True
+            score += 20
         else:
-            
             for s_token in shop_tokens:
-                if len(q_token) > 3 and s_token.startswith(q_token):
-                     matches += 0.5
-                     score += 5
-                     token_found = True
+                if len(q_token) > 2 and s_token.startswith(q_token):
+                     matches += 0.7
+                     score += 8
                      break
-                # Allow substring match only for very long tokens?
-                elif len(q_token) > 4 and q_token in s_token:
+                elif len(q_token) > 3 and q_token in s_token:
                      matches += 0.5
                      score += 5 
-                     token_found = True
                      break
         
     if matches >= query_token_count and query_token_count > 0:
@@ -541,7 +560,7 @@ def calculate_score(shop, query_tokens, normalized_query):
         
     if query_token_count > 1:
         ratio = matches / query_token_count
-        if ratio <= 0.5:
+        if ratio < 0.3:
              return 0
              
     return score

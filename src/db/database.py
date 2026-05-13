@@ -57,6 +57,16 @@ class SQLAlchemy(SQLAlchemy):
         semantic_results = semantic_search.search(query)
         
         semantic_scores = {r['shop_id']: r['score'] * 100 for r in semantic_results} # Scale up 0-1 to 0-100 logic
+        
+        # Phase 3: Category-based search fallback
+        # Match query against category names (Bengali + English)
+        matching_categories = Category.query.filter(
+            or_(
+                Category.name.ilike(f'%{query}%'),
+                Category.name_english.ilike(f'%{query}%')
+            )
+        ).all()
+        category_ids = {c.id for c in matching_categories}
             
         shops = Shop.query.options(
              joinedload(Shop.shop_tags).joinedload(ShopTag.tag)
@@ -73,6 +83,10 @@ class SQLAlchemy(SQLAlchemy):
             }
             
             score = calculate_score(search_data, query_tokens, normalized_query)
+            
+            # Category boost: if shop belongs to a matching category
+            if shop.category_id in category_ids:
+                score += 40
             
             sem_score = semantic_scores.get(shop.id, 0)
             
