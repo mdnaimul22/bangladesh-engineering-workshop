@@ -1,0 +1,4 @@
+2026-05-12 18:22:24  WARNING   bew.app                              Failed to log visit: (sqlite3.OperationalError) attempt to write a readonly database
+[SQL: INSERT INTO analytics (page_url, visitor_ip, user_agent, visit_time) VALUES (?, ?, ?, ?)]
+[parameters: ('http://127.0.0.1:5000/dashboard/', '127.0.0.1', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36', '2026-05-12 18:22:24.159920')]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)

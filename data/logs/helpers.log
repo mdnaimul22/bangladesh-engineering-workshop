@@ -8,3 +8,75 @@
 2026-05-09 03:34:30  ERROR     bew.helpers.retry                    All 2 retries exhausted for bad_func: fail
 2026-05-09 03:34:30  WARNING   bew.helpers.retry                    Retry 1/3 for flaky_func: not yet (next attempt in 0.0s)
 2026-05-09 03:34:30  WARNING   bew.helpers.retry                    Retry 2/3 for flaky_func: not yet (next attempt in 0.0s)
+2026-05-13 12:47:09  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 12:47:09  WARNING   bew.helpers.retry                    Retry 1/2 for bad_func: fail (next attempt in 0.0s)
+2026-05-13 12:47:09  WARNING   bew.helpers.retry                    Retry 2/2 for bad_func: fail (next attempt in 0.0s)
+2026-05-13 12:47:09  ERROR     bew.helpers.retry                    All 2 retries exhausted for bad_func: fail
+2026-05-13 12:47:09  WARNING   bew.helpers.retry                    Retry 1/3 for flaky_func: not yet (next attempt in 0.0s)
+2026-05-13 12:47:09  WARNING   bew.helpers.retry                    Retry 2/3 for flaky_func: not yet (next attempt in 0.0s)
+2026-05-13 12:47:10  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 12:48:59  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 12:48:59  WARNING   bew.helpers.retry                    Retry 1/2 for bad_func: fail (next attempt in 0.0s)
+2026-05-13 12:48:59  WARNING   bew.helpers.retry                    Retry 2/2 for bad_func: fail (next attempt in 0.0s)
+2026-05-13 12:48:59  ERROR     bew.helpers.retry                    All 2 retries exhausted for bad_func: fail
+2026-05-13 12:48:59  WARNING   bew.helpers.retry                    Retry 1/3 for flaky_func: not yet (next attempt in 0.0s)
+2026-05-13 12:48:59  WARNING   bew.helpers.retry                    Retry 2/3 for flaky_func: not yet (next attempt in 0.0s)
+2026-05-13 12:48:59  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 12:49:29  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 12:49:29  WARNING   bew.helpers.retry                    Retry 1/2 for bad_func: fail (next attempt in 0.0s)
+2026-05-13 12:49:29  WARNING   bew.helpers.retry                    Retry 2/2 for bad_func: fail (next attempt in 0.0s)
+2026-05-13 12:49:29  ERROR     bew.helpers.retry                    All 2 retries exhausted for bad_func: fail
+2026-05-13 12:49:29  WARNING   bew.helpers.retry                    Retry 1/3 for flaky_func: not yet (next attempt in 0.0s)
+2026-05-13 12:49:29  WARNING   bew.helpers.retry                    Retry 2/3 for flaky_func: not yet (next attempt in 0.0s)
+2026-05-13 12:49:30  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 12:49:47  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 12:50:55  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 12:50:56  WARNING   bew.helpers.retry                    Retry 1/2 for bad_func: fail (next attempt in 0.0s)
+2026-05-13 12:50:56  WARNING   bew.helpers.retry                    Retry 2/2 for bad_func: fail (next attempt in 0.0s)
+2026-05-13 12:50:56  ERROR     bew.helpers.retry                    All 2 retries exhausted for bad_func: fail
+2026-05-13 12:50:56  WARNING   bew.helpers.retry                    Retry 1/3 for flaky_func: not yet (next attempt in 0.0s)
+2026-05-13 12:50:56  WARNING   bew.helpers.retry                    Retry 2/3 for flaky_func: not yet (next attempt in 0.0s)
+2026-05-13 12:50:56  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 12:51:11  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 12:51:12  WARNING   bew.helpers.retry                    Retry 1/2 for bad_func: fail (next attempt in 0.0s)
+2026-05-13 12:51:12  WARNING   bew.helpers.retry                    Retry 2/2 for bad_func: fail (next attempt in 0.0s)
+2026-05-13 12:51:12  ERROR     bew.helpers.retry                    All 2 retries exhausted for bad_func: fail
+2026-05-13 12:51:12  WARNING   bew.helpers.retry                    Retry 1/3 for flaky_func: not yet (next attempt in 0.0s)
+2026-05-13 12:51:12  WARNING   bew.helpers.retry                    Retry 2/3 for flaky_func: not yet (next attempt in 0.0s)
+2026-05-13 12:51:12  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 12:51:18  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 12:51:18  WARNING   bew.helpers.retry                    Retry 1/2 for bad_func: fail (next attempt in 0.0s)
+2026-05-13 12:51:18  WARNING   bew.helpers.retry                    Retry 2/2 for bad_func: fail (next attempt in 0.0s)
+2026-05-13 12:51:18  ERROR     bew.helpers.retry                    All 2 retries exhausted for bad_func: fail
+2026-05-13 12:51:18  WARNING   bew.helpers.retry                    Retry 1/3 for flaky_func: not yet (next attempt in 0.0s)
+2026-05-13 12:51:18  WARNING   bew.helpers.retry                    Retry 2/3 for flaky_func: not yet (next attempt in 0.0s)
+2026-05-13 12:51:19  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 13:13:47  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 13:14:14  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 13:15:24  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 13:20:28  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 13:26:16  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 13:26:22  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 13:27:12  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 13:27:16  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 13:27:25  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 13:30:23  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 13:30:38  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 13:30:42  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 13:32:21  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 13:32:24  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 13:33:00  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 13:33:02  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 13:33:06  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 13:47:01  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 13:47:05  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 13:56:44  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 14:04:41  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 14:36:16  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 14:43:52  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 14:49:22  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 14:54:34  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 14:55:15  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 14:55:18  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 14:55:27  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 14:55:52  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
