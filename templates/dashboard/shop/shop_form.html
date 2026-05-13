@@ -204,12 +204,7 @@
                            class="form-control flex-1 px-3 py-1 border border-[var(--color-border)] rounded-md
                                   bg-[var(--color-input)] text-[var(--color-text)] text-sm h-8
                                   focus:border-[var(--color-primary)] outline-none transition-all">
-                    <button type="button" @click="addTag()"
-                            class="w-9 h-8 min-w-[36px] flex items-center justify-center
-                                   bg-[var(--color-btn-primary)] text-white rounded-md
-                                   hover:opacity-90 hover:scale-105 transition-all shrink-0">
-                        <span class="material-icons text-lg">add</span>
-                    </button>
+                    {{ btn(icon='add', variant='primary', size='sm', class_extra='shrink-0', attrs='@click="addTag()"') }}
                 </div>
 
                 <input type="hidden" name="tags" :value="tags.map(t => t.name).join(',')">

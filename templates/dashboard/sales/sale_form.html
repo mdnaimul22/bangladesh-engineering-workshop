@@ -66,10 +66,7 @@
                 <h3 class="text-base font-semibold m-0 flex items-center gap-2 text-[var(--color-text)]">
                     <span class="material-icons text-lg">list</span> {{ _('ITEMS') }}
                 </h3>
-                <button type="button" @click="addItem()"
-                        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[var(--color-primary)]/10 text-[var(--color-primary)] border border-[var(--color-primary)]/20 rounded-md text-xs font-bold uppercase tracking-wider hover:bg-[var(--color-primary)] hover:text-white transition-all">
-                    <span class="material-icons text-sm">add</span> {{ _('Add Item') }}
-                </button>
+                {{ btn(text=_('Add Item'), icon='add', variant='ghost', size='sm', attrs='@click="addItem()"') }}
             </div>
 
             <template x-for="(item, index) in items" :key="index">
@@ -101,10 +98,7 @@
                             </select>
                         </div>
                         <div class="flex items-end">
-                            <button type="button" @click="removeItem(index)"
-                                    class="w-[38px] h-[38px] flex items-center justify-center bg-red-500 text-white rounded-md hover:bg-red-600 transition-all">
-                                <span class="material-icons text-lg">delete</span>
-                            </button>
+                            {{ btn(icon='delete', variant='danger', attrs='@click="removeItem(index)"', title=_('Remove')) }}
                         </div>
                     </div>
                 </div>

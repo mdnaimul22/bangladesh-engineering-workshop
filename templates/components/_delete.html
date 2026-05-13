@@ -8,16 +8,9 @@
 ──────────────────────────────────────────────────────────────────────── #}
 
 {# ── Delete Button Macro ── #}
-{% macro delete_button(action_url, label='', icon='delete', size='sm', variant='danger') %}
-<button type="button"
-    @click="$store.deleteConfirm.show('{{ action_url }}')"
-    class="inline-flex items-center gap-1.5 rounded-lg font-medium no-underline transition-colors
-           {% if size == 'xs' %}px-2 py-1 text-xs{% elif size == 'sm' %}px-3 py-1.5 text-sm{% else %}px-4 py-2 text-sm{% endif %}
-           {% if variant == 'danger' %}bg-red-500 text-white border-2 border-red-500 shadow-sm hover:bg-red-600 hover:border-red-600 hover:scale-105 hover:shadow-md
-           {% else %}bg-[var(--color-bg)] text-[var(--color-text)] border border-[var(--color-border)] hover:bg-[var(--color-surface)]{% endif %}">
-    <span class="material-icons text-base">{{ icon }}</span>
-    {% if label %}{{ label }}{% endif %}
-</button>
+{% macro delete_button(action_url, label='', icon='delete', size='md', variant='danger') %}
+{% from 'components/_buttons.html' import btn with context %}
+{{ btn(text=label, icon=icon, variant=variant, size=size, attrs="@click=\"$store.deleteConfirm.show('" ~ action_url ~ "')\"") }}
 {% endmacro %}
 
 
@@ -74,23 +67,10 @@
             </div>
 
             {# Buttons #}
-            <div class="flex gap-3">
-                <button type="button"
-                        @click="$store.deleteConfirm.cancel()"
-                        class="flex-1 px-4 py-2.5 text-sm font-medium rounded-lg
-                               bg-[var(--color-bg)] text-[var(--color-text)]
-                               border border-[var(--color-border)]
-                               hover:bg-[var(--color-surface)] transition-colors">
-                    {{ _('Cancel') }}
-                </button>
-                <button type="submit"
-                        class="flex-1 px-4 py-2.5 text-sm font-medium rounded-lg
-                               bg-[var(--color-btn-danger)] text-white
-                               hover:opacity-90 transition-opacity
-                               flex items-center justify-center gap-1.5">
-                    <span class="material-icons text-base">delete_forever</span>
-                    {{ _('Delete') }}
-                </button>
+            {% from 'components/_buttons.html' import btn with context %}
+            <div class="flex gap-3 mt-5">
+                {{ btn(text=_('Cancel'), variant='secondary', class_extra='flex-1', attrs='@click="$store.deleteConfirm.cancel()"') }}
+                {{ btn(text=_('Delete'), icon='delete_forever', variant='danger', type='submit', class_extra='flex-1') }}
             </div>
         </form>
     </div>

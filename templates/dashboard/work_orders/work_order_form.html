@@ -120,16 +120,14 @@
                 <h3 class="text-base font-semibold m-0 flex items-center gap-2 text-[var(--color-text)]">
                     <span class="material-icons text-[var(--color-primary)]">collections</span> {{ _('Document Gallery') }}
                 </h3>
-                <button type="button" @click="addDoc()" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[var(--color-primary)]/10 text-[var(--color-primary)] border border-[var(--color-primary)]/20 rounded-md text-xs font-bold uppercase tracking-wider hover:bg-[var(--color-primary)] hover:text-white transition-all">
-                    <span class="material-icons text-sm">add_photo_alternate</span> {{ _('Add Item') }}
-                </button>
+                {{ btn(text=_('Add Item'), icon='add_photo_alternate', variant='ghost', size='sm', attrs='@click="addDoc()"') }}
             </div>
             <div id="gallery-container">
                 <template x-for="(doc, index) in docs" :key="index">
                     <div class="gallery-row mb-3 pb-3 border-b border-[var(--color-border)] relative">
-                        <button type="button" @click="removeDoc(index)" class="absolute top-0 right-0 w-7 h-7 flex items-center justify-center bg-red-500 text-white rounded-md hover:bg-red-600 text-xs" title="{{ _('Remove') }}">
-                            <span class="material-icons text-sm">close</span>
-                        </button>
+                        <div class="absolute top-0 right-0">
+                            {{ btn_action(icon='close', variant='danger', title=_('Remove'), attrs='@click="removeDoc(index)"') }}
+                        </div>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pr-10">
                             <div class="flex flex-col justify-end">
                                 <label class="{{ lbl }}">{{ _('Document File') }}</label>
@@ -162,16 +160,14 @@
                 <h3 class="text-base font-semibold m-0 flex items-center gap-2 text-[var(--color-text)]">
                     <span class="material-icons text-[var(--color-primary)]">settings_suggest</span> {{ _('Parts & Materials') }}
                 </h3>
-                <button type="button" @click="addPart()" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[var(--color-primary)]/10 text-[var(--color-primary)] border border-[var(--color-primary)]/20 rounded-md text-xs font-bold uppercase tracking-wider hover:bg-[var(--color-primary)] hover:text-white transition-all">
-                    <span class="material-icons text-sm">add</span> {{ _('Add Part') }}
-                </button>
+                {{ btn(text=_('Add Part'), icon='add', variant='ghost', size='sm', attrs='@click="addPart()"') }}
             </div>
             <div id="parts-container">
                 <template x-for="(part, index) in parts" :key="index">
                     <div class="part-row mb-3 pb-3 border-b border-[var(--color-border)] relative">
-                        <button type="button" @click="removePart(index)" class="absolute top-0 right-0 w-7 h-7 flex items-center justify-center bg-red-500 text-white rounded-md hover:bg-red-600 text-xs" title="{{ _('Remove Part') }}">
-                            <span class="material-icons text-sm">close</span>
-                        </button>
+                        <div class="absolute top-0 right-0">
+                            {{ btn_action(icon='close', variant='danger', title=_('Remove Part'), attrs='@click="removePart(index)"') }}
+                        </div>
                         <input type="hidden" name="voucher_file_path" :value="part.voucher_file_path || ''">
                         
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-3 pr-10 mb-2">

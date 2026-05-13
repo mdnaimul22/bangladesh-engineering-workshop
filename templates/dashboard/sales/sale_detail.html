@@ -26,7 +26,7 @@
         </h1>
     </div>
     <div class="flex gap-2 flex-wrap">
-        {{ btn(text=_('Edit Sale'), icon='edit', variant='primary', href=url_for('sales.edit_sale', sale_id=sale.id)) }}
+        {{ btn(text=_('Edit'), icon='edit', variant='primary', href=url_for('sales.edit_sale', sale_id=sale.id)) }}
         {{ btn(text=_('Back'), icon='arrow_back', variant='secondary', href=url_for('sales.sale_list')) }}
     </div>
 </div>

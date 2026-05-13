@@ -205,12 +205,7 @@ Page Content
                 {% if session.get('is_admin') %}
                 {{ btn(text=_('Edit'), icon='edit', variant='primary', href=url_for('shops.edit_shop', shop_id=shop.id)) }}
                 {% endif %}
-                <a href="javascript:history.back()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium
-                   bg-[var(--color-bg)] text-[var(--color-text)] border border-[var(--color-border)]
-                   hover:bg-[var(--color-surface)] transition-colors no-underline">
-                    <span class="material-icons text-base">arrow_back</span>
-                    {{ _('Back') }}
-                </a>
+                {{ btn(text=_('Back'), icon='arrow_back', variant='secondary', href='javascript:history.back()', class_extra='no-underline') }}
             </div>
 
             {# Visiting Card #}

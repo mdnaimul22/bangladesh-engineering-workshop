@@ -23,6 +23,7 @@
 {% endblock %}
 
 {% block layout_content %}
+{% from 'components/_buttons.html' import btn with context %}
 <div x-data="{
         currentPath: window.location.pathname,
         resizing: false,
@@ -313,15 +314,10 @@
             </template>
 
             <template x-if="$store.header.addUrl">
-                <a :href="$store.header.addUrl"
-                   :hx-get="$store.header.addUrl" hx-target="#content-area" hx-select="#content-area"
-                   hx-swap="innerHTML" hx-push-url="true"
-                   @click.prevent="htmx.ajax('GET', $store.header.addUrl, {target:'#content-area', select:'#content-area', swap:'innerHTML', pushUrl:true})"
-                   class="flex items-center gap-1.5 px-[11px] py-1.5 rounded-lg text-sm font-medium no-underline
-                          bg-[var(--color-btn-primary)] text-white hover:bg-[var(--color-btn-hover)] transition-colors shrink-0">
-                    <span class="material-icons text-base">add</span>
-                    <span>{{ _('Add') }}</span>
-                </a>
+                <div class="shrink-0">
+                    {{ btn(text=_('Add'), icon='add', variant='primary', size='sm', 
+                           attrs=':href="$store.header.addUrl" :hx-get="$store.header.addUrl" hx-target="#content-area" hx-select="#content-area" hx-swap="innerHTML" hx-push-url="true" @click.prevent="htmx.ajax(\'GET\', $store.header.addUrl, {target:\'#content-area\', select:\'#content-area\', swap:\'innerHTML\', pushUrl:true})"') }}
+                </div>
             </template>
         </header>
 

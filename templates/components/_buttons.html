@@ -2,35 +2,33 @@
 
 {% macro btn(text='', variant='primary', icon='', href='', type='button',
              size='md', class_extra='', attrs='') %}
-{% set base = 'inline-flex items-center justify-center gap-1 font-semibold rounded-[var(--btn-radius)] no-underline cursor-pointer transition-all duration-300 ease-[var(--ease-bounce)] border-2 border-transparent outline-none whitespace-nowrap leading-none focus:shadow-[var(--ring)]' %}
-{% set xs_class = 'w-[30px] h-[30px] min-w-[30px] p-0 text-xs' if not text else 'px-2 h-[26px] min-w-[auto] text-xs' %}
-{% set sm_class = 'w-[36px] h-[36px] min-w-[36px] p-0 text-xs' if not text else 'px-3 h-[32px] min-w-[auto] text-xs' %}
+{% set base = 'inline-flex items-center justify-center gap-2 font-bold rounded-lg no-underline cursor-pointer transition-all duration-200 border outline-none whitespace-nowrap antialiased' %}
 {% set sizes = {
-    'xs': xs_class,
-    'sm': sm_class,
-    'md': 'px-4 h-[38px] min-w-[100px] text-sm',
-    'lg': 'px-6 h-[44px] min-w-[120px] text-sm'
+    'xs': 'px-2 h-[26px] text-[10px] uppercase tracking-wider' if text else 'w-[26px] h-[26px] p-0',
+    'sm': 'px-3 h-[32px] text-sm' if text else 'w-8 h-8 p-0',
+    'md': 'px-4 h-[36px] text-sm' if text else 'w-9 h-9 p-0',
+    'lg': 'px-6 h-[44px] text-base' if text else 'w-11 h-11 p-0'
 } %}
 {% set variants = {
-    'primary': 'bg-[var(--color-btn-primary)] text-[var(--color-btn-text)] border-[var(--color-btn-primary)] shadow-sm hover:bg-[var(--color-btn-hover)] hover:text-[var(--color-btn-primary)] hover:scale-105 hover:shadow-lg',
-    'secondary': 'bg-[var(--color-btn-secondary)] text-[var(--color-primary)] border-[var(--color-border)] shadow-sm hover:bg-[var(--color-btn-hover)] hover:border-[var(--color-primary)] hover:scale-105 hover:shadow-md',
-    'danger': 'bg-red-500 text-white border-red-500 shadow-sm hover:bg-red-600 hover:border-red-600 hover:text-white hover:scale-105 hover:shadow-md',
-    'orange': 'bg-[var(--color-btn-orange)] text-white border-[var(--color-btn-orange)] shadow-sm hover:bg-[var(--color-btn-hover)] hover:text-[var(--color-btn-orange)] hover:scale-105 hover:shadow-lg',
-    'ghost': 'bg-transparent text-[var(--color-text-muted)] border-transparent hover:bg-[var(--color-bg)] hover:text-[var(--color-primary)]'
+    'primary': 'bg-[var(--color-btn-primary)] text-white border-[var(--color-btn-primary)] active:scale-95',
+    'secondary': 'bg-[var(--color-bg)] text-[var(--color-text)] border-[var(--color-border)] hover:bg-[var(--color-surface)] active:scale-95',
+    'danger': 'bg-red-500 text-white border-red-500 active:scale-95',
+    'orange': 'bg-[var(--color-btn-orange)] text-white border-[var(--color-btn-orange)] active:scale-95',
+    'ghost': 'bg-transparent text-[var(--color-text-muted)] border-transparent hover:text-[var(--color-primary)] active:scale-95'
 } %}
 {% if href %}
 <a href="{{ href }}"
    class="{{ base }} {{ sizes[size] }} {{ variants[variant] }} {{ class_extra }}"
-   {{ attrs }}>
-    {% if icon %}<span class="material-icons text-lg">{{ icon }}</span>{% endif %}
-    {% if text %}{{ text }}{% endif %}
+   {{ attrs|safe }}>
+    {% if icon %}<span class="material-icons text-[18px] leading-none text-inherit">{{ icon }}</span>{% endif %}
+    {% if text %}<span class="leading-none text-inherit">{{ text }}</span>{% endif %}
 </a>
 {% else %}
 <button type="{{ type }}"
         class="{{ base }} {{ sizes[size] }} {{ variants[variant] }} {{ class_extra }}"
-        {{ attrs }}>
-    {% if icon %}<span class="material-icons text-lg">{{ icon }}</span>{% endif %}
-    {% if text %}{{ text }}{% endif %}
+        {{ attrs|safe }}>
+    {% if icon %}<span class="material-icons text-[18px] leading-none text-inherit">{{ icon }}</span>{% endif %}
+    {% if text %}<span class="leading-none text-inherit">{{ text }}</span>{% endif %}
 </button>
 {% endif %}
 {% endmacro %}

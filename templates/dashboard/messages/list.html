@@ -1,6 +1,7 @@
 {% extends "dashboard_base.html" %}
 
 {% block title %}Visitor Messages | {{ super() }}{% endblock %}
+{% from 'components/_buttons.html' import btn with context %}
 
 {% block content %}
 <div id="page-meta" class="hidden"
@@ -46,7 +47,7 @@
                         </td>
                         <td class="px-6 py-4 text-right">
                             <div x-data="{ open: false }">
-                                <button @click="open = true" class="text-primary hover:text-primary-dark font-medium text-sm">
+                                <button @click="open = true" class="text-[var(--color-primary)] hover:text-[var(--color-primary-dark)] font-medium text-sm transition-colors">
                                     {{ _('View Message') }}
                                 </button>
                                 
@@ -80,14 +81,10 @@
                                             <div class="px-6 py-4 bg-bew-bg/50 flex justify-end gap-3 border-t border-[var(--color-border)]">
                                                 {% if not msg.is_read %}
                                                 <form action="{{ url_for('dashboard_home.mark_read', msg_id=msg.id) }}" method="POST">
-                                                    <button type="submit" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity">
-                                                        {{ _('Mark as Read') }}
-                                                    </button>
+                                                    {{ btn(text=_('Mark as Read'), type='submit', variant='primary', size='sm') }}
                                                 </form>
                                                 {% endif %}
-                                                <button @click="open = false" class="px-4 py-2 bg-surface border border-[var(--color-border)] text-[var(--color-text)] rounded-lg text-sm font-semibold hover:bg-bew-bg transition-colors">
-                                                    {{ _('Close') }}
-                                                </button>
+                                                {{ btn(text=_('Close'), variant='secondary', size='sm', attrs='@click="open = false"') }}
                                             </div>
                                         </div>
                                     </div>
