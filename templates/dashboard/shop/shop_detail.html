@@ -230,23 +230,24 @@ Page Content
 
         </div>
     </div>
-</section>
 
-{# ── Bottom Action Bar: Full-width, pinned to bottom ── #}
-{% if session.get('is_admin') %}
-<div class="flex justify-between items-center mt-4 px-2">
-    <div class="flex gap-2">
-        {{ btn(text=_('Purchases'), icon='receipt_long', variant='secondary',
-        href=url_for('purchases.shop_purchases', shop_id=shop.id)) }}
-        {{ btn(text=_('New Purchase'), icon='add_shopping_cart', variant='primary',
-        href=url_for('purchases.new_purchase', supplier_id=shop.id)) }}
+    {# ── Bottom Action Bar ── #}
+    {% if session.get('is_admin') %}
+    <div class="flex justify-between items-center mt-4 pt-4 border-t border-[var(--color-border)]">
+        <div class="flex gap-2">
+            {{ btn(text=_('Purchases'), icon='receipt_long', variant='secondary',
+            href=url_for('purchases.shop_purchases', shop_id=shop.id)) }}
+            {{ btn(text=_('New Purchase'), icon='add_shopping_cart', variant='primary',
+            href=url_for('purchases.new_purchase', supplier_id=shop.id)) }}
+        </div>
+        <div>
+            {{ delete_button(
+                action_url=url_for('shops.delete_shop', shop_id=shop.id),
+                label=_('Delete')
+            ) }}
+        </div>
     </div>
-    <div>
-        {{ delete_button(
-            action_url=url_for('shops.delete_shop', shop_id=shop.id),
-            label=_('Delete')
-        ) }}
-    </div>
-</div>
-{% endif %}
+    {% endif %}
+
+</section>
 {% endblock %}
