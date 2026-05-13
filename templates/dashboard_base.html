@@ -359,4 +359,9 @@
         {% endwith %}
     </div>
 </div>
+
+{# ── Global Delete Confirmation Modal ── #}
+{% from 'components/_delete.html' import delete_modal with context %}
+{{ delete_modal() }}
+
 {% endblock %}

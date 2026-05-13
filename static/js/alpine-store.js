@@ -131,6 +131,28 @@ document.addEventListener('alpine:init', () => {
             this.action = null;
         }
     });
+
+    // ── Delete Confirmation Store ────────────────────────
+    // Used by components/_delete.html for password-based delete
+    Alpine.store('deleteConfirm', {
+        open: false,
+        actionUrl: '',
+
+        show(url) {
+            this.actionUrl = url;
+            this.open = true;
+            // Focus password input after modal opens
+            setTimeout(() => {
+                const input = document.querySelector('[x-ref="deletePasswordInput"]');
+                if (input) input.focus();
+            }, 100);
+        },
+
+        cancel() {
+            this.open = false;
+            this.actionUrl = '';
+        }
+    });
 });
 
 // ── Header Sync: runs after Alpine init + every HTMX content swap ──
