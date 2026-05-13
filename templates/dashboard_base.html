@@ -284,10 +284,8 @@
 
             {# LEFT: Back button OR Title #}
             <template x-if="$store.header.backUrl">
-                <a :href="$store.header.backUrl"
-                   :hx-get="$store.header.backUrl" hx-target="#content-area" hx-select="#content-area"
-                   hx-swap="innerHTML" hx-push-url="true"
-                   @click.prevent="htmx.ajax('GET', $store.header.backUrl, {target:'#content-area', select:'#content-area', swap:'innerHTML', pushUrl:true})"
+                <a href="javascript:void(0)"
+                   @click.prevent="history.back()"
                    class="flex items-center gap-1.5 text-[var(--color-text-muted)] hover:text-[var(--color-primary)] no-underline transition-colors shrink-0 mr-1">
                     <span class="material-icons text-lg">arrow_back</span>
                 </a>

@@ -80,3 +80,7 @@
 2026-05-13 14:55:18  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
 2026-05-13 14:55:27  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
 2026-05-13 14:55:52  ERROR     bew.helpers.semantic                 Failed to load Semantic Search Index: No module named 'search_engine'
+2026-05-13 19:52:37  INFO      bew.helpers.semantic                 Fetching data from live database (/home/naimul/bangladesh-engineering-workshop/data/shop.db) for semantic index...
+2026-05-13 19:52:37  INFO      bew.helpers.semantic                 Indexing 334 shops...
+2026-05-13 19:52:37  INFO      bew.helpers.semantic                 Indexing complete.
+2026-05-13 19:52:37  INFO      bew.helpers.semantic                 Semantic Search Index saved to /home/naimul/bangladesh-engineering-workshop/data/models

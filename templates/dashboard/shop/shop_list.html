@@ -24,7 +24,7 @@ url=request.url
 {% block content %}
 {% set header_title = current_category.name if current_category else _('All Shops') %}
 <div id="page-meta" class="hidden" data-title="{{ header_title }}" data-icon="storefront"
-    data-search-url="{{ url_for('shops.shop_list') }}" data-add-url="{{ url_for('shops.new_shop') }}"></div>
+    data-search-url="{{ url_for('shops.shop_list') }}" data-search-query="{{ search_query|default('') }}" data-add-url="{{ url_for('shops.new_shop') }}"></div>
 
 
 {# ── Shop Table ──────────────────────────────────────────── #}
@@ -67,7 +67,7 @@ url=request.url
         <tbody class="divide-y divide-[var(--color-border)]">
             {% for shop in shops %}
             <tr class="hover:bg-[var(--color-bg)] transition-colors duration-150 cursor-pointer"
-                @click="if(!$event.target.closest('a, button, form')) htmx.ajax('GET', '{{ url_for('shops.shop_detail', shop_id=shop.id) }}', {target:'#content-area', select:'#content-area', swap:'innerHTML', pushUrl:true})">
+                @click="if(!$event.target.closest('a, button, form')) { {% if session.get('is_admin') %}htmx.ajax('GET', '{{ url_for('shops.shop_detail', shop_id=shop.id) }}', {target:'#content-area', select:'#content-area', swap:'innerHTML', pushUrl:true}){% else %}window.location.href='{{ url_for('shops.shop_detail', shop_id=shop.id) }}'{% endif %} }">
                 {# Row Number #}
                 <td class="px-3 py-3 text-center text-[var(--color-text-muted)] text-sm tabular-nums"
                     data-label="{{ _('No') }}">

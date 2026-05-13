@@ -1,6 +1,7 @@
 """Shop routes — thin HTTP wrapper over shop service."""
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_babel import _
+from src.helpers.utils import paginate_list
 import src.services.shop_svc as shop_svc
 from src.helpers.exceptions import ValidationError
 from src.config import setup_logger, Settings
@@ -33,28 +34,35 @@ def index():
 
 @shops_bp.route('/shops')
 def shop_list():
-    """List all shops with pagination"""
+    """List all shops with pagination and search"""
+    query = request.args.get('q', '').strip()
     page = request.args.get('page', 1, type=int)
     per_page = 20
-    offset = (page - 1) * per_page
 
-    shops, total = shop_svc.list_all(limit=per_page, offset=offset)
-    total_pages = (total + per_page - 1) // per_page
+    if query:
+        all_shops = shop_svc.search(query)
+        shops, meta = paginate_list(all_shops, page, per_page=per_page)
+        total = len(all_shops)
+    else:
+        offset = (page - 1) * per_page
+        shops, total = shop_svc.list_all(limit=per_page, offset=offset)
+        total_pages = (total + per_page - 1) // per_page
+        meta = {
+            'page': page,
+            'per_page': per_page,
+            'total_pages': total_pages,
+            'total_items': total,
+            'has_prev': page > 1,
+            'has_next': page < total_pages
+        }
+
     categories = shop_svc.get_categories()
-
-    meta = {
-        'page': page,
-        'per_page': per_page,
-        'total_pages': total_pages,
-        'total_items': total,
-        'has_prev': page > 1,
-        'has_next': page < total_pages
-    }
 
     return render_template('dashboard/shop/shop_list.html',
                            shops=shops,
                            categories=categories,
-                           meta=meta)
+                           meta=meta,
+                           search_query=query)
 
 
 @shops_bp.route('/category/<int:category_id>')
