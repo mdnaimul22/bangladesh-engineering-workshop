@@ -76,10 +76,9 @@ url=request.url
 
                 {# Shop Name #}
                 <td class="px-4 py-3 text-left font-bold text-base" data-label="{{ _('Institution') }}">
-                    <a href="{{ url_for('shops.shop_detail', shop_id=shop.id) }}"
-                        class="text-[var(--color-primary)] no-underline font-medium hover:underline transition-colors">
+                    <span class="text-[var(--color-text)] font-medium transition-colors">
                         {{ shop.name }}
-                    </a>
+                    </span>
                 </td>
 
                 {# Proprietor #}
