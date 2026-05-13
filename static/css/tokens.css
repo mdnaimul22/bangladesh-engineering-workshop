@@ -54,20 +54,19 @@
     --font-display: 'Inter', 'Noto Sans Bengali', sans-serif;
     --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 
-    --text-xs: 1rem;
-    /* 12.8px */
-    --text-sm: 0.92rem;
-    /* 14.7px */
+    --text-xs: 0.95rem;
+
+    --text-sm: 1.0rem;
+
     --text-base: 1.05rem;
-    /* 16.8px */
-    --text-lg: 1.18rem;
-    /* 18.8px */
-    --text-xl: 1.35rem;
-    /* 21.6px */
-    --text-2xl: 1.6rem;
-    /* 25.6px */
-    --text-3xl: 2.1rem;
-    /* 33.6px */
+
+    --text-lg: 1.1rem;
+
+    --text-xl: 1.25rem;
+
+    --text-2xl: 1.5rem;
+
+    --text-3xl: 2.0rem;
 
     --leading-tight: 1.25;
     --leading-normal: 1.5;
