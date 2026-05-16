@@ -150,4 +150,4 @@ app.jinja_env.filters['parse_contact_info'] = parse_contact_info
 
 # ── Entry point ──────────────────────────────────────────────
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host=Settings.APP_HOST, port=Settings.APP_PORT)

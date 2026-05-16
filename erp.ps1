@@ -88,18 +88,30 @@ if ($Setup) {
     }
     $action   = New-ScheduledTaskAction -Execute "powershell.exe" `
                     -Argument "-ExecutionPolicy Bypass -WindowStyle Hidden -File ""$DIR\erp.ps1"" -Run"
-    $trigger  = New-ScheduledTaskTrigger -AtLogOn
-    $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries `
-                    -DontStopIfGoingOnBatteries -StartWhenAvailable -RestartCount 999 `
-                    -RestartInterval (New-TimeSpan -Minutes 1)
+
+    # Two triggers: fires at boot AND at logon (whichever comes first)
+    $triggerBoot   = New-ScheduledTaskTrigger -AtStartup
+    $triggerLogon  = New-ScheduledTaskTrigger -AtLogOn
+
+    $settings = New-ScheduledTaskSettingsSet `
+                    -AllowStartIfOnBatteries `
+                    -DontStopIfGoingOnBatteries `
+                    -StartWhenAvailable `
+                    -RestartCount 10 `
+                    -RestartInterval (New-TimeSpan -Minutes 1) `
+                    -ExecutionTimeLimit ([TimeSpan]::Zero)   # run forever
 
     if (Get-ScheduledTask -TaskName $TASK -ErrorAction SilentlyContinue) {
         Unregister-ScheduledTask -TaskName $TASK -Confirm:$false
     }
-    Register-ScheduledTask -Action $action -Trigger $trigger -Settings $settings `
-                           -TaskName $TASK -User $env:USERNAME -RunLevel Highest
+    Register-ScheduledTask -Action $action `
+                           -Trigger $triggerBoot, $triggerLogon `
+                           -Settings $settings `
+                           -TaskName $TASK `
+                           -User "SYSTEM" `
+                           -RunLevel Highest
 
-    Write-Host "Task registered." -ForegroundColor Green
+    Write-Host "Task registered. Triggers: AtStartup + AtLogon. User: SYSTEM" -ForegroundColor Green
     Start-ScheduledTask -TaskName $TASK
     return
 }
