@@ -1,6 +1,6 @@
 {% extends "dashboard_base.html" %}
 {% from 'components/_navigation.html' import page_header, breadcrumb with context %}
-{% from 'components/_buttons.html' import btn with context %}
+{% from 'components/_buttons.html' import btn, btn_action with context %}
 {% from 'components/_forms.html' import searchable_select with context %}
 {% from 'components/_seo.html' import og_tags, breadcrumb_schema with context %}
 
@@ -98,7 +98,7 @@
                             </select>
                         </div>
                         <div class="flex items-end">
-                            {{ btn(icon='delete', variant='danger', attrs='@click="removeItem(index)"', title=_('Remove')) }}
+                            {{ btn_action(icon='delete', variant='danger', attrs='@click="removeItem(index)"', title=_('Remove')) }}
                         </div>
                     </div>
                 </div>
