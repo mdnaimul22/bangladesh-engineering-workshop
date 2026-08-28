@@ -2,6 +2,7 @@
 {% extends "dashboard_base.html" %}
 {% from 'components/_navigation.html' import page_header, breadcrumb with context %}
 {% from 'components/_buttons.html' import btn with context %}
+{% from 'components/_delete.html' import delete_button with context %}
 {% from 'components/_badges.html' import badge with context %}
 {% from 'components/_seo.html' import og_tags, breadcrumb_schema with context %}
 
@@ -74,11 +75,7 @@
                         <div class="flex gap-1.5 justify-end flex-nowrap">
                             {{ btn(icon='visibility', variant='secondary', size='xs', href=url_for('buyers.buyer_detail', buyer_id=buyer.id)) }}
                             {{ btn(icon='edit', variant='primary', size='xs', href=url_for('buyers.edit_buyer', buyer_id=buyer.id)) }}
-                            <form action="{{ url_for('buyers.delete_buyer', buyer_id=buyer.id) }}" method="POST"
-                                  onsubmit="return confirm('{{ _('Are you sure you want to delete this buyer?') }}');"
-                                  class="inline-flex">
-                                {{ btn(icon='delete', variant='danger', size='xs', type='submit') }}
-                            </form>
+                            {{ delete_button(action_url=url_for('buyers.delete_buyer', buyer_id=buyer.id), size='xs') }}
                         </div>
                     </td>
                 </tr>
