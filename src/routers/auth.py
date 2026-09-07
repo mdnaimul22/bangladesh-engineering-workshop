@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from flask_babel import _
-from src.config.settings import Settings
+from src.config import Settings
 
 auth_bp = Blueprint('auth', __name__)
 

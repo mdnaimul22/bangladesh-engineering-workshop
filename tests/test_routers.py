@@ -17,6 +17,14 @@ class TestCoreRoutes:
         resp = client.get('/our-services')
         assert resp.status_code in (200, 302)
 
+    def test_service_detail_path_traversal(self, client):
+        """Path traversal or special character in service_alias should redirect or return 404 safely."""
+        resp = client.get('/services/..%2F..%2Fetc')
+        assert resp.status_code in (302, 404)
+
+        resp2 = client.get('/services/bad..alias')
+        assert resp2.status_code in (302, 404)
+
 
 class TestShopRoutes:
     """Verify shop routes respond."""
@@ -47,6 +55,16 @@ class TestShopRoutes:
     def test_search_api(self, client):
         resp = client.get('/api/search?q=test')
         assert resp.status_code == 200
+
+    def test_search_by_tag(self, client):
+        """Tag search route should render successfully without template errors."""
+        resp = client.get('/search/tag/hardware')
+        assert resp.status_code == 200
+
+    def test_tag_mutation_unauthenticated(self, client):
+        """Tag modification API must be protected and reject unauthenticated requests."""
+        resp = client.post('/api/tag/add', json={'name': 'unauthorized_tag'})
+        assert resp.status_code in (302, 401)
 
 
 class TestBuyerRoutes:

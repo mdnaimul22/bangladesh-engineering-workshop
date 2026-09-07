@@ -1,11 +1,9 @@
 """Purchase service — business logic for supplier purchase vouchers."""
 import datetime
-from sqlalchemy.exc import OperationalError
 from src.config import setup_logger, Settings
 from src.db.database import db
 from src.helpers.exceptions import ValidationError
 from src.helpers.upload import save_upload
-from src.helpers.retry import retry
 from src.helpers.auth import verify_delete_password
 
 logger = setup_logger(Settings.LOG_DIR / "services.log", name="bew.services.purchase")

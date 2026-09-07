@@ -1,6 +1,6 @@
 import sqlite3
 import pandas as pd
-from src.config import Settings, PROJECT_ROOT, ensure_dir, setup_logger, exists, read_pickle, write_pickle
+from src.config import Settings, get_abs_path, ensure_dir, setup_logger, exists, read_pickle, write_pickle
 from .engine import tokenize, custom_tokenizer, DOMAIN_MAP
 
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -10,17 +10,32 @@ logger = setup_logger(Settings.LOG_DIR / "helpers.log", name="bew.helpers.semant
 
 
 class SemanticSearch:
+    _cached_vectorizer = None
+    _cached_tfidf_matrix = None
+    _cached_shop_ids = None
+
     def __init__(self, vectorizer_path=None, matrix_path=None, shop_ids_path=None):
         self.vectorizer_path = vectorizer_path or str(Settings.MODELS_DIR / "tfidf_vectorizer.pkl")
         self.matrix_path = matrix_path or str(Settings.MODELS_DIR / "tfidf_matrix.pkl")
         self.shop_ids_path = shop_ids_path or str(Settings.MODELS_DIR / "shop_ids.pkl")
 
-        self.vectorizer = None
-        self.tfidf_matrix = None
-        self.shop_ids = None
+        is_default = (
+            self.vectorizer_path == str(Settings.MODELS_DIR / "tfidf_vectorizer.pkl")
+            and self.matrix_path == str(Settings.MODELS_DIR / "tfidf_matrix.pkl")
+            and self.shop_ids_path == str(Settings.MODELS_DIR / "shop_ids.pkl")
+        )
+
+        if is_default and SemanticSearch._cached_tfidf_matrix is not None:
+            self.vectorizer = SemanticSearch._cached_vectorizer
+            self.tfidf_matrix = SemanticSearch._cached_tfidf_matrix
+            self.shop_ids = SemanticSearch._cached_shop_ids
+        else:
+            self.vectorizer = None
+            self.tfidf_matrix = None
+            self.shop_ids = None
 
     def get_data_from_db(self, db_path=None):
-        db_path = db_path or str(PROJECT_ROOT / Settings.DATABASE_NAME)
+        db_path = db_path or get_abs_path(Settings.DATABASE_NAME)
         conn = sqlite3.connect(db_path)
         query = """
             SELECT 
@@ -54,7 +69,7 @@ class SemanticSearch:
         return df
 
     def build_index(self, db_path=None):
-        db_path = db_path or str(PROJECT_ROOT / Settings.DATABASE_NAME)
+        db_path = db_path or get_abs_path(Settings.DATABASE_NAME)
         logger.info(f"Fetching data from live database ({db_path}) for semantic index...")
         df = self.get_data_from_db(db_path)
 
@@ -109,13 +124,31 @@ class SemanticSearch:
         write_pickle(self.vectorizer, self.vectorizer_path)
         write_pickle(self.tfidf_matrix, self.matrix_path)
         write_pickle(self.shop_ids, self.shop_ids_path)
+        SemanticSearch._cached_vectorizer = self.vectorizer
+        SemanticSearch._cached_tfidf_matrix = self.tfidf_matrix
+        SemanticSearch._cached_shop_ids = self.shop_ids
         logger.info(f"Semantic Search Index saved to {Settings.MODELS_DIR}")
 
     def load(self):
+        is_default = (
+            self.vectorizer_path == str(Settings.MODELS_DIR / "tfidf_vectorizer.pkl")
+            and self.matrix_path == str(Settings.MODELS_DIR / "tfidf_matrix.pkl")
+            and self.shop_ids_path == str(Settings.MODELS_DIR / "shop_ids.pkl")
+        )
+        if is_default and SemanticSearch._cached_tfidf_matrix is not None:
+            self.vectorizer = SemanticSearch._cached_vectorizer
+            self.tfidf_matrix = SemanticSearch._cached_tfidf_matrix
+            self.shop_ids = SemanticSearch._cached_shop_ids
+            return
+
         try:
             self.vectorizer = read_pickle(self.vectorizer_path)
             self.tfidf_matrix = read_pickle(self.matrix_path)
             self.shop_ids = read_pickle(self.shop_ids_path)
+            if is_default:
+                SemanticSearch._cached_vectorizer = self.vectorizer
+                SemanticSearch._cached_tfidf_matrix = self.tfidf_matrix
+                SemanticSearch._cached_shop_ids = self.shop_ids
         except Exception as e:
             logger.error(f"Failed to load Semantic Search Index: {e}")
 

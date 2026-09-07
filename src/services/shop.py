@@ -1,11 +1,8 @@
 """Shop service — business logic for supplier/vendor management."""
-import os
-from sqlalchemy.exc import OperationalError
 from src.config import setup_logger, Settings
 from src.db.database import db, Shop, Category, Tag, ShopTag
 from src.helpers.exceptions import ValidationError, NotFoundError
 from src.helpers.upload import save_upload
-from src.helpers.retry import retry
 from src.helpers.auth import verify_delete_password
 
 logger = setup_logger(Settings.LOG_DIR / "services.log", name="bew.services.shop")
@@ -171,9 +168,9 @@ def _resolve_category(form_data):
         return None
 
 
-def _sync_tags(shop_id: int, tags_input: str):
+def _sync_tags(shop_id: int, tags_input: str | None):
     """Sync tags for a shop: remove old, add new from comma-separated string."""
-    if not tags_input:
+    if tags_input is None:
         return
 
     existing_tags = db.get_shop_tags(shop_id)

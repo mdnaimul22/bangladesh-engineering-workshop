@@ -1,7 +1,7 @@
 """Inventory routes — thin HTTP wrapper over inventory service."""
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from flask_babel import _
-import src.services.inventory_svc as inventory_svc
+from src.services import inventory as inventory_service
 from src.helpers.exceptions import ValidationError
 from src.config import setup_logger, Settings
 
@@ -21,7 +21,7 @@ def before_request():
 def inventory_list():
     """List all inventory items"""
     query = request.args.get('q', '').strip()
-    inventory = inventory_svc.list_all(query)
+    inventory = inventory_service.list_all(query)
     page = request.args.get('page', 1, type=int)
     from src.helpers.utils import paginate_list
     inventory, meta = paginate_list(inventory, page, per_page=10)
@@ -31,11 +31,11 @@ def inventory_list():
 @inventory_bp.route('/inventory/new', methods=['GET', 'POST'])
 def new_inventory():
     """Add new inventory item"""
-    shops = inventory_svc.list_shops()
+    shops = inventory_service.list_shops()
 
     if request.method == 'POST':
         try:
-            inventory_svc.create(request.form)
+            inventory_service.create(request.form)
             flash(_('Inventory added successfully!'), 'success')
             return redirect(url_for('inventory.inventory_list'))
         except ValidationError as e:
@@ -50,7 +50,7 @@ def delete_inventory(item_id):
     """Delete inventory item"""
     password = request.form.get('delete_password', '')
     try:
-        if inventory_svc.remove(item_id, password):
+        if inventory_service.remove(item_id, password):
             flash(_('Inventory item deleted successfully!'), 'success')
         else:
             flash(_('Error deleting inventory item!'), 'error')
@@ -65,5 +65,6 @@ def api_inventory_search():
     query = request.args.get('q', '').lower()
     if not query:
         return jsonify([])
-    results = inventory_svc.search(query)
+    results = inventory_service.search(query)
     return jsonify(results)
+

@@ -1,7 +1,7 @@
 """Sales routes — thin HTTP wrapper over sale service."""
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_babel import _
-import src.services.sale_svc as sale_svc
+from src.services import sale as sale_service
 from src.helpers.exceptions import ValidationError
 from src.config import setup_logger, Settings
 
@@ -21,7 +21,7 @@ def before_request():
 def sale_list():
     """Record of all material/product sales"""
     query = request.args.get('q', '').strip()
-    sales = sale_svc.list_all(query)
+    sales = sale_service.list_all(query)
     page = request.args.get('page', 1, type=int)
     from src.helpers.utils import paginate_list
     sales, meta = paginate_list(sales, page, per_page=10)
@@ -31,12 +31,12 @@ def sale_list():
 @sales_bp.route('/sales/new', methods=['GET', 'POST'])
 def new_sale():
     """Create a new sales entry"""
-    buyers = sale_svc.get_buyers()
-    inventory_items = sale_svc.get_inventory()
+    buyers = sale_service.get_buyers()
+    inventory_items = sale_service.get_inventory()
 
     if request.method == 'POST':
         try:
-            sale_id = sale_svc.create(request.form, request.files)
+            sale_id = sale_service.create(request.form, request.files)
             flash(_('Sale created successfully!'), 'success')
             return redirect(url_for('sales.sale_detail', sale_id=sale_id))
         except ValidationError as e:
@@ -52,17 +52,17 @@ def new_sale():
 @sales_bp.route('/sales/<int:sale_id>/edit', methods=['GET', 'POST'])
 def edit_sale(sale_id):
     """Modify existing sales entry"""
-    sale = sale_svc.get(sale_id)
+    sale = sale_service.get(sale_id)
     if not sale:
         flash(_('Sale record not found!'), 'error')
         return redirect(url_for('sales.sale_list'))
 
-    buyers = sale_svc.get_buyers()
-    inventory_items = sale_svc.get_inventory()
+    buyers = sale_service.get_buyers()
+    inventory_items = sale_service.get_inventory()
 
     if request.method == 'POST':
         try:
-            sale_svc.update(sale_id, request.form, request.files, existing_sale=sale)
+            sale_service.update(sale_id, request.form, request.files, existing_sale=sale)
             flash(_('Sale record updated successfully!'), 'success')
             return redirect(url_for('sales.sale_detail', sale_id=sale_id))
         except ValidationError as e:
@@ -75,7 +75,7 @@ def edit_sale(sale_id):
 @sales_bp.route('/sales/<int:sale_id>')
 def sale_detail(sale_id):
     """Invoice/Sale detailed view"""
-    sale = sale_svc.get(sale_id)
+    sale = sale_service.get(sale_id)
     if not sale:
         flash(_('Sale not found!'), 'error')
         return redirect(url_for('sales.sale_list'))
@@ -87,7 +87,7 @@ def delete_sale(sale_id):
     """Remove sales record"""
     password = request.form.get('delete_password', '')
     try:
-        if sale_svc.delete(sale_id, password):
+        if sale_service.delete(sale_id, password):
             flash(_('Sale deleted successfully!'), 'success')
         else:
             flash(_('Error deleting sale!'), 'error')

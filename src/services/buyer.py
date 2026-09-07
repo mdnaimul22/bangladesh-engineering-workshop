@@ -1,5 +1,4 @@
 """Buyer service — business logic for client/buyer management."""
-from sqlalchemy.exc import OperationalError
 from src.config import setup_logger, Settings
 from src.db.database import db
 from src.helpers.exceptions import ValidationError, NotFoundError
@@ -20,8 +19,7 @@ def list_all(query: str = ''):
             )
         ).order_by(Buyer.company_name).all()
 
-        if buyers_query:
-            return [b.to_dict() for b in buyers_query]
+        return [b.to_dict() for b in buyers_query]
 
     return db.get_all_buyers()
 

@@ -2,7 +2,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, abort
 from flask_babel import _
 from src.helpers.utils import paginate_list
-import src.services.buyer_svc as buyer_svc
+from src.services import buyer as buyer_service
 from src.helpers.exceptions import ValidationError
 from src.helpers.auth_middleware import admin_required
 from src.config import setup_logger, Settings
@@ -21,7 +21,7 @@ def before_request():
 def buyer_list():
     """List all buyers with search functionality"""
     query = request.args.get('q', '').strip()
-    buyers = buyer_svc.list_all(query)
+    buyers = buyer_service.list_all(query)
     page = request.args.get('page', 1, type=int)
     buyers, meta = paginate_list(buyers, page, per_page=10)
     return render_template('dashboard/buyer/buyer_list.html', buyers=buyers, meta=meta, search_query=query)
@@ -32,7 +32,7 @@ def new_buyer():
     """Add new buyer"""
     if request.method == 'POST':
         try:
-            buyer_id = buyer_svc.create(request.form)
+            buyer_id = buyer_service.create(request.form)
             flash(_('Buyer added successfully!'), 'success')
             return redirect(url_for('buyers.buyer_list'))
         except ValidationError as e:
@@ -46,7 +46,7 @@ def new_buyer():
 def buyer_detail(buyer_id):
     """View buyer profile dashboard"""
     try:
-        buyer = buyer_svc.get_profile(buyer_id)
+        buyer = buyer_service.get_profile(buyer_id)
     except Exception:
         flash(_('Buyer not found!'), 'error')
         return redirect(url_for('buyers.buyer_list'))
@@ -57,14 +57,14 @@ def buyer_detail(buyer_id):
 def edit_buyer(buyer_id):
     """Edit existing buyer"""
     try:
-        buyer = buyer_svc.get(buyer_id)
+        buyer = buyer_service.get(buyer_id)
     except Exception:
         flash(_('Buyer not found!'), 'error')
         return redirect(url_for('buyers.buyer_list'))
 
     if request.method == 'POST':
         try:
-            buyer_svc.update(buyer_id, request.form)
+            buyer_service.update(buyer_id, request.form)
             flash(_('Buyer updated successfully!'), 'success')
         except ValidationError as e:
             flash(_(str(e)), 'error')
@@ -80,7 +80,7 @@ def delete_buyer(buyer_id):
     """Delete buyer with safety check"""
     password = request.form.get('delete_password', '')
     try:
-        success, reason = buyer_svc.delete(buyer_id, password)
+        success, reason = buyer_service.delete(buyer_id, password)
 
         if success:
             flash(_('Buyer deleted successfully!'), 'success')
@@ -95,3 +95,4 @@ def delete_buyer(buyer_id):
         return redirect(url_for('buyers.buyer_detail', buyer_id=buyer_id))
 
     return redirect(url_for('buyers.buyer_list'))
+

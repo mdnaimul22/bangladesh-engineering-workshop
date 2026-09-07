@@ -87,7 +87,7 @@ def setup_logger(log_path: Path, name: str) -> logging.Logger:
         _registry[name] = logger
         return logger
 
-def shutdown() -> None:
+def shutdown_logger() -> None:
     with _lock:
         for logger in _registry.values():
             for handler in logger.handlers[:]:
@@ -96,3 +96,7 @@ def shutdown() -> None:
                 logger.removeHandler(handler)
         _registry.clear()
     logging.shutdown()
+
+
+# Backwards compatibility alias
+shutdown = shutdown_logger

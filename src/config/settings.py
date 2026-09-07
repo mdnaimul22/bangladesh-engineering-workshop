@@ -53,6 +53,15 @@ class Settings(BaseSettings):
     odt_file_rel: str = Field(..., validation_alias="ODT_FILE")
 
     def _resolve(self, val: str) -> Path:
+        val = val.strip()
+        # Handle /.hidden -> ~/.hidden (Forgotten tilde)
+        if val.startswith("/."):
+            val = "~/" + val[2:] if val.startswith("/./") else "~/" + val[1:]
+
+        # Handle .hidden (if it's not ./ or ../) -> treat as home relative for our tools
+        if val.startswith(".") and not val.startswith("./") and not val.startswith("../"):
+            val = "~/" + val
+
         p = Path(val).expanduser()
         return p if p.is_absolute() else PROJECT_ROOT / p
 

@@ -87,6 +87,13 @@ class TestUtils:
         assert result['type'] == 'email'
         assert result['value'] == "test@gmail.com"
 
+    def test_parse_contact_info_corporate_email(self):
+        """Corporate custom domain email should be detected as email, not web."""
+        from src.helpers.utils import parse_contact_info
+        result = parse_contact_info("info@bengal-workshop.com")
+        assert result['type'] == 'email'
+        assert result['value'] == "info@bengal-workshop.com"
+
     def test_parse_contact_info_website(self):
         """Website should be detected as web type."""
         from src.helpers.utils import parse_contact_info

@@ -1,12 +1,9 @@
 """Work order service — business logic for production job management."""
-import os
 import datetime
-from sqlalchemy.exc import OperationalError
 from src.config import setup_logger, Settings, exists, delete
 from src.db.database import db
 from src.helpers.exceptions import ValidationError
 from src.helpers.upload import save_upload
-from src.helpers.retry import retry
 from src.helpers.auth import verify_delete_password
 
 logger = setup_logger(Settings.LOG_DIR / "services.log", name="bew.services.work_order")

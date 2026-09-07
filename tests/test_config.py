@@ -10,31 +10,36 @@ class TestConfigInit:
     """Verify config module loads and exposes all expected symbols."""
 
     def test_config_imports(self):
-        """All public names from __init__.py should be importable."""
+        """All 22 canonical public names from __init__.py should be importable."""
         from src.config import (
-            PROJECT_ROOT, find_project_root,
             read_text, write_text, read_json, write_json,
-            read_pickle, write_pickle,
-            exists, ensure_dir, delete, list_files, get_abs_path,
+            read_pickle, write_pickle, read_from_pos, get_size, get_mtime,
+            exists, is_file, is_dir, ensure_dir, delete, list_files, get_abs_path,
             load_dotenv, set_value, get_value, remove_value,
-            Settings, setup_logger,
+            Settings, setup_logger, shutdown_logger,
         )
         assert Settings is not None
         assert callable(setup_logger)
+        assert callable(shutdown_logger)
         assert callable(read_pickle)
         assert callable(write_pickle)
+        assert callable(get_mtime)
+        assert callable(is_file)
 
-    def test_project_root_exists(self):
-        """PROJECT_ROOT should point to an existing directory."""
-        from src.config import PROJECT_ROOT
+    def test_internal_paths(self):
+        """Internal paths module should detect project root."""
+        from src.config.paths import PROJECT_ROOT, find_project_root
         assert PROJECT_ROOT.exists()
         assert PROJECT_ROOT.is_dir()
-
-    def test_find_project_root_returns_path(self):
-        """find_project_root() should return a Path object."""
-        from src.config import find_project_root
         root = find_project_root()
         assert root.exists()
+
+    def test_paths_not_exposed_in_public_api(self):
+        """paths.py symbols should be strictly internal and not in src.config __all__."""
+        import src.config as config
+        assert "PROJECT_ROOT" not in config.__all__
+        assert "find_project_root" not in config.__all__
+        assert "resolve_sandboxed" not in config.__all__
 
 
 class TestSettings:

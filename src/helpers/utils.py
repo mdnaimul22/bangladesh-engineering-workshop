@@ -13,18 +13,19 @@ def parse_tags(tags_string: str) -> list[dict]:
 
 def parse_contact_info(value: str) -> dict:
     """Detect if contact info is email, website, or text."""
-    if not value:
+    if not value or not str(value).strip():
         return {'type': 'text', 'value': '-'}
 
-    value_lower = value.lower()
+    val = str(value).strip()
+    value_lower = val.lower()
 
-    if '@' in value and any(x in value_lower for x in ['gmail', 'yahoo', 'hotmail', 'mail']):
-        return {'type': 'email', 'value': value}
+    if '@' in value_lower and '.' in value_lower.split('@')[-1]:
+        return {'type': 'email', 'value': val}
 
     if '.com' in value_lower or 'http' in value_lower or 'www.' in value_lower:
-        return {'type': 'web', 'value': value}
+        return {'type': 'web', 'value': val}
 
-    return {'type': 'text', 'value': value}
+    return {'type': 'text', 'value': val}
 
 
 def is_truthy(value) -> bool:

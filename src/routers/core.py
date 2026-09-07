@@ -1,8 +1,11 @@
+import re
 from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_babel import _
 from src.db.database import db
 
 core_bp = Blueprint('core', __name__)
+
+_SERVICE_ALIAS_PATTERN = re.compile(r'^[a-zA-Z0-9_-]+$')
 
 
 @core_bp.route('/about-us')
@@ -21,6 +24,8 @@ def services():
 @core_bp.route('/services/<service_alias>')
 def service_detail(service_alias):
     """Dynamic Service Detail Page"""
+    if not _SERVICE_ALIAS_PATTERN.match(service_alias):
+        return redirect(url_for('core.services'))
     try:
         return render_template(f'web/service_page/{service_alias}.html')
     except Exception:
